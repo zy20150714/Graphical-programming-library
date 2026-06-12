@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark-tech">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>机器人角色素材 | Robot Asset Library</title>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .cat-tab {
+            padding: 7px 16px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1.5px solid var(--border-subtle);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            user-select: none;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .cat-tab:hover {
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+        .cat-tab.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+
+        .view-btn {
+            padding: 7px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1.5px solid var(--border-subtle);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            font-family: inherit;
+        }
+        .view-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+        .view-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .asset-grid {
+            display: grid;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+        .asset-grid.grid-view {
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        }
+        .asset-grid.list-view {
+            grid-template-columns: 1fr;
+        }
+
+        .asset-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+        }
+        .asset-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .list-view .asset-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+        }
+
+        .asset-thumb {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            overflow: hidden;
+            position: relative;
+        }
+        .asset-thumb img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        .asset-card:hover .asset-thumb img {
+            transform: scale(1.06);
+        }
+        .list-view .asset-thumb {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .list-view .asset-thumb img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .list-view .asset-card:hover .asset-thumb img {
+            transform: scale(1.1);
+        }
+
+        .asset-info {
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .list-view .asset-info {
+            flex: 1;
+            flex-direction: row;
+            align-items: center;
+            padding: 0;
+            gap: 16px;
+        }
+
+        .asset-name {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        .list-view .asset-name {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+
+        .asset-cat-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--accent);
+            background: var(--accent-glow);
+            border: 1px solid var(--accent-glow);
+            align-self: flex-start;
+        }
+        .list-view .asset-cat-badge {
+            font-size: 0.72rem;
+            padding: 3px 10px;
+        }
+
+        .asset-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .list-view .asset-actions {
+            flex-shrink: 0;
+        }
+
+        .asset-action-btn {
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            transition: all 0.15s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .asset-action-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .asset-action-btn.primary:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .hover-zoom-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            z-index: 30000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+            backdrop-filter: blur(4px);
+        }
+        .hover-zoom-content {
+            max-width: 80vw;
+            max-height: 80vh;
+            border-radius: 16px;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+            animation: modalSlide 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
+        .hover-zoom-content img {
+            display: block;
+            max-width: 80vw;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .stats-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-input-robot {
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 8px 14px 8px 34px;
+            width: 220px;
+            outline: none;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        .search-input-robot:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        .search-input-robot::placeholder { color: var(--text-muted); }
+        .search-wrap-robot {
+            position: relative;
+        }
+        .search-wrap-robot .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .asset-grid.grid-view {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            .search-input-robot {
+                width: 100%;
+            }
+            .cat-tab {
+                font-size: 0.75rem;
+                padding: 5px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+    <div class="progress-track" id="progressBar" style="width:0%"></div>
+    <div class="toast-stack" id="toastStack"></div>
+
+    <header class="topbar">
+        <div class="max-w-7xl mx-auto flex items-center justify-between" style="height:64px">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="back-link" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--text-secondary);font-size:0.85rem;font-weight:500;padding:6px 12px;border-radius:8px;transition:all 0.2s ease">                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+                    返回
+                </a>
+                <div class="w-px h-6" style="background:var(--border-subtle)"></div>
+                <div class="logo-mark">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="16"/><rect x="4" y="12" width="16" height="8" rx="2"/></svg>
+                </div>
+                <div>
+                    <h1 style="font-size:1.125rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.02em">机器人角色素材</h1>
+                    <p style="font-size:0.75rem;color:var(--text-muted);margin-top:-2px">Robot Asset Library</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="stat-pill" id="totalCount">
+                    <span>共</span>
+                    <span class="font-bold" style="color:var(--accent)" id="assetCount">0</span>
+                    <span>个</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="max-width:1400px;margin:0 auto;padding:20px 24px;position:relative;z-index:10">
+        <div class="card mb-4">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div class="flex flex-wrap gap-2" id="categoryTabs">
+                    <button class="cat-tab active" data-cat="all">全部</button>
+                    <button class="cat-tab" data-cat="角色姿势">角色姿势</button>
+                    <button class="cat-tab" data-cat="角色装扮">角色装扮</button>
+                    <button class="cat-tab" data-cat="表情">表情</button>
+                    <button class="cat-tab" data-cat="场景背景">场景背景</button>
+                    <button class="cat-tab" data-cat="交互按钮">交互按钮</button>
+                    <button class="cat-tab" data-cat="装饰元素">装饰元素</button>
+                    <button class="cat-tab" data-cat="机械元素">机械元素</button>
+                    <button class="cat-tab" data-cat="标记反馈">标记反馈</button>
+                    <button class="cat-tab" data-cat="框架装饰">框架装饰</button>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="search-wrap-robot">
+                        <span class="search-icon">&#128269;</span>
+                        <input type="text" id="searchInput" class="search-input-robot" placeholder="搜索素材..." autocomplete="off">
+                    </div>
+                    <div class="flex gap-1" id="viewToggle">
+                        <button class="view-btn active" data-view="grid">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                            网格
+                        </button>
+                        <button class="view-btn" data-view="list">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                            列表
+                        </button>
+                    </div>
+                    <button id="batchDownloadBtn" class="btn-primary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        批量ZIP
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="asset-grid grid-view" id="assetGrid"></div>
+    </main>
+
+    <footer class="text-center py-6 text-xs relative z-10" style="color:var(--text-muted)">
+        <kbd class="kbd">Ctrl+A</kbd> 全选
+        <span class="mx-2">·</span>
+        <kbd class="kbd">Ctrl+S</kbd> 下载ZIP
+        <span class="mx-2">·</span>
+        悬浮图片查看大图
+        <span class="mx-2">·</span>
+        共 48 个机器人素材
+    </footer>
+
+    <div class="hover-zoom-overlay" id="hoverZoom" style="display:none">
+        <div class="hover-zoom-content">
+            <img id="hoverZoomImg" src="" alt="大图预览">
+        </div>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/export.js"></script>
+    <script>
+        var EXP = window.__export;
+        var robotAssets = [
+            { file: '01_智宝-待机正面.png', category: '角色姿势' },
+            { file: '04_智宝-挥手打招呼.png', category: '角色姿势' },
+            { file: '05_智宝-跳舞姿势1.png', category: '角色姿势' },
+            { file: '06_智宝-跳舞姿势2.png', category: '角色姿势' },
+            { file: '07_智宝-跳舞姿势3.png', category: '角色姿势' },
+            { file: '11_智宝-告别挥手.png', category: '角色姿势' },
+            { file: '13_智宝-竖大拇指.png', category: '角色姿势' },
+            { file: '44_智宝-送餐服务员.png', category: '角色装扮' },
+            { file: '45_智宝-宇航服.png', category: '角色装扮' },
+            { file: '46_智宝-厨师服.png', category: '角色装扮' },
+            { file: '47_智宝-科学家.png', category: '角色装扮' },
+            { file: '50_智宝-问答助手.png', category: '角色装扮' },
+            { file: '08_智宝-开心表情.png', category: '表情' },
+            { file: '09_智宝-思考表情.png', category: '表情' },
+            { file: '10_智宝-爱心表情.png', category: '表情' },
+            { file: '12_智宝-惊讶表情.png', category: '表情' },
+            { file: '02_背景-智能工厂.png', category: '场景背景' },
+            { file: '03_背景-温馨客厅.png', category: '场景背景' },
+            { file: '14_背景-舞台灯光.png', category: '场景背景' },
+            { file: '15_背景-教室黑板.png', category: '场景背景' },
+            { file: '16_背景-星空夕阳.png', category: '场景背景' },
+            { file: '48_春晚机器人方阵.png', category: '场景背景' },
+            { file: '17_按钮-聊聊天.png', category: '交互按钮' },
+            { file: '18_按钮-一起跳舞.png', category: '交互按钮' },
+            { file: '19_按钮-学习闯关.png', category: '交互按钮' },
+            { file: '20_按钮-说再见.png', category: '交互按钮' },
+            { file: '21_按钮-再来一次.png', category: '交互按钮' },
+            { file: '22_音符-大粉色.png', category: '装饰元素' },
+            { file: '23_音符-双连蓝色.png', category: '装饰元素' },
+            { file: '24_音符-小黄色.png', category: '装饰元素' },
+            { file: '25_音符-迷你绿色.png', category: '装饰元素' },
+            { file: '26_星星-金色大.png', category: '装饰元素' },
+            { file: '27_星星-银色小.png', category: '装饰元素' },
+            { file: '28_星星-粉色中.png', category: '装饰元素' },
+            { file: '29_闪光-蓝色电火花.png', category: '装饰元素' },
+            { file: '30_光环-彩虹光圈.png', category: '装饰元素' },
+            { file: '49_飞碟太空元素.png', category: '装饰元素' },
+            { file: '31_传送带.png', category: '机械元素' },
+            { file: '32_机械臂.png', category: '机械元素' },
+            { file: '33_齿轮.png', category: '机械元素' },
+            { file: '43_太空机械臂.png', category: '机械元素' },
+            { file: '34_正确标记-绿色对勾.png', category: '标记反馈' },
+            { file: '35_错误标记-红色叉号.png', category: '标记反馈' },
+            { file: '36_金色奖杯.png', category: '标记反馈' },
+            { file: '37_得分面板.png', category: '标记反馈' },
+            { file: '38_科技感边框.png', category: '框架装饰' },
+            { file: '39_中国智造徽章.png', category: '框架装饰' },
+            { file: '42_电路板纹理.png', category: '框架装饰' }
+        ];
+
+        var currentCategory = 'all';
+        var currentView = 'grid';
+        var hoverZoomEl = document.getElementById('hoverZoom');
+        var hoverZoomImg = document.getElementById('hoverZoomImg');
+        var assetGrid = document.getElementById('assetGrid');
+
+        function getAssetPath(file) {
+            var base = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+            if (!base || base === '/') base = './';
+            return base + 'assets/robot/' + file;
+        }
+
+        function renderAssets() {
+            var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+            assetGrid.innerHTML = '';
+            var count = 0;
+
+            robotAssets.forEach(function(asset, idx) {
+                if (currentCategory !== 'all' && asset.category !== currentCategory) return;
+                if (q && !asset.file.toLowerCase().includes(q) && !asset.category.toLowerCase().includes(q)) return;
+                count++;
+
+                var card = document.createElement('div');
+                card.className = 'asset-card';
+                card.dataset.index = idx;
+
+                var thumb = document.createElement('div');
+                thumb.className = 'asset-thumb';
+
+                var img = document.createElement('img');
+                img.src = getAssetPath(asset.file);
+                img.alt = asset.file.replace(/\.png$/, '');
+                img.loading = 'lazy';
+                img.addEventListener('mouseenter', function(e) {
+                    showHoverZoom(e, asset.file);
+                });
+                img.addEventListener('mouseleave', hideHoverZoom);
+                img.addEventListener('mousemove', moveHoverZoom);
+                thumb.appendChild(img);
+                card.appendChild(thumb);
+
+                var info = document.createElement('div');
+                info.className = 'asset-info';
+
+                var nameEl = document.createElement('div');
+                nameEl.className = 'asset-name';
+                nameEl.textContent = asset.file.replace(/\.png$/, '');
+
+                var badge = document.createElement('span');
+                badge.className = 'asset-cat-badge';
+                badge.textContent = asset.category;
+
+                var actions = document.createElement('div');
+                actions.className = 'asset-actions';
+
+                var dlBtn = document.createElement('button');
+                dlBtn.className = 'asset-action-btn primary';
+                dlBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 下载';
+                dlBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var url = getAssetPath(asset.file);
+                    EXP.downloadUrl(url, asset.file);
+                    EXP.toast('已下载: ' + asset.file, 'ok');
+                });
+
+                var delBtn = document.createElement('button');
+                delBtn.className = 'asset-action-btn';
+                delBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览';
+                delBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var url = getAssetPath(asset.file);
+                    showFullPreview(url, asset.file);
+                });
+
+                actions.appendChild(dlBtn);
+                actions.appendChild(delBtn);
+
+                info.appendChild(nameEl);
+                info.appendChild(badge);
+                info.appendChild(actions);
+                card.appendChild(info);
+                assetGrid.appendChild(card);
+            });
+
+            document.getElementById('assetCount').textContent = robotAssets.length;
+        }
+
+        var zoomTimer = null;
+
+        function showHoverZoom(e, file) {
+            clearTimeout(zoomTimer);
+            zoomTimer = setTimeout(function() {
+                var url = getAssetPath(file);
+                hoverZoomImg.src = url;
+                hoverZoomEl.style.display = 'flex';
+            }, 400);
+        }
+
+        function hideHoverZoom() {
+            clearTimeout(zoomTimer);
+            hoverZoomEl.style.display = 'none';
+        }
+
+        function moveHoverZoom(e) {}
+
+        function showFullPreview(url, name) {
+            var overlay = document.createElement('div');
+            overlay.className = 'modal-bg';
+            overlay.innerHTML =
+                '<div class="modal-panel" style="max-width:90vw;padding:16px;text-align:center">' +
+                    '<img src="' + url + '" alt="' + name + '" style="max-width:100%;max-height:70vh;border-radius:8px;display:block;margin:0 auto">' +
+                    '<p style="margin-top:12px;font-size:0.82rem;color:var(--text-secondary)">' + name.replace(/\.png$/, '') + '</p>' +
+                    '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px">' +
+                        '<button class="btn-secondary" id="previewClose" style="padding:8px 20px">关闭</button>' +
+                        '<button class="btn-primary" id="previewDl" style="padding:8px 20px">下载</button>' +
+                    '</div>' +
+                '</div>';
+            document.body.appendChild(overlay);
+            overlay.querySelector('#previewClose').addEventListener('click', function() { overlay.remove(); });
+            overlay.querySelector('#previewDl').addEventListener('click', function() {
+                EXP.downloadUrl(url, name);
+                EXP.toast('已下载: ' + name, 'ok');
+                overlay.remove();
+            });
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) overlay.remove();
+            });
+        }
+
+        document.querySelectorAll('.cat-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.cat-tab').forEach(function(t) { t.classList.remove('active'); });
+                tab.classList.add('active');
+                currentCategory = tab.dataset.cat;
+                renderAssets();
+            });
+        });
+
+        document.querySelectorAll('#viewToggle .view-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#viewToggle .view-btn').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                currentView = btn.dataset.view;
+                assetGrid.className = 'asset-grid ' + currentView + '-view';
+            });
+        });
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            renderAssets();
+        });
+
+        document.getElementById('batchDownloadBtn').addEventListener('click', function() {
+            var btn = this;
+            btn.disabled = true;
+            var orig = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner"></span> 打包中';
+            EXP.setProgress(5);
+
+            var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+            var items = [];
+            robotAssets.forEach(function(asset) {
+                if (currentCategory !== 'all' && asset.category !== currentCategory) return;
+                if (q && !asset.file.toLowerCase().includes(q) && !asset.category.toLowerCase().includes(q)) return;
+                items.push({ url: getAssetPath(asset.file), name: asset.file });
+            });
+
+            if (!items.length) {
+                EXP.toast('没有符合条件的素材', 'err');
+                btn.disabled = false;
+                btn.innerHTML = orig;
+                return;
+            }
+
+            EXP.batchDownloadZip(items, '机器人素材_' + items.length + '个');
+            setTimeout(function() {
+                btn.disabled = false;
+                btn.innerHTML = orig;
+            }, 500);
+        });
+
+        hoverZoomEl.addEventListener('click', function(e) {
+            if (e.target === hoverZoomEl) {
+                hideHoverZoom();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideHoverZoom();
+                var modal = document.querySelector('.modal-bg');
+                if (modal) modal.remove();
+            }
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'a') {
+                    e.preventDefault();
+                } else if (e.key === 's') {
+                    e.preventDefault();
+                    document.getElementById('batchDownloadBtn').click();
+                }
+            }
+        });
+
+        window.addEventListener('load', function() {
+            renderAssets();
+            EXP.toast('机器人素材库已就绪 · 共48个素材', '');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>计算器按键素材库 - 图形化编程素材库</title>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/themes.css">
+<link rel="stylesheet" href="css/common.css">
+<style>
+:root {
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}
+body {
+  font-family: 'Noto Sans SC', 'Space Grotesk', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+h1, h2, h3 { font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif; }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.topbar-inner {
+  max-width: 1440px; margin: 0 auto; padding: 0 24px;
+}
+.topbar-header {
+  display: flex; align-items: center; justify-content: space-between; padding: 14px 0;
+}
+.logo-area { display: flex; align-items: center; gap: 12px; }
+.logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: #fff;
+}
+.logo-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: var(--radius-sm);
+  font-size: 13px; color: var(--text-secondary);
+  text-decoration: none; border: 1px solid var(--border-subtle);
+  transition: all var(--transition-fast);
+  background: var(--bg-input);
+}
+.back-link:hover { border-color: var(--accent); color: var(--text-primary); }
+.topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+.theme-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 2px solid transparent; cursor: pointer;
+  transition: all 0.2s ease; padding: 0;
+}
+.theme-btn:hover { transform: scale(1.15); }
+.theme-btn.active { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+
+.main-content { max-width: 1440px; margin: 0 auto; padding: 24px; }
+
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+}
+.section-title { font-size: 22px; font-weight: 700; color: var(--text-primary); }
+.section-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+.control-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 20px;
+}
+.control-row {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.control-row:last-child { margin-bottom: 0; }
+.control-label {
+  font-size: 13px; font-weight: 600; color: var(--text-secondary);
+  min-width: 70px;
+}
+
+.style-tabs {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.style-tab {
+  padding: 6px 14px; border-radius: var(--radius-xl);
+  font-size: 12px; cursor: pointer; font-family: inherit;
+  border: 1px solid var(--border-subtle);
+  background: transparent; color: var(--text-secondary);
+  transition: all var(--transition-fast); user-select: none;
+}
+.style-tab:hover { border-color: var(--accent); color: var(--text-primary); }
+.style-tab.active {
+  background: var(--accent); color: white;
+  border-color: var(--accent); box-shadow: 0 0 14px var(--accent-glow);
+}
+
+.color-chips {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.color-chip {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid transparent; cursor: pointer;
+  transition: all 0.2s ease; position: relative;
+}
+.color-chip:hover { transform: scale(1.12); }
+.color-chip.active {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--accent);
+}
+.color-chip-name {
+  position: absolute; bottom: -18px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px; color: var(--text-muted);
+  white-space: nowrap; pointer-events: none;
+}
+
+.filter-tabs {
+  display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.filter-tab {
+  padding: 7px 16px; border-radius: var(--radius-xl);
+  font-size: 13px; cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  background: transparent; color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  user-select: none; font-family: inherit;
+}
+.filter-tab:hover { border-color: var(--accent); color: var(--text-primary); }
+.filter-tab.active {
+  background: var(--accent); color: white;
+  border-color: var(--accent); box-shadow: 0 0 14px var(--accent-glow);
+}
+
+.key-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+.key-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  position: relative;
+  cursor: pointer;
+}
+.key-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px var(--accent-glow);
+}
+.key-card.selected {
+  border-color: var(--accent-secondary);
+  box-shadow: 0 0 16px var(--accent-glow);
+}
+.key-card-check {
+  position: absolute; top: 8px; left: 8px; z-index: 5;
+  width: 18px; height: 18px;
+  accent-color: var(--accent-secondary);
+  cursor: pointer;
+}
+.key-card-preview {
+  width: 100%; height: 140px;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.key-card-preview canvas {
+  display: block; max-width: 90%; max-height: 90%;
+}
+.key-card-info { padding: 10px 12px; }
+.key-card-name {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-primary); text-align: center;
+  margin-bottom: 8px;
+}
+.key-card-actions { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+.key-card-actions .btn {
+  padding: 4px 8px; border-radius: 5px;
+  font-size: 10px; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  background: transparent; color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  font-family: inherit;
+}
+.key-card-actions .btn:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--accent); }
+.key-card-actions .btn-primary-s {
+  background: var(--accent); border-color: var(--accent); color: white;
+}
+.key-card-actions .btn-primary-s:hover { box-shadow: 0 0 10px var(--accent-glow); }
+
+.batch-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: 18px;
+  animation: slideDown 0.3s ease;
+}
+.batch-bar.hidden { display: none; }
+@keyframes slideDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+.batch-count {
+  background: var(--accent); color: white;
+  padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+
+.custom-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-top: 24px;
+}
+.custom-panel-title {
+  font-size: 16px; font-weight: 700; margin-bottom: 16px;
+  color: var(--text-primary);
+}
+.custom-row {
+  display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 16px;
+}
+.custom-field {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.custom-field label {
+  font-size: 12px; color: var(--text-secondary); font-weight: 500;
+}
+.custom-field input, .custom-field select {
+  padding: 8px 12px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-input); color: var(--text-primary);
+  font-family: inherit; font-size: 13px; outline: none;
+  min-width: 120px;
+}
+.custom-field input:focus, .custom-field select:focus { border-color: var(--accent); }
+.custom-preview-wrap {
+  display: flex; gap: 24px; align-items: center; flex-wrap: wrap;
+}
+.custom-preview-box {
+  width: 200px; height: 200px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border-subtle);
+}
+.custom-preview-box canvas { max-width: 90%; max-height: 90%; }
+
+.modal-bg {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--modal-overlay);
+  display: none; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.modal-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  max-width: 90vw; max-height: 90vh;
+  overflow: auto;
+  box-shadow: var(--card-shadow);
+}
+.modal-preview canvas {
+  width: 100%; height: auto; border-radius: 8px;
+}
+
+@media (max-width: 900px) {
+  .key-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+}
+@media (max-width: 640px) {
+  .main-content { padding: 16px; }
+  .topbar-inner { padding: 0 12px; }
+  .section-header { flex-direction: column; align-items: flex-start; }
+  .custom-row { flex-direction: column; align-items: stretch; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-glow bg-glow--tl"></div>
+<div class="bg-glow bg-glow--br"></div>
+
+<div class="progress-track" id="progressBar" style="width:0%"></div>
+<div class="toast-stack" id="toastStack"></div>
+<div class="ctx-menu" id="ctxMenu" style="display:none"></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-header">
+      <div class="logo-area">
+        <div class="logo-icon">&#9673;</div>
+        <span class="logo-text">计算器按键素材库</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a href="index.html" class="back-link">&larr; 返回首页</a>
+        <button class="theme-btn" data-theme-btn="dark-tech" onclick="__theme.switch('dark-tech')" style="background:#0a0a0f;border-color:#6366f1;"></button>
+        <button class="theme-btn" data-theme-btn="light-clean" onclick="__theme.switch('light-clean')" style="background:#f8f9fa;border-color:#2563eb;"></button>
+        <button class="theme-btn" data-theme-btn="kids-color" onclick="__theme.switch('kids-color')" style="background:#fff8e7;border-color:#ff6b6b;"></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="main-content">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">计算器按键素材</h2>
+      <p class="section-subtitle">10 种风格 × 8 种配色 × 40 个按键 = 3200 种组合，Canvas 实时渲染，支持 PNG/JPG/SVG 导出</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary);cursor:pointer;">
+        <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this.checked)" style="accent-color:var(--accent-secondary);"> 全选
+      </label>
+    </div>
+  </div>
+
+  <div class="control-panel">
+    <div class="control-row">
+      <span class="control-label">按键风格</span>
+      <div class="style-tabs" id="styleTabs"></div>
+    </div>
+    <div class="control-row">
+      <span class="control-label">配色方案</span>
+      <div class="color-chips" id="colorChips"></div>
+    </div>
+  </div>
+
+  <div class="batch-bar hidden" id="batchBar">
+    <span class="batch-count" id="batchCount">0</span>
+    <span style="font-size:13px;color:var(--text-secondary);">已选择</span>
+    <button class="btn-primary" onclick="batchDownload('png')" style="padding:6px 16px;font-size:13px;">批量 PNG</button>
+    <button class="btn-primary" onclick="batchDownload('jpg')" style="padding:6px 16px;font-size:13px;">批量 JPG</button>
+    <button class="btn-primary" onclick="batchDownload('svg')" style="padding:6px 16px;font-size:13px;">批量 SVG</button>
+    <button class="btn-secondary" onclick="clearSelection()" style="padding:6px 16px;font-size:13px;">取消选择</button>
+  </div>
+
+  <div class="filter-tabs" id="filterTabs">
+    <div class="filter-tab active" data-cat="all" onclick="filterBy('all')">全部</div>
+    <div class="filter-tab" data-cat="num" onclick="filterBy('num')">数字</div>
+    <div class="filter-tab" data-cat="op" onclick="filterBy('op')">运算符</div>
+    <div class="filter-tab" data-cat="func" onclick="filterBy('func')">功能</div>
+    <div class="filter-tab" data-cat="mem" onclick="filterBy('mem')">内存</div>
+    <div class="filter-tab" data-cat="adv" onclick="filterBy('adv')">高级</div>
+  </div>
+
+  <div class="key-grid" id="keyGrid"></div>
+
+  <div class="custom-panel">
+    <div class="custom-panel-title">自定义按键生成器</div>
+    <div class="custom-row">
+      <div class="custom-field">
+        <label>按键文字</label>
+        <input type="text" id="customText" value="=" maxlength="4">
+      </div>
+      <div class="custom-field">
+        <label>按键类型</label>
+        <select id="customType">
+          <option value="num">数字</option>
+          <option value="op" selected>运算符</option>
+          <option value="func">功能</option>
+          <option value="mem">内存</option>
+          <option value="adv">高级</option>
+        </select>
+      </div>
+      <div class="custom-field">
+        <label>风格</label>
+        <select id="customStyle"></select>
+      </div>
+      <div class="custom-field">
+        <label>配色</label>
+        <select id="customColor"></select>
+      </div>
+      <div class="custom-field">
+        <label>尺寸</label>
+        <select id="customSize">
+          <option value="128">128px</option>
+          <option value="256" selected>256px</option>
+          <option value="512">512px</option>
+          <option value="1024">1024px</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="updateCustomPreview()" style="padding:8px 18px;font-size:13px;">预览</button>
+    </div>
+    <div class="custom-preview-wrap">
+      <div class="custom-preview-box" id="customPreviewBox">
+        <canvas id="customCanvas" width="256" height="256"></canvas>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn-primary" onclick="downloadCustom('png')" style="padding:8px 20px;font-size:13px;">下载 PNG</button>
+        <button class="btn-primary" onclick="downloadCustom('jpg')" style="padding:8px 20px;font-size:13px;">下载 JPG</button>
+        <button class="btn-primary" onclick="downloadCustom('svg')" style="padding:8px 20px;font-size:13px;">下载 SVG</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="modal-bg" id="modalBg" style="display:none" onclick="closeModal(event)">
+  <div class="modal-panel modal-preview" id="modalPanel" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 style="font-size:18px;font-weight:600;" id="modalTitle"></h3>
+      <button onclick="closeModal()" style="background:none;border:none;color:var(--text-secondary);font-size:20px;cursor:pointer;">&times;</button>
+    </div>
+    <div id="modalContent" style="display:flex;justify-content:center;"></div>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;" id="modalActions"></div>
+  </div>
+</div>
+
+<script src="js/theme.js"></script>
+<script src="js/export.js"></script>
+<script>
+var fontsLoaded = false;
+var currentFilter = 'all';
+var selection = new Set();
+var currentStyle = 'modern';
+var currentColor = 'indigo';
+
+var FF = "'Noto Sans SC', 'Space Grotesk', sans-serif";
+var FM = "'Space Grotesk', 'Noto Sans SC', sans-serif";
+
+function getFont() { return fontsLoaded ? FF : 'sans-serif'; }
+function getMonoFont() { return fontsLoaded ? FM : 'sans-serif'; }
+
+function cssVar(name, fallback) {
+  try {
+    var val = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return val || fallback;
+  } catch(e) { return fallback; }
+}
+
+function hsl(h, s, l) { return 'hsl(' + h + ',' + s + '%,' + l + '%)'; }
+function hsla(h, s, l, a) { return 'hsla(' + h + ',' + s + '%,' + l + '%,' + a + ')'; }
+
+function hexToRgba(hex, alpha) {
+  var r = parseInt(hex.slice(1, 3), 16);
+  var g = parseInt(hex.slice(3, 5), 16);
+  var b = parseInt(hex.slice(5, 7), 16);
+  return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+}
+
+/* ================================================================
+   Color Variants base hue per variant
+   ================================================================ */
+var colorVariants = {
+  indigo:    { hue: 245, name: '靛蓝' },
+  warm:      { hue: 18,  name: '暖色' },
+  cool:      { hue: 195, name: '冷色' },
+  forest:    { hue: 145, name: '森林' },
+  rose:      { hue: 340, name: '玫瑰' },
+  gold:      { hue: 43,  name: '金色' },
+  midnight:  { hue: 260, name: '午夜' },
+  monochrome:{ hue: 0,   name: '单色', sat: 0 }
+};
+
+function getVariantHue(variant) {
+  return colorVariants[variant] ? colorVariants[variant].hue : 245;
+}
+function getVariantSat(variant) {
+  return colorVariants[variant] && colorVariants[variant].sat !== undefined ? colorVariants[variant].sat : 75;
+}
+
+/* key type colors derived from base hue */
+function getKeyColors(type, variant) {
+  var h = getVariantHue(variant);
+  var s = getVariantSat(variant);
+  var colors = {
+    num:  { bg: hsl(h, s, 92), text: hsl(h, s, 25), border: hsl(h, s, 80) },
+    op:   { bg: hsl(h, s, 55), text: '#ffffff', border: hsl(h, s, 45) },
+    func: { bg: hsl(h, s, 35), text: '#ffffff', border: hsl(h, s, 25) },
+    mem:  { bg: hsl(h, s, 70), text: hsl(h, s, 15), border: hsl(h, s, 60) },
+    adv:  { bg: hsl(h, s, 85), text: hsl(h, s, 20), border: hsl(h, s, 65) }
+  };
+  if (variant === 'monochrome') {
+    colors = {
+      num:  { bg: '#f5f5f5', text: '#333333', border: '#dddddd' },
+      op:   { bg: '#555555', text: '#ffffff', border: '#444444' },
+      func: { bg: '#333333', text: '#ffffff', border: '#222222' },
+      mem:  { bg: '#aaaaaa', text: '#222222', border: '#999999' },
+      adv:  { bg: '#e0e0e0', text: '#444444', border: '#cccccc' }
+    };
+  }
+  return colors[type] || colors.num;
+}
+
+/* ================================================================
+   40 Keys
+   ================================================================ */
+var keys = [
+  { id:'k0',  label:'0',  type:'num' },
+  { id:'k1',  label:'1',  type:'num' },
+  { id:'k2',  label:'2',  type:'num' },
+  { id:'k3',  label:'3',  type:'num' },
+  { id:'k4',  label:'4',  type:'num' },
+  { id:'k5',  label:'5',  type:'num' },
+  { id:'k6',  label:'6',  type:'num' },
+  { id:'k7',  label:'7',  type:'num' },
+  { id:'k8',  label:'8',  type:'num' },
+  { id:'k9',  label:'9',  type:'num' },
+  { id:'k00', label:'00', type:'num' },
+  { id:'kdot',label:'.',  type:'num' },
+  { id:'kadd',label:'+',  type:'op' },
+  { id:'ksub',label:'-',  type:'op' },
+  { id:'kmul',label:'\u00d7', type:'op' },
+  { id:'kdiv',label:'\u00f7', type:'op' },
+  { id:'keq', label:'=',  type:'op' },
+  { id:'kc',  label:'C',  type:'func' },
+  { id:'kce', label:'CE', type:'func' },
+  { id:'kdel',label:'DEL',type:'func' },
+  { id:'kpm', label:'\u00b1', type:'func' },
+  { id:'kpct',label:'%',  type:'func' },
+  { id:'ksqrt',label:'\u221a', type:'func' },
+  { id:'ksq', label:'x\u00b2', type:'func' },
+  { id:'kinv',label:'1/x',type:'func' },
+  { id:'kmc', label:'MC', type:'mem' },
+  { id:'kmr', label:'MR', type:'mem' },
+  { id:'kms', label:'MS', type:'mem' },
+  { id:'kmp', label:'M+', type:'mem' },
+  { id:'kmm', label:'M-', type:'mem' },
+  { id:'ksin',label:'sin',type:'adv' },
+  { id:'kcos',label:'cos',type:'adv' },
+  { id:'ktan',label:'tan',type:'adv' },
+  { id:'klog',label:'log',type:'adv' },
+  { id:'kln', label:'ln', type:'adv' },
+  { id:'kpi', label:'\u03c0', type:'adv' },
+  { id:'ke',  label:'e',  type:'adv' },
+  { id:'klp', label:'(',  type:'adv' },
+  { id:'krp', label:')',  type:'adv' },
+  { id:'kpow',label:'x\u207f', type:'adv' }
+];
+
+var styles = ['modern','skeuomorph','flat','glass','neon','retro','minimal','soft','material','cyber'];
+var styleNames = {
+  modern:'现代', skeuomorph:'拟物', flat:'扁平', glass:'玻璃',
+  neon:'霓虹', retro:'复古', minimal:'极简', soft:'柔和',
+  material:'材料', cyber:'赛博'
+};
+
+/* ================================================================
+   Style Renderers: each returns { canvas, svgString }
+   ================================================================ */
+
+function roundRectPath(ctx, x, y, w, h, r) {
+  r = Math.max(0, Math.min(r, Math.min(w, h) / 2));
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function makeCanvas(size) {
+  var c = document.createElement('canvas');
+  c.width = size; c.height = size;
+  return c;
+}
+
+function drawKeyModern(ctx, size, label, colors, variant) {
+  var p = size * 0.06;
+  var s = size - p * 2;
+  var r = size * 0.12;
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.fillStyle = colors.bg;
+  ctx.fill();
+  ctx.strokeStyle = colors.border;
+  ctx.lineWidth = Math.max(1, size * 0.008);
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.stroke();
+  ctx.fillStyle = colors.text;
+  var fs = size * (label.length > 2 ? 0.18 : 0.28);
+  ctx.font = '700 ' + fs + 'px "Space Grotesk", system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, size / 2, size / 2 + size * 0.01);
+}
+
+function drawKeySkeuomorph(ctx, size, label, colors, variant) {
+  var p = size * 0.06;
+  var s = size - p * 2;
+  var r = size * 0.12;
+  var grad = ctx.createLinearGradient(p, p, p, p + s);
+  grad.addColorStop(0, colors.bg);
+  grad.addColorStop(1, hsla(getVariantHue(variant), getVariantSat(variant), 40, 1));
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.fillStyle = grad;
+  ctx.fill();
+  var shine = ctx.createLinearGradient(p, p, p + s, p + s);
+  shine.addColorStop(0, 'rgba(255,255,255,0.25)');
+  shine.addColorStop(0.5, 'rgba(255,255,255,0)');
+  shine.addColorStop(1, 'rgba(0,0,0,0.1)');
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.fillStyle = shine;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+  ctx.lineWidth = Math.max(1, size * 0.006);
+  roundRectPath(ctx, p + size * 0.015, p + size * 0.015, s - size * 0.03, s - size * 0.03, r * 0.8);
+  ctx.stroke();
+  ctx.fillStyle = colors.text;
+  var fs = size * (label.length > 2 ? 0.18 : 0.28);
+  ctx.font = '700 ' + fs + 'px "Space Grotesk", system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, size / 2, size / 2 + size * 0.01);
+}
+
+function drawKeyFlat(ctx, size, label, colors, variant) {
+  var p = size * 0.06;
+  var s = size - p * 2;
+  var r = size * 0.08;
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.fillStyle = colors.bg;
+  ctx.fill();
+  ctx.fillStyle = colors.text;
+  var fs = size * (label.length > 2 ? 0.18 : 0.28);
+  ctx.font = '700 ' + fs + 'px "Space Grotesk", system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, size / 2, size / 2 + size * 0.01);
+}
+
+function drawKeyGlass(ctx, size, label, colors, variant) {
+  var p = size * 0.06;
+  var s = size - p * 2;
+  var r = size * 0.14;
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.fillStyle = hsla(getVariantHue(variant), getVariantSat(variant), 80, 0.15);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+  ctx.lineWidth = Math.max(1, size * 0.01);
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.stroke();
+  var shine = ctx.createLinearGradient(p, p, p + s, p);
+  shine.addColorStop(0, 'rgba(255,255,255,0.2)');
+  shine.addColorStop(1, 'rgba(255,255,255,0)');
+  roundRectPath(ctx, p, p, s, s * 0.5, r);
+  ctx.fillStyle = shine;
+  ctx.fill();
+  ctx.fillStyle = colors.text;
+  var fs = size * (label.length > 2 ? 0.18 : 0.28);
+  ctx.font = '700 ' + fs + 'px "Space Grotesk", system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(0,0,0,0.4)';
+  ctx.shadowBlur = size * 0.02;
+  ctx.fillText(label, size / 2, size / 2 + size * 0.01);
+  ctx.shadowBlur = 0;
+}
+
+function drawKeyNeon(ctx, size, label, colors, variant) {
+  var p = size * 0.06;
+  var s = size - p * 2;
+  var r = size * 0.1;
+  var h = getVariantHue(variant);
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.fillStyle = '#0a0a12';
+  ctx.fill();
+  ctx.shadowColor = hsl(h, getVariantSat(variant), 60);
+  ctx.shadowBlur = size * 0.04;
+  ctx.strokeStyle = hsl(h, getVariantSat(variant), 60);
+  ctx.lineWidth = Math.max(1, size * 0.012);
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = hsl(h, getVariantSat(variant), 75);
+  var fs = size * (label.length > 2 ? 0.18 : 0.28);
+  ctx.font = '700 ' + fs + 'px "Space Grotesk", system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.shadowColor = hsl(h, getVariantSat(variant), 60);
+  ctx.shadowBlur = size * 0.025;
+  ctx.fillText(label, size / 2, size / 2 + size * 0.01);
+  ctx.shadowBlur = 0;
+}
+
+function drawKeyRetro(ctx, size, label, colors, variant) {
+  var p = size * 0.06;
+  var s = size - p * 2;
+  var r = size * 0.04;
+  var retroBg = variant === 'monochrome' ? '#e8e4dc' : '#f5f0e6';
+  var retroBorder = variant === 'monochrome' ? '#999' : '#8b7355';
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.fillStyle = retroBg;
+  ctx.fill();
+  ctx.strokeStyle = retroBorder;
+  ctx.lineWidth = Math.max(2, size * 0.012);
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.stroke();
+  ctx.fillStyle = retroBorder;
+  var fs = size * (label.length > 2 ? 0.16 : 0.24);
+  ctx.font = '700 ' + fs + 'px "Space Grotesk", monospace, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, size / 2, size / 2 + size * 0.01);
+}
+
+function drawKeyMinimal(ctx, size, label, colors, variant) {
+  var p = size * 0.06;
+  var s = size - p * 2;
+  var r = size * 0.12;
+  ctx.strokeStyle = colors.border;
+  ctx.lineWidth = Math.max(1, size * 0.008);
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.stroke();
+  ctx.fillStyle = colors.text;
+  var fs = size * (label.length > 2 ? 0.18 : 0.28);
+  ctx.font = '500 ' + fs + 'px "Space Grotesk", system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, size / 2, size / 2 + size * 0.01);
+}
+
+function drawKeySoft(ctx, size, label, colors, variant) {
+  var p = size * 0.06;
+  var s = size - p * 2;
+  var r = size * 0.3;
+  var grad = ctx.createLinearGradient(p, p, p + s, p + s);
+  grad.addColorStop(0, colors.bg);
+  grad.addColorStop(1, hsl(getVariantHue(variant), Math.max(20, getVariantSat(variant) - 20), 88));
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.strokeStyle = colors.border;
+  ctx.lineWidth = Math.max(1, size * 0.006);
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.stroke();
+  ctx.fillStyle = colors.text;
+  var fs = size * (label.length > 2 ? 0.18 : 0.28);
+  ctx.font = '700 ' + fs + 'px "Space Grotesk", system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, size / 2, size / 2 + size * 0.01);
+}
+
+function drawKeyMaterial(ctx, size, label, colors, variant) {
+  var p = size * 0.06;
+  var s = size - p * 2;
+  var r = size * 0.1;
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.fillStyle = colors.bg;
+  ctx.fill();
+  ctx.shadowColor = 'rgba(0,0,0,0.2)';
+  ctx.shadowBlur = size * 0.03;
+  ctx.shadowOffsetY = size * 0.015;
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
+  ctx.fillStyle = colors.text;
+  var fs = size * (label.length > 2 ? 0.18 : 0.28);
+  ctx.font = '700 ' + fs + 'px "Space Grotesk", system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, size / 2, size / 2 + size * 0.01);
+}
+
+function drawKeyCyber(ctx, size, label, colors, variant) {
+  var p = size * 0.06;
+  var s = size - p * 2;
+  var r = size * 0.06;
+  var h = getVariantHue(variant);
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.fillStyle = '#080810';
+  ctx.fill();
+  ctx.strokeStyle = hsl(h, getVariantSat(variant), 50);
+  ctx.lineWidth = Math.max(1, size * 0.008);
+  roundRectPath(ctx, p, p, s, s, r);
+  ctx.stroke();
+  var gs = size * 0.04;
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  for (var gx = p; gx < p + s; gx += gs) {
+    ctx.beginPath(); ctx.moveTo(gx, p); ctx.lineTo(gx, p + s); ctx.stroke();
+  }
+  for (var gy = p; gy < p + s; gy += gs) {
+    ctx.beginPath(); ctx.moveTo(p, gy); ctx.lineTo(p + s, gy); ctx.stroke();
+  }
+  ctx.fillStyle = hsl(h, getVariantSat(variant), 65);
+  var fs = size * (label.length > 2 ? 0.18 : 0.28);
+  ctx.font = '700 ' + fs + 'px "Space Grotesk", system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, size / 2, size / 2 + size * 0.01);
+}
+
+var styleDrawers = {
+  modern: drawKeyModern,
+  skeuomorph: drawKeySkeuomorph,
+  flat: drawKeyFlat,
+  glass: drawKeyGlass,
+  neon: drawKeyNeon,
+  retro: drawKeyRetro,
+  minimal: drawKeyMinimal,
+  soft: drawKeySoft,
+  material: drawKeyMaterial,
+  cyber: drawKeyCyber
+};
+
+/* ================================================================
+   renderKeyToCanvas: main entry for rendering a key
+   ================================================================ */
+function renderKeyToCanvas(style, colorVariant, keyObj, size) {
+  size = size || 256;
+  var c = makeCanvas(size);
+  var ctx = c.getContext('2d');
+  var colors = getKeyColors(keyObj.type, colorVariant);
+  var drawer = styleDrawers[style] || drawKeyModern;
+  drawer(ctx, size, keyObj.label, colors, colorVariant);
+  return c;
+}
+
+/* ================================================================
+   SVG Generators per style
+   ================================================================ */
+function svgRect(x, y, w, h, r, fill, stroke, sw) {
+  var rx = r != null ? ' rx="' + r + '" ry="' + r + '"' : '';
+  var s = stroke ? ' stroke="' + stroke + '"' : '';
+  var swA = sw ? ' stroke-width="' + sw + '"' : '';
+  return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '"' + rx + ' fill="' + fill + '"' + s + swA + '/>';
+}
+function svgText(x, y, text, fill, fontSize, align, bold) {
+  var a = align ? ' text-anchor="' + align + '"' : '';
+  var fw = bold ? ' font-weight="bold"' : '';
+  return '<text x="' + x + '" y="' + y + '"' + a + ' font-family="' + getFont() + '" font-size="' + fontSize + '" fill="' + fill + '"' + fw + '>' + text + '</text>';
+}
+function svgWrap(w, h, defs, content) {
+  var d = defs ? '<defs>' + defs + '</defs>' : '';
+  return '<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' + d + content + '\n</svg>';
+}
+
+function genKeySvg(style, colorVariant, keyObj, size) {
+  size = size || 256;
+  var p = Math.round(size * 0.06);
+  var s = size - p * 2;
+  var r = Math.round(size * 0.12);
+  var colors = getKeyColors(keyObj.type, colorVariant);
+  var h = getVariantHue(colorVariant);
+  var sat = getVariantSat(colorVariant);
+  var label = keyObj.label;
+  var fs = Math.round(size * (label.length > 2 ? 0.18 : 0.28));
+  var content = '';
+
+  if (style === 'modern') {
+    content += svgRect(p, p, s, s, r, colors.bg, colors.border, Math.max(1, Math.round(size * 0.008)));
+    content += svgText(size / 2, size / 2 + size * 0.02, label, colors.text, fs + 'px', 'middle', true);
+  } else if (style === 'skeuomorph') {
+    var gradId = 'skg' + h + sat;
+    var defs = '<linearGradient id="' + gradId + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + colors.bg + '"/><stop offset="100%" stop-color="' + hsl(h, sat, 40) + '"/></linearGradient>';
+    content += svgRect(p, p, s, s, r, 'url(#' + gradId + ')', null, 0);
+    content += svgText(size / 2, size / 2 + size * 0.02, label, colors.text, fs + 'px', 'middle', true);
+    return svgWrap(size, size, defs, content);
+  } else if (style === 'flat') {
+    r = Math.round(size * 0.08);
+    content += svgRect(p, p, s, s, r, colors.bg, null, 0);
+    content += svgText(size / 2, size / 2 + size * 0.02, label, colors.text, fs + 'px', 'middle', true);
+  } else if (style === 'glass') {
+    r = Math.round(size * 0.14);
+    content += svgRect(p, p, s, s, r, hsla(h, sat, 80, 0.15), 'rgba(255,255,255,0.25)', Math.max(1, Math.round(size * 0.01)));
+    content += svgText(size / 2, size / 2 + size * 0.02, label, colors.text, fs + 'px', 'middle', true);
+  } else if (style === 'neon') {
+    r = Math.round(size * 0.1);
+    content += svgRect(p, p, s, s, r, '#0a0a12', hsl(h, sat, 60), Math.max(1, Math.round(size * 0.012)));
+    content += svgText(size / 2, size / 2 + size * 0.02, label, hsl(h, sat, 75), fs + 'px', 'middle', true);
+  } else if (style === 'retro') {
+    r = Math.round(size * 0.04);
+    var rb = colorVariant === 'monochrome' ? '#e8e4dc' : '#f5f0e6';
+    var rbo = colorVariant === 'monochrome' ? '#999' : '#8b7355';
+    content += svgRect(p, p, s, s, r, rb, rbo, Math.max(2, Math.round(size * 0.012)));
+    content += svgText(size / 2, size / 2 + size * 0.02, label, rbo, Math.round(size * (label.length > 2 ? 0.16 : 0.24)) + 'px', 'middle', true);
+  } else if (style === 'minimal') {
+    content += svgRect(p, p, s, s, r, 'none', colors.border, Math.max(1, Math.round(size * 0.008)));
+    content += svgText(size / 2, size / 2 + size * 0.02, label, colors.text, fs + 'px', 'middle', false);
+  } else if (style === 'soft') {
+    r = Math.round(size * 0.3);
+    var gradId = 'sg' + h + sat;
+    var defs = '<linearGradient id="' + gradId + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="' + colors.bg + '"/><stop offset="100%" stop-color="' + hsl(h, Math.max(20, sat - 20), 88) + '"/></linearGradient>';
+    content += svgRect(p, p, s, s, r, 'url(#' + gradId + ')', colors.border, Math.max(1, Math.round(size * 0.006)));
+    content += svgText(size / 2, size / 2 + size * 0.02, label, colors.text, fs + 'px', 'middle', true);
+    return svgWrap(size, size, defs, content);
+  } else if (style === 'material') {
+    r = Math.round(size * 0.1);
+    content += svgRect(p, p, s, s, r, colors.bg, null, 0);
+    content += svgText(size / 2, size / 2 + size * 0.02, label, colors.text, fs + 'px', 'middle', true);
+  } else if (style === 'cyber') {
+    r = Math.round(size * 0.06);
+    content += svgRect(p, p, s, s, r, '#080810', hsl(h, sat, 50), Math.max(1, Math.round(size * 0.008)));
+    content += svgText(size / 2, size / 2 + size * 0.02, label, hsl(h, sat, 65), fs + 'px', 'middle', true);
+  } else {
+    content += svgRect(p, p, s, s, r, colors.bg, colors.border, Math.max(1, Math.round(size * 0.008)));
+    content += svgText(size / 2, size / 2 + size * 0.02, label, colors.text, fs + 'px', 'middle', true);
+  }
+  return svgWrap(size, size, '', content);
+}
+
+/* ================================================================
+   UI Builders
+   ================================================================ */
+function buildStyleTabs() {
+  var container = document.getElementById('styleTabs');
+  var html = '';
+  styles.forEach(function(st) {
+    var active = st === currentStyle ? ' active' : '';
+    html += '<button class="style-tab' + active + '" data-style="' + st + '" onclick="setStyle(\'' + st + '\')">' + styleNames[st] + '</button>';
+  });
+  container.innerHTML = html;
+}
+
+function buildColorChips() {
+  var container = document.getElementById('colorChips');
+  var html = '';
+  Object.keys(colorVariants).forEach(function(cv) {
+    var v = colorVariants[cv];
+    var active = cv === currentColor ? ' active' : '';
+    var color = hsl(v.hue, v.sat !== undefined ? v.sat : 70, 55);
+    html += '<div class="color-chip' + active + '" data-color="' + cv + '" onclick="setColor(\'' + cv + '\')" style="background:' + color + '"><span class="color-chip-name">' + v.name + '</span></div>';
+  });
+  container.innerHTML = html;
+}
+
+function buildCustomSelectors() {
+  var sSel = document.getElementById('customStyle');
+  var cSel = document.getElementById('customColor');
+  var sHtml = '', cHtml = '';
+  styles.forEach(function(st) {
+    sHtml += '<option value="' + st + '">' + styleNames[st] + '</option>';
+  });
+  Object.keys(colorVariants).forEach(function(cv) {
+    cHtml += '<option value="' + cv + '">' + colorVariants[cv].name + '</option>';
+  });
+  sSel.innerHTML = sHtml;
+  cSel.innerHTML = cHtml;
+  sSel.value = currentStyle;
+  cSel.value = currentColor;
+}
+
+/* ================================================================
+   State setters
+   ================================================================ */
+function setStyle(st) {
+  currentStyle = st;
+  buildStyleTabs();
+  renderAll();
+  updateCustomPreview();
+}
+
+function setColor(cv) {
+  currentColor = cv;
+  buildColorChips();
+  renderAll();
+  updateCustomPreview();
+}
+
+function filterBy(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('#filterTabs .filter-tab').forEach(function(t) {
+    t.classList.toggle('active', t.dataset.cat === cat);
+  });
+  renderAll();
+}
+
+/* ================================================================
+   Grid Rendering
+   ================================================================ */
+function renderAll() {
+  var container = document.getElementById('keyGrid');
+  var html = '';
+  keys.forEach(function(key, idx) {
+    if (currentFilter !== 'all' && key.type !== currentFilter) return;
+    var selected = selection.has(idx) ? ' selected' : '';
+    var checked = selection.has(idx) ? ' checked' : '';
+    html += '<div class="key-card' + selected + '" data-idx="' + idx + '" data-type="' + key.type + '" data-label="' + key.label + '" onclick="toggleItem(' + idx + ')">';
+    html += '<input type="checkbox" class="key-card-check"' + checked + ' onchange="event.stopPropagation();toggleItem(' + idx + ')" onclick="event.stopPropagation()">';
+    html += '<div class="key-card-preview"><canvas id="key-canvas-' + idx + '" width="200" height="200"></canvas></div>';
+    html += '<div class="key-card-info"><div class="key-card-name">' + key.label + '</div>';
+    html += '<div class="key-card-actions">';
+    html += '<button class="btn btn-primary-s" onclick="event.stopPropagation();previewKey(' + idx + ')">预览</button>';
+    html += '<button class="btn" onclick="event.stopPropagation();downloadKeyPng(' + idx + ')">PNG</button>';
+    html += '<button class="btn" onclick="event.stopPropagation();downloadKeyJpg(' + idx + ')">JPG</button>';
+    html += '<button class="btn" onclick="event.stopPropagation();downloadKeySvg(' + idx + ')">SVG</button>';
+    html += '</div></div></div>';
+  });
+  container.innerHTML = html;
+  keys.forEach(function(key, idx) {
+    if (currentFilter !== 'all' && key.type !== currentFilter) return;
+    var canvas = document.getElementById('key-canvas-' + idx);
+    if (canvas) {
+      var c = renderKeyToCanvas(currentStyle, currentColor, key, 200);
+      var ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 200, 200);
+      ctx.drawImage(c, 0, 0);
+    }
+  });
+}
+
+/* ================================================================
+   Selection & Batch
+   ================================================================ */
+function toggleItem(idx) {
+  if (selection.has(idx)) selection.delete(idx);
+  else selection.add(idx);
+  updateUI();
+}
+
+function toggleSelectAll(checked) {
+  selection.clear();
+  if (checked) {
+    keys.forEach(function(key, idx) {
+      if (currentFilter === 'all' || key.type === currentFilter) selection.add(idx);
+    });
+  }
+  updateUI();
+}
+
+function clearSelection() {
+  selection.clear();
+  updateUI();
+}
+
+function updateUI() {
+  var bar = document.getElementById('batchBar');
+  var count = selection.size;
+  document.getElementById('batchCount').textContent = count;
+  bar.classList.toggle('hidden', count === 0);
+  document.querySelectorAll('.key-card').forEach(function(card) {
+    var idx = parseInt(card.dataset.idx);
+    card.classList.toggle('selected', selection.has(idx));
+    var cb = card.querySelector('.key-card-check');
+    if (cb) cb.checked = selection.has(idx);
+  });
+}
+
+/* ================================================================
+   Individual Downloads
+   ================================================================ */
+function downloadKeyPng(idx) {
+  var key = keys[idx];
+  var c = renderKeyToCanvas(currentStyle, currentColor, key, 512);
+  __export.exportPngTransparent(c, keyName(key));
+}
+
+function downloadKeyJpg(idx) {
+  var key = keys[idx];
+  var c = renderKeyToCanvas(currentStyle, currentColor, key, 512);
+  __export.exportJpg(c, keyName(key), 0.95);
+}
+
+function downloadKeySvg(idx) {
+  var key = keys[idx];
+  var svg = genKeySvg(currentStyle, currentColor, key, 512);
+  __export.exportSvg(svg, keyName(key));
+}
+
+function keyName(key) {
+  return 'key_' + currentStyle + '_' + currentColor + '_' + key.type + '_' + key.label.replace(/[^a-zA-Z0-9]/g, '');
+}
+
+function previewKey(idx) {
+  var key = keys[idx];
+  document.getElementById('modalTitle').textContent = key.label + ' (' + styleNames[currentStyle] + ' / ' + colorVariants[currentColor].name + ')';
+  var container = document.getElementById('modalContent');
+  container.innerHTML = '';
+  var c = renderKeyToCanvas(currentStyle, currentColor, key, 512);
+  c.style.maxWidth = '100%';
+  c.style.maxHeight = '60vh';
+  c.style.borderRadius = '8px';
+  container.appendChild(c);
+  var actions = document.getElementById('modalActions');
+  actions.innerHTML = '';
+  var btns = [
+    { label: 'PNG (透明)', fn: function() { __export.exportPngTransparent(c, keyName(key)); } },
+    { label: 'PNG (白底)', fn: function() { __export.exportPngWhite(c, keyName(key)); } },
+    { label: 'JPG', fn: function() { __export.exportJpg(c, keyName(key), 0.95); } },
+    { label: 'SVG', fn: function() { __export.exportSvg(genKeySvg(currentStyle, currentColor, key, 512), keyName(key)); } }
+  ];
+  btns.forEach(function(b) {
+    var btn = document.createElement('button');
+    btn.className = 'btn-primary';
+    btn.style.padding = '8px 16px';
+    btn.style.fontSize = '13px';
+    btn.textContent = b.label;
+    btn.onclick = b.fn;
+    actions.appendChild(btn);
+  });
+  document.getElementById('modalBg').style.display = 'flex';
+}
+
+function closeModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('modalBg').style.display = 'none';
+}
+
+/* ================================================================
+   Batch Download
+   ================================================================ */
+function batchDownload(fmt) {
+  if (selection.size === 0) { __export.toast('请先选择按键', 'err'); return; }
+  var arr = Array.from(selection).sort(function(a, b) { return a - b; });
+  var total = arr.length;
+  __export.setProgress(5);
+
+  function processNext(i) {
+    if (i >= total) {
+      __export.setProgress(100);
+      setTimeout(function() { __export.setProgress(0); }, 800);
+      __export.toast('批量导出完成 (' + total + ' 个)', 'ok');
+      return;
+    }
+    var idx = arr[i];
+    var key = keys[idx];
+    var name = keyName(key);
+    if (fmt === 'svg') {
+      var svgStr = genKeySvg(currentStyle, currentColor, key, 512);
+      var blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+      __export.downloadBlob(blob, name + '.svg');
+    } else if (fmt === 'png') {
+      var c = renderKeyToCanvas(currentStyle, currentColor, key, 512);
+      __export.canvasToBlob(c, 'image/png').then(function(blob) {
+        __export.downloadBlob(blob, name + '.png');
+      });
+    } else if (fmt === 'jpg') {
+      var c2 = renderKeyToCanvas(currentStyle, currentColor, key, 512);
+      var w = c2.width, h = c2.height;
+      var jc = document.createElement('canvas');
+      jc.width = w; jc.height = h;
+      var jctx = jc.getContext('2d');
+      jctx.fillStyle = '#fff';
+      jctx.fillRect(0, 0, w, h);
+      jctx.drawImage(c2, 0, 0);
+      __export.canvasToBlob(jc, 'image/jpeg', 0.95).then(function(blob) {
+        __export.downloadBlob(blob, name + '.jpg');
+      });
+    }
+    __export.setProgress(Math.round(((i + 1) / total) * 95));
+    setTimeout(function() { processNext(i + 1); }, 120);
+  }
+  processNext(0);
+}
+
+/* ================================================================
+   Custom Panel
+   ================================================================ */
+function updateCustomPreview() {
+  var text = document.getElementById('customText').value || '?';
+  var type = document.getElementById('customType').value;
+  var style = document.getElementById('customStyle').value;
+  var color = document.getElementById('customColor').value;
+  var size = parseInt(document.getElementById('customSize').value) || 256;
+  var keyObj = { label: text, type: type };
+  var c = renderKeyToCanvas(style, color, keyObj, size);
+  var box = document.getElementById('customPreviewBox');
+  box.innerHTML = '';
+  c.id = 'customCanvas';
+  c.style.maxWidth = '90%';
+  c.style.maxHeight = '90%';
+  box.appendChild(c);
+}
+
+function downloadCustom(fmt) {
+  var text = document.getElementById('customText').value || '?';
+  var type = document.getElementById('customType').value;
+  var style = document.getElementById('customStyle').value;
+  var color = document.getElementById('customColor').value;
+  var size = parseInt(document.getElementById('customSize').value) || 256;
+  var keyObj = { label: text, type: type };
+  var name = 'custom_key_' + style + '_' + color + '_' + type + '_' + text.replace(/[^a-zA-Z0-9]/g, '');
+  if (fmt === 'svg') {
+    var svgStr = genKeySvg(style, color, keyObj, size);
+    __export.exportSvg(svgStr, name);
+  } else if (fmt === 'png') {
+    var c = renderKeyToCanvas(style, color, keyObj, size);
+    __export.exportPngTransparent(c, name);
+  } else if (fmt === 'jpg') {
+    var c2 = renderKeyToCanvas(style, color, keyObj, size);
+    var w = c2.width, h = c2.height;
+    var jc = document.createElement('canvas');
+    jc.width = w; jc.height = h;
+    var jctx = jc.getContext('2d');
+    jctx.fillStyle = '#fff';
+    jctx.fillRect(0, 0, w, h);
+    jctx.drawImage(c2, 0, 0);
+    __export.exportJpg(jc, name, 0.95);
+  }
+}
+
+/* ================================================================
+   Init
+   ================================================================ */
+function init() {
+  buildStyleTabs();
+  buildColorChips();
+  buildCustomSelectors();
+  renderAll();
+  updateCustomPreview();
+
+  document.fonts.ready.then(function() {
+    fontsLoaded = true;
+    renderAll();
+    updateCustomPreview();
+  });
+
+  document.addEventListener('themechange', function() {
+    renderAll();
+    updateCustomPreview();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
+
+  document.getElementById('customText').addEventListener('input', updateCustomPreview);
+  document.getElementById('customType').addEventListener('change', updateCustomPreview);
+  document.getElementById('customStyle').addEventListener('change', updateCustomPreview);
+  document.getElementById('customColor').addEventListener('change', updateCustomPreview);
+  document.getElementById('customSize').addEventListener('change', updateCustomPreview);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

@@ -1,0 +1,2769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI组件素材 - 图形化编程素材库</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/themes.css">
+<link rel="stylesheet" href="css/common.css">
+<style>
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #222240;
+  --border-color: #2a2a4a;
+  --border-glow: #4f46e5;
+  --text-primary: #e8e8f0;
+  --text-secondary: #9898b8;
+  --text-muted: #6868a8;
+  --accent-purple: #a855f7;
+  --accent-green: #34d399;
+  --accent-orange: #fb923c;
+  --accent-pink: #f472b6;
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px var(--glow-indigo);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+body {
+  font-family: 'Noto Sans SC', 'Space Grotesk', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+h1, h2, h3 { font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+}
+.topbar-inner { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+.topbar-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
+.logo-area { display: flex; align-items: center; gap: 12px; }
+.logo-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.logo-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.topbar-actions { display: flex; align-items: center; gap: 12px; }
+.main-content { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.section-title { font-size: 24px; font-weight: 700; color: var(--text-primary); }
+.section-subtitle { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+.batch-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  animation: slideDown 0.3s ease;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.batch-bar.hidden { display: none; }
+.batch-count {
+  background: var(--accent); color: white;
+  padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;
+}
+.btn {
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card); color: var(--text-primary);
+  transition: all var(--transition-fast);
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.btn:hover { background: var(--bg-card-hover); border-color: var(--accent); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent-hover); box-shadow: var(--shadow-glow); }
+.btn-danger { border-color: #ef4444; color: #ef4444; }
+.btn-danger:hover { background: rgba(239, 68, 68, 0.15); }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.style-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.style-tab {
+  padding: 8px 16px; border-radius: var(--radius-xl);
+  font-size: 13px; cursor: pointer;
+  border: 1px solid var(--border-color);
+  background: transparent; color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+.style-tab:hover { border-color: var(--accent); color: var(--text-primary); }
+.style-tab.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: var(--shadow-glow); }
+.variant-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+.variant-tab {
+  padding: 6px 14px; border-radius: var(--radius-xl);
+  font-size: 12px; cursor: pointer;
+  border: 1px solid var(--border-color);
+  background: transparent; color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+.variant-tab:hover { border-color: var(--accent); color: var(--text-primary); }
+.variant-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+.search-box {
+  display: flex; align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 8px 14px; gap: 8px;
+  margin-bottom: 20px; max-width: 400px;
+}
+.search-box input {
+  background: transparent; border: none; outline: none;
+  color: var(--text-primary); font-size: 14px; width: 100%;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.search-box input::placeholder { color: var(--text-muted); }
+.ui-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.ui-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  position: relative; cursor: pointer;
+}
+.ui-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--shadow-glow); }
+.ui-card.selected { border-color: var(--accent-secondary); box-shadow: 0 0 16px var(--accent-glow); }
+.ui-card-check {
+  position: absolute; top: 12px; left: 12px; z-index: 5;
+  width: 22px; height: 22px;
+  accent-color: var(--accent-secondary); cursor: pointer;
+}
+.ui-card-preview {
+  width: 100%; aspect-ratio: 3/1;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.ui-card-preview canvas { width: 100%; height: 100%; display: block; }
+.ui-card-info { padding: 14px; }
+.ui-card-name { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px; }
+.ui-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.ui-card-actions .btn { flex: 1; justify-content: center; min-width: 50px; }
+.progress-track {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+  z-index: 9999; transition: width 0.3s ease;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+.toast-stack {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%); z-index: 10001;
+  display: flex; flex-direction: column; gap: 8px;
+  align-items: center; pointer-events: none;
+}
+.toast-msg {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  color: var(--text-primary); padding: 12px 24px;
+  border-radius: 12px; font-size: 0.88rem; font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  animation: toastSlide 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+  white-space: nowrap; pointer-events: auto; display: flex; align-items: center; gap: 8px;
+}
+.toast-msg.out { animation: toastOut 0.25s ease forwards; }
+.toast-msg.ok { border-color: #34d399; border-left: 3px solid #34d399; }
+.toast-msg.err { border-color: #f87171; border-left: 3px solid #f87171; }
+@keyframes toastSlide {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(20px); }
+}
+.theme-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid transparent; cursor: pointer;
+  transition: all 0.2s ease; padding: 0;
+}
+.theme-btn:hover { transform: scale(1.15); }
+.theme-btn.active { border-color: var(--accent-secondary); box-shadow: 0 0 10px var(--accent-glow); }
+@media (max-width: 768px) {
+  .ui-grid { grid-template-columns: 1fr; }
+  .topbar-inner { padding: 0 12px; }
+  .section-header { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+<div class="progress-track" id="progressBar" style="width:0%"></div>
+<div class="toast-stack" id="toastStack"></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-header">
+      <div class="logo-area">
+        <div class="logo-icon">&#9632;</div>
+        <span class="logo-text">UI组件素材库</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="theme-btn" data-theme-btn="dark-tech" onclick="__theme.switch('dark-tech')" style="background:#0a0a0f;border-color:#6366f1;"></button>
+        <button class="theme-btn" data-theme-btn="light-clean" onclick="__theme.switch('light-clean')" style="background:#f8f9fa;border-color:#2563eb;"></button>
+        <button class="theme-btn" data-theme-btn="kids-color" onclick="__theme.switch('kids-color')" style="background:#fff8e7;border-color:#ff6b6b;"></button>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="main-content">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">UI组件素材</h2>
+      <p class="section-subtitle">Canvas生成的UI组件，支持PNG/JPG/SVG导出，50个组件，10个分类</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary);cursor:pointer;">
+        <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this.checked)" style="accent-color:var(--accent-secondary);"> 全选
+      </label>
+    </div>
+  </div>
+  <div class="batch-bar hidden" id="batchBar">
+    <span class="batch-count" id="batchCount">0</span>
+    <span style="font-size:13px;color:var(--text-secondary);">已选择</span>
+    <button class="btn btn-primary" onclick="batchDownload()">批量下载 (ZIP)</button>
+    <button class="btn btn-danger" onclick="clearSelection()">取消选择</button>
+  </div>
+  <div class="search-box">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input type="text" id="searchInput" placeholder="搜索组件名称..." oninput="handleSearch(this.value)">
+  </div>
+  <div class="style-tabs" id="subTabs">
+    <div class="style-tab active" data-cat="all" onclick="filterBy('all')">全部</div>
+    <div class="style-tab" data-cat="buttons" onclick="filterBy('buttons')">按钮</div>
+    <div class="style-tab" data-cat="inputs" onclick="filterBy('inputs')">输入框</div>
+    <div class="style-tab" data-cat="selection" onclick="filterBy('selection')">选择控件</div>
+    <div class="style-tab" data-cat="progress" onclick="filterBy('progress')">进度与加载</div>
+    <div class="style-tab" data-cat="info" onclick="filterBy('info')">信息展示</div>
+    <div class="style-tab" data-cat="navigation" onclick="filterBy('navigation')">导航</div>
+    <div class="style-tab" data-cat="feedback" onclick="filterBy('feedback')">反馈</div>
+    <div class="style-tab" data-cat="data" onclick="filterBy('data')">数据展示</div>
+    <div class="style-tab" data-cat="media" onclick="filterBy('media')">媒体控件</div>
+    <div class="style-tab" data-cat="social" onclick="filterBy('social')">社交元素</div>
+  </div>
+  <div class="variant-tabs" id="variantTabs">
+    <div class="variant-tab active" data-variant="default" onclick="filterVariant('default')">默认</div>
+    <div class="variant-tab" data-variant="primary" onclick="filterVariant('primary')">主要</div>
+    <div class="variant-tab" data-variant="success" onclick="filterVariant('success')">成功</div>
+    <div class="variant-tab" data-variant="warning" onclick="filterVariant('warning')">警告</div>
+    <div class="variant-tab" data-variant="danger" onclick="filterVariant('danger')">危险</div>
+  </div>
+  <div class="ui-grid" id="assetGrid"></div>
+</main>
+<script src="js/theme.js"></script>
+<script src="js/export.js"></script>
+<script>
+var fontsLoaded = false;
+var currentFilter = 'all';
+var currentVariant = 'default';
+var searchQuery = '';
+var selection = new Set();
+var PREVIEW_W = 360, PREVIEW_H = 120;
+var EXPORT_W = 400, EXPORT_H = 200;
+function cssVar(name, fallback) {
+  try { var val = getComputedStyle(document.documentElement).getPropertyValue(name).trim(); return val || fallback; }
+  catch(e) { return fallback; }
+}
+function hexToRgba(hex, alpha) {
+  var r = parseInt(hex.slice(1, 3), 16);
+  var g = parseInt(hex.slice(3, 5), 16);
+  var b = parseInt(hex.slice(5, 7), 16);
+  return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+}
+function roundRect(ctx, x, y, w, h, r) {
+  r = Math.max(0, Math.min(r, Math.min(w, h) / 2));
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+function svgRect(x, y, w, h, r, fill, stroke, sw) {
+  var rx = r ? ' rx="' + r + '" ry="' + r + '"' : '';
+  var s = stroke ? ' stroke="' + stroke + '"' : '';
+  var swA = sw ? ' stroke-width="' + sw + '"' : '';
+  return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '"' + rx + ' fill="' + fill + '"' + s + swA + '/>';
+}
+function svgCircle(cx, cy, r, fill, stroke, sw) {
+  var s = stroke ? ' stroke="' + stroke + '"' : '';
+  var swA = sw ? ' stroke-width="' + sw + '"' : '';
+  return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + fill + '"' + s + swA + '/>';
+}
+function svgText(x, y, text, fill, fontSize, align, family, bold) {
+  var a = align ? ' text-anchor="' + align + '"' : '';
+  var fw = bold ? ' font-weight="bold"' : '';
+  var fm = family || 'sans-serif';
+  return '<text x="' + x + '" y="' + y + '"' + a + ' font-family="' + fm + '" font-size="' + fontSize + '" fill="' + fill + '"' + fw + '>' + text + '</text>';
+}
+function svgPath(d, fill, stroke, sw) {
+  var f = fill ? ' fill="' + fill + '"' : ' fill="none"';
+  var s = stroke ? ' stroke="' + stroke + '"' : '';
+  var swA = sw ? ' stroke-width="' + sw + '"' : '';
+  return '<path d="' + d + '"' + f + s + swA + '/>';
+}
+function svgGradient(id, x1, y1, x2, y2, stops) {
+  var s = '';
+  stops.forEach(function(st) { s += '<stop offset="' + st[0] + '" stop-color="' + st[1] + '"/>'; });
+  return '<linearGradient id="' + id + '" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '">' + s + '</linearGradient>';
+}
+function svgWrap(w, h, defs, content) {
+  var d = defs ? '<defs>' + defs + '</defs>' : '';
+  return '<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' + d + content + '\n</svg>';
+}
+function getVariantColor(variant) {
+  if (variant === 'primary') return cssVar('--accent', '#6366f1');
+  if (variant === 'success') return cssVar('--success', '#34d399');
+  if (variant === 'warning') return cssVar('--warning', '#fbbf24');
+  if (variant === 'danger') return cssVar('--danger', '#f87171');
+  return cssVar('--accent', '#6366f1');
+}
+function getVariantColorSecondary(variant) {
+  if (variant === 'primary') return cssVar('--accent-secondary', '#22d3ee');
+  if (variant === 'success') return cssVar('--accent-green', '#34d399');
+  if (variant === 'warning') return cssVar('--accent-orange', '#fb923c');
+  if (variant === 'danger') return cssVar('--accent-pink', '#f472b6');
+  return cssVar('--accent-secondary', '#22d3ee');
+}
+var FF = "'Noto Sans SC', sans-serif";
+var FM = "'Space Grotesk', sans-serif";
+function getFont() { return fontsLoaded ? FF : 'sans-serif'; }
+function getMonoFont() { return fontsLoaded ? FM : 'sans-serif'; }
+/* ========== 1. Buttons ========== */
+function renderBtnRounded(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.fillStyle = color; roundRect(ctx, bx, by, bw, bh, 10); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 15px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('确认', bx + bw / 2, by + bh / 2);
+}
+function genBtnRoundedSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  return svgWrap(w, h, '', svgRect(bx, by, bw, bh, 10, color) + svgText(bx + bw / 2, by + bh / 2 + 5, '确认', '#ffffff', '15px', 'middle', getFont(), true));
+}
+function renderBtnPill(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.fillStyle = color; roundRect(ctx, bx, by, bw, bh, bh / 2); ctx.fill();
+  ctx.fillStyle = bgPrimary; ctx.font = 'bold 15px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('开始', bx + bw / 2, by + bh / 2);
+}
+function genBtnPillSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  return svgWrap(w, h, '', svgRect(bx, by, bw, bh, 22, color) + svgText(bx + bw / 2, by + bh / 2 + 5, '开始', bgPrimary, '15px', 'middle', getFont(), true));
+}
+function renderBtnGradient(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var grad = ctx.createLinearGradient(bx, by, bx + bw, by);
+  grad.addColorStop(0, color); grad.addColorStop(1, color2);
+  ctx.fillStyle = grad; roundRect(ctx, bx, by, bw, bh, 10); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 15px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('提交', bx + bw / 2, by + bh / 2);
+}
+function genBtnGradientSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var defs = svgGradient('g1', bx, by, bx + bw, by, [['0%', color], ['100%', color2]]);
+  return svgWrap(w, h, defs, svgRect(bx, by, bw, bh, 10, 'url(#g1)') + svgText(bx + bw / 2, by + bh / 2 + 5, '提交', '#ffffff', '15px', 'middle', getFont(), true));
+}
+function renderBtnOutline(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.strokeStyle = color; ctx.lineWidth = 2; roundRect(ctx, bx, by, bw, bh, 10); ctx.stroke();
+  ctx.fillStyle = color; ctx.font = 'bold 15px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('取消', bx + bw / 2, by + bh / 2);
+}
+function genBtnOutlineSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  return svgWrap(w, h, '', svgRect(bx, by, bw, bh, 10, 'transparent', color, 2) + svgText(bx + bw / 2, by + bh / 2 + 5, '取消', color, '15px', 'middle', getFont(), true));
+}
+function renderBtnIcon(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var bw = 44, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, bx, by, bw, bh, 10); ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(bx + 14, by + 14); ctx.lineTo(bx + 30, by + 30); ctx.moveTo(bx + 30, by + 14); ctx.lineTo(bx + 14, by + 30); ctx.stroke();
+}
+function genBtnIconSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var bw = 44, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var p = svgPath('M' + (bx + 14) + ',' + (by + 14) + ' L' + (bx + 30) + ',' + (by + 30) + ' M' + (bx + 30) + ',' + (by + 14) + ' L' + (bx + 14) + ',' + (by + 30), '', color, 2);
+  return svgWrap(w, h, '', svgRect(bx, by, bw, bh, 10, bgCard) + p);
+}
+function renderBtnGhost(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.fillStyle = hexToRgba(color, 0.1); roundRect(ctx, bx, by, bw, bh, 10); ctx.fill();
+  ctx.fillStyle = color; ctx.font = 'bold 15px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('幽灵', bx + bw / 2, by + bh / 2);
+}
+function genBtnGhostSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  return svgWrap(w, h, '', svgRect(bx, by, bw, bh, 10, hexToRgba(color, 0.1)) + svgText(bx + bw / 2, by + bh / 2 + 5, '幽灵', color, '15px', 'middle', getFont(), true));
+}
+function renderBtnDropdown(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.fillStyle = color; roundRect(ctx, bx, by, bw, bh, 10); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 15px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('选项', bx + bw / 2 - 10, by + bh / 2);
+  ctx.beginPath(); ctx.moveTo(bx + bw - 24, by + bh / 2 - 3); ctx.lineTo(bx + bw - 18, by + bh / 2 + 3); ctx.lineTo(bx + bw - 12, by + bh / 2 - 3); ctx.fill();
+}
+function genBtnDropdownSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var arrow = svgPath('M' + (bx + bw - 24) + ',' + (by + bh / 2 - 3) + ' L' + (bx + bw - 18) + ',' + (by + bh / 2 + 3) + ' L' + (bx + bw - 12) + ',' + (by + bh / 2 - 3) + ' Z', '#ffffff');
+  return svgWrap(w, h, '', svgRect(bx, by, bw, bh, 10, color) + svgText(bx + bw / 2 - 10, by + bh / 2 + 5, '选项', '#ffffff', '15px', 'middle', getFont(), true) + arrow);
+}
+function renderBtnGroup(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var bw = 160, bh = 36, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var seg = bw / 3;
+  ctx.fillStyle = color; roundRect(ctx, bx, by, seg, bh, 6); ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 1.5; roundRect(ctx, bx + seg, by, seg, bh, 0); ctx.stroke(); roundRect(ctx, bx + seg * 2, by, seg, bh, 0); ctx.stroke();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 13px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('左', bx + seg / 2, by + bh / 2);
+  ctx.fillStyle = color; ctx.fillText('中', bx + seg + seg / 2, by + bh / 2); ctx.fillText('右', bx + seg * 2 + seg / 2, by + bh / 2);
+}
+function genBtnGroupSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var bw = 160, bh = 36, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var seg = bw / 3;
+  var c = svgRect(bx, by, seg, bh, 6, color);
+  c += svgRect(bx + seg, by, seg, bh, 0, 'transparent', color, 1.5);
+  c += svgRect(bx + seg * 2, by, seg, bh, 0, 'transparent', color, 1.5);
+  c += svgText(bx + seg / 2, by + bh / 2 + 4, '左', '#ffffff', '13px', 'middle', getFont(), true);
+  c += svgText(bx + seg + seg / 2, by + bh / 2 + 4, '中', color, '13px', 'middle', getFont(), true);
+  c += svgText(bx + seg * 2 + seg / 2, by + bh / 2 + 4, '右', color, '13px', 'middle', getFont(), true);
+  return svgWrap(w, h, '', c);
+}
+function renderBtnLoading(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.fillStyle = color; roundRect(ctx, bx, by, bw, bh, 10); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 15px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('加载中', bx + bw / 2 + 10, by + bh / 2);
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(bx + 30, by + bh / 2, 8, 0, Math.PI * 1.5); ctx.stroke();
+}
+function genBtnLoadingSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var arc = svgPath('M' + (bx + 30) + ',' + (by + bh / 2 - 8) + ' A8,8 0 1,1 ' + (bx + 30 + 8) + ',' + (by + bh / 2), '', '#ffffff', 2);
+  return svgWrap(w, h, '', svgRect(bx, by, bw, bh, 10, color) + svgText(bx + bw / 2 + 10, by + bh / 2 + 5, '加载中', '#ffffff', '15px', 'middle', getFont(), true) + arc);
+}
+function renderBtnFab(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var s = 56, sx = (w - s) / 2, sy = (h - s) / 2;
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(sx + s / 2, sy + s / 2, s / 2, 0, Math.PI * 2); ctx.fill();
+  ctx.shadowColor = 'rgba(0,0,0,0.3)'; ctx.shadowBlur = 12; ctx.fill(); ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(sx + s / 2, sy + 16); ctx.lineTo(sx + s / 2, sy + s - 16); ctx.moveTo(sx + 16, sy + s / 2); ctx.lineTo(sx + s - 16, sy + s / 2); ctx.stroke();
+}
+function genBtnFabSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var s = 56, sx = (w - s) / 2, sy = (h - s) / 2;
+  var p = svgPath('M' + (sx + s / 2) + ',' + (sy + 16) + ' L' + (sx + s / 2) + ',' + (sy + s - 16) + ' M' + (sx + 16) + ',' + (sy + s / 2) + ' L' + (sx + s - 16) + ',' + (sy + s / 2), '', '#ffffff', 3);
+  return svgWrap(w, h, '', svgCircle(sx + s / 2, sy + s / 2, s / 2, color) + p);
+}
+/* ========== 2. Inputs ========== */
+function renderInputText(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var iw = 240, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy, iw, ih, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, ix, iy, iw, ih, 8); ctx.stroke();
+  ctx.fillStyle = textMuted; ctx.font = '14px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('请输入内容...', ix + 14, iy + ih / 2);
+}
+function genInputTextSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var iw = 240, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  return svgWrap(w, h, '', svgRect(ix, iy, iw, ih, 8, bgCard) + svgRect(ix, iy, iw, ih, 8, 'transparent', borderColor, 1.5) + svgText(ix + 14, iy + ih / 2 + 5, '请输入内容...', textMuted, '14px', 'start', getFont()));
+}
+function renderInputSearch(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var iw = 240, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy, iw, ih, ih / 2); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, ix, iy, iw, ih, ih / 2); ctx.stroke();
+  ctx.strokeStyle = textMuted; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(ix + 22, iy + ih / 2, 6, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ix + 26, iy + ih / 2 + 4); ctx.lineTo(ix + 32, iy + ih / 2 + 10); ctx.stroke();
+  ctx.fillStyle = textMuted; ctx.font = '14px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('搜索...', ix + 42, iy + ih / 2);
+}
+function genInputSearchSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var iw = 240, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  var circ = svgCircle(ix + 22, iy + ih / 2, 6, 'transparent', textMuted, 1.5);
+  var line = svgPath('M' + (ix + 26) + ',' + (iy + ih / 2 + 4) + ' L' + (ix + 32) + ',' + (iy + ih / 2 + 10), '', textMuted, 1.5);
+  return svgWrap(w, h, '', svgRect(ix, iy, iw, ih, 20, bgCard) + svgRect(ix, iy, iw, ih, 20, 'transparent', borderColor, 1.5) + circ + line + svgText(ix + 42, iy + ih / 2 + 5, '搜索...', textMuted, '14px', 'start', getFont()));
+}
+function renderInputNumber(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var iw = 160, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy, iw, ih, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, ix, iy, iw, ih, 8); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = 'bold 16px ' + getMonoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('42', ix + iw / 2, iy + ih / 2);
+  ctx.fillStyle = textMuted; ctx.font = '18px sans-serif';
+  ctx.fillText('▲', ix + iw - 22, iy + 12); ctx.fillText('▼', ix + iw - 22, iy + ih - 12);
+}
+function genInputNumberSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var iw = 160, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  return svgWrap(w, h, '', svgRect(ix, iy, iw, ih, 8, bgCard) + svgRect(ix, iy, iw, ih, 8, 'transparent', borderColor, 1.5) + svgText(ix + iw / 2, iy + ih / 2 + 5, '42', textPrimary, '16px', 'middle', getMonoFont(), true) + svgText(ix + iw - 22, iy + 12, '▲', textMuted, '12px', 'middle') + svgText(ix + iw - 22, iy + ih - 12, '▼', textMuted, '12px', 'middle'));
+}
+function renderInputPassword(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var iw = 240, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy, iw, ih, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, ix, iy, iw, ih, 8); ctx.stroke();
+  ctx.fillStyle = textMuted; ctx.font = '14px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('••••••••', ix + 14, iy + ih / 2);
+  ctx.strokeStyle = textMuted; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(ix + iw - 22, iy + ih / 2, 5, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ix + iw - 26, iy + ih / 2); ctx.lineTo(ix + iw - 18, iy + ih / 2); ctx.stroke();
+}
+function genInputPasswordSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var iw = 240, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  var eye = svgCircle(ix + iw - 22, iy + ih / 2, 5, 'transparent', textMuted, 1.5);
+  var line = svgPath('M' + (ix + iw - 26) + ',' + (iy + ih / 2) + ' L' + (ix + iw - 18) + ',' + (iy + ih / 2), '', textMuted, 1.5);
+  return svgWrap(w, h, '', svgRect(ix, iy, iw, ih, 8, bgCard) + svgRect(ix, iy, iw, ih, 8, 'transparent', borderColor, 1.5) + svgText(ix + 14, iy + ih / 2 + 5, '••••••••', textMuted, '14px', 'start', getFont()) + eye + line);
+}
+function renderInputTextarea(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var accent = cssVar('--accent', '#6366f1');
+  var iw = 240, ih = 70, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy, iw, ih, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, ix, iy, iw, ih, 8); ctx.stroke();
+  ctx.fillStyle = textMuted; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('请输入多行文本...', ix + 12, iy + 10);
+  ctx.fillStyle = accent;
+  ctx.fillRect(ix + 12, iy + 32, 60, 2); ctx.fillRect(ix + 12, iy + 40, 40, 2); ctx.fillRect(ix + 12, iy + 48, 80, 2);
+}
+function genInputTextareaSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var accent = cssVar('--accent', '#6366f1');
+  var iw = 240, ih = 70, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  return svgWrap(w, h, '', svgRect(ix, iy, iw, ih, 8, bgCard) + svgRect(ix, iy, iw, ih, 8, 'transparent', borderColor, 1.5) + svgText(ix + 12, iy + 22, '请输入多行文本...', textMuted, '13px', 'start', getFont()) + svgRect(ix + 12, iy + 32, 60, 2, 0, accent) + svgRect(ix + 12, iy + 40, 40, 2, 0, accent) + svgRect(ix + 12, iy + 48, 80, 2, 0, accent));
+}
+function renderInputTag(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var color = getVariantColor(variant);
+  var iw = 260, ih = 44, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy, iw, ih, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, ix, iy, iw, ih, 8); ctx.stroke();
+  var tags = ['JS', 'CSS']; var tx = ix + 10;
+  tags.forEach(function(tag) {
+    ctx.fillStyle = hexToRgba(color, 0.2); roundRect(ctx, tx, iy + 8, 40, 28, 6); ctx.fill();
+    ctx.fillStyle = color; ctx.font = 'bold 12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(tag, tx + 20, iy + 22); tx += 48;
+  });
+  ctx.fillStyle = textPrimary; ctx.font = '14px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('添加标签...', tx + 6, iy + ih / 2);
+}
+function genInputTagSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var color = getVariantColor(variant);
+  var iw = 260, ih = 44, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  var r1 = svgRect(ix + 10, iy + 8, 40, 28, 6, hexToRgba(color, 0.2));
+  var t1 = svgText(ix + 30, iy + 26, 'JS', color, '12px', 'middle', getFont(), true);
+  var r2 = svgRect(ix + 58, iy + 8, 40, 28, 6, hexToRgba(color, 0.2));
+  var t2 = svgText(ix + 78, iy + 26, 'CSS', color, '12px', 'middle', getFont(), true);
+  var t3 = svgText(ix + 112, iy + ih / 2 + 5, '添加标签...', textPrimary, '14px', 'start', getFont());
+  return svgWrap(w, h, '', svgRect(ix, iy, iw, ih, 8, bgCard) + svgRect(ix, iy, iw, ih, 8, 'transparent', borderColor, 1.5) + r1 + t1 + r2 + t2 + t3);
+}
+function renderInputAutocomplete(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textSecondary = cssVar('--text-secondary', '#9898b8');
+  var accent = cssVar('--accent', '#6366f1');
+  var iw = 240, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy, iw, ih, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, ix, iy, iw, ih, 8); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = '14px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('React', ix + 14, iy + ih / 2);
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy + ih + 4, iw, 80, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, ix, iy + ih + 4, iw, 80, 8); ctx.stroke();
+  var items = ['React', 'React Native', 'Redux'];
+  items.forEach(function(item, i) {
+    ctx.fillStyle = i === 0 ? accent : textSecondary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(item, ix + 14, iy + ih + 20 + i * 24);
+  });
+}
+function genInputAutocompleteSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textSecondary = cssVar('--text-secondary', '#9898b8');
+  var accent = cssVar('--accent', '#6366f1');
+  var iw = 240, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  var d = svgRect(ix, iy + ih + 4, iw, 80, 8, bgCard);
+  var dbr = svgRect(ix, iy + ih + 4, iw, 80, 8, 'transparent', borderColor, 1);
+  var i1 = svgText(ix + 14, iy + ih + 24, 'React', accent, '13px', 'start', getFont());
+  var i2 = svgText(ix + 14, iy + ih + 48, 'React Native', textSecondary, '13px', 'start', getFont());
+  var i3 = svgText(ix + 14, iy + ih + 72, 'Redux', textSecondary, '13px', 'start', getFont());
+  return svgWrap(w, h, '', svgRect(ix, iy, iw, ih, 8, bgCard) + svgRect(ix, iy, iw, ih, 8, 'transparent', borderColor, 1.5) + svgText(ix + 14, iy + ih / 2 + 5, 'React', textPrimary, '14px', 'start', getFont()) + d + dbr + i1 + i2 + i3);
+}
+function renderInputColor(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var iw = 180, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy, iw, ih, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, ix, iy, iw, ih, 8); ctx.stroke();
+  ctx.fillStyle = '#ff6b6b'; roundRect(ctx, ix + 10, iy + 8, 24, 24, 4); ctx.fill();
+  ctx.fillStyle = textPrimary; ctx.font = '14px ' + getMonoFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('#FF6B6B', ix + 44, iy + ih / 2);
+}
+function genInputColorSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var iw = 180, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  return svgWrap(w, h, '', svgRect(ix, iy, iw, ih, 8, bgCard) + svgRect(ix, iy, iw, ih, 8, 'transparent', borderColor, 1.5) + svgRect(ix + 10, iy + 8, 24, 24, 4, '#ff6b6b') + svgText(ix + 44, iy + ih / 2 + 5, '#FF6B6B', textPrimary, '14px', 'start', getMonoFont()));
+}
+function renderInputDate(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var iw = 180, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy, iw, ih, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, ix, iy, iw, ih, 8); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = '14px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('2024-06-12', ix + 14, iy + ih / 2);
+  ctx.strokeStyle = textMuted; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(ix + iw - 28, iy + 10); ctx.lineTo(ix + iw - 20, iy + 10); ctx.lineTo(ix + iw - 20, iy + 18); ctx.lineTo(ix + iw - 28, iy + 18); ctx.closePath(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ix + iw - 28, iy + 14); ctx.lineTo(ix + iw - 20, iy + 14); ctx.stroke();
+}
+function genInputDateSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var iw = 180, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  var cal = svgPath('M' + (ix + iw - 28) + ',' + (iy + 10) + ' L' + (ix + iw - 20) + ',' + (iy + 10) + ' L' + (ix + iw - 20) + ',' + (iy + 18) + ' L' + (ix + iw - 28) + ',' + (iy + 18) + ' Z', 'transparent', textMuted, 1.5);
+  var line = svgPath('M' + (ix + iw - 28) + ',' + (iy + 14) + ' L' + (ix + iw - 20) + ',' + (iy + 14), '', textMuted, 1.5);
+  return svgWrap(w, h, '', svgRect(ix, iy, iw, ih, 8, bgCard) + svgRect(ix, iy, iw, ih, 8, 'transparent', borderColor, 1.5) + svgText(ix + 14, iy + ih / 2 + 5, '2024-06-12', textPrimary, '14px', 'start', getFont()) + cal + line);
+}
+function renderInputFile(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var bw = 180, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.setLineDash([6, 4]); roundRect(ctx, bx, by, bw, bh, 10); ctx.stroke(); ctx.setLineDash([]);
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(bx + bw / 2 - 6, by + bh / 2 - 4); ctx.lineTo(bx + bw / 2, by + bh / 2 - 10); ctx.lineTo(bx + bw / 2 + 6, by + bh / 2 - 4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(bx + bw / 2, by + bh / 2 - 6); ctx.lineTo(bx + bw / 2, by + bh / 2 + 8); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('点击上传', bx + bw / 2, by + bh / 2 + 14);
+}
+function genInputFileSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var bw = 180, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var arrow = svgPath('M' + (bx + bw / 2 - 6) + ',' + (by + bh / 2 - 4) + ' L' + (bx + bw / 2) + ',' + (by + bh / 2 - 10) + ' L' + (bx + bw / 2 + 6) + ',' + (by + bh / 2 - 4), 'transparent', color, 2);
+  var line = svgPath('M' + (bx + bw / 2) + ',' + (by + bh / 2 - 6) + ' L' + (bx + bw / 2) + ',' + (by + bh / 2 + 8), '', color, 2);
+  return svgWrap(w, h, '', svgRect(bx, by, bw, bh, 10, 'transparent', color, 2) + arrow + line + svgText(bx + bw / 2, by + bh / 2 + 19, '点击上传', textPrimary, '13px', 'middle', getFont()));
+}
+/* ========== 3. Selection ========== */
+function renderToggleOn(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var tw = 52, th = 28, tx = (w - tw) / 2, ty = (h - th) / 2;
+  ctx.fillStyle = color; roundRect(ctx, tx, ty, tw, th, th / 2); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(tx + tw - th / 2, ty + th / 2, th / 2 - 3, 0, Math.PI * 2); ctx.fill();
+}
+function genToggleOnSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var tw = 52, th = 28, tx = (w - tw) / 2, ty = (h - th) / 2;
+  return svgWrap(w, h, '', svgRect(tx, ty, tw, th, 14, color) + svgCircle(tx + tw - 14, ty + 14, 11, '#ffffff'));
+}
+function renderToggleOff(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var tw = 52, th = 28, tx = (w - tw) / 2, ty = (h - th) / 2;
+  ctx.fillStyle = borderColor; roundRect(ctx, tx, ty, tw, th, th / 2); ctx.fill();
+  ctx.fillStyle = textMuted; ctx.beginPath(); ctx.arc(tx + th / 2, ty + th / 2, th / 2 - 3, 0, Math.PI * 2); ctx.fill();
+}
+function genToggleOffSvg(w, h, variant) {
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var tw = 52, th = 28, tx = (w - tw) / 2, ty = (h - th) / 2;
+  return svgWrap(w, h, '', svgRect(tx, ty, tw, th, 14, borderColor) + svgCircle(tx + 14, ty + 14, 11, textMuted));
+}
+function renderCheckboxChecked(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var s = 22, sx = (w - s) / 2, sy = (h - s) / 2;
+  ctx.fillStyle = color; roundRect(ctx, sx, sy, s, s, 4); ctx.fill();
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.beginPath(); ctx.moveTo(sx + 5, sy + s / 2); ctx.lineTo(sx + s / 2 - 1, sy + s - 6); ctx.lineTo(sx + s - 5, sy + 5); ctx.stroke();
+}
+function genCheckboxCheckedSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var s = 22, sx = (w - s) / 2, sy = (h - s) / 2;
+  var check = svgPath('M' + (sx + 5) + ',' + (sy + s / 2) + ' L' + (sx + s / 2 - 1) + ',' + (sy + s - 6) + ' L' + (sx + s - 5) + ',' + (sy + 5), '', '#ffffff', 2.5);
+  return svgWrap(w, h, '', svgRect(sx, sy, s, s, 4, color) + check);
+}
+function renderCheckboxEmpty(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var s = 22, sx = (w - s) / 2, sy = (h - s) / 2;
+  ctx.strokeStyle = textMuted; ctx.lineWidth = 2; roundRect(ctx, sx, sy, s, s, 4); ctx.stroke();
+}
+function genCheckboxEmptySvg(w, h, variant) {
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var s = 22, sx = (w - s) / 2, sy = (h - s) / 2;
+  return svgWrap(w, h, '', svgRect(sx, sy, s, s, 4, 'transparent', textMuted, 2));
+}
+function renderRadioSelected(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var s = 22, sx = (w - s) / 2, sy = (h - s) / 2;
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(sx + s / 2, sy + s / 2, s / 2 - 1, 0, Math.PI * 2); ctx.stroke();
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(sx + s / 2, sy + s / 2, s / 2 - 6, 0, Math.PI * 2); ctx.fill();
+}
+function genRadioSelectedSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var s = 22, sx = (w - s) / 2, sy = (h - s) / 2;
+  return svgWrap(w, h, '', svgCircle(sx + s / 2, sy + s / 2, s / 2 - 1, 'transparent', color, 2) + svgCircle(sx + s / 2, sy + s / 2, s / 2 - 6, color));
+}
+function renderRadioEmpty(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var s = 22, sx = (w - s) / 2, sy = (h - s) / 2;
+  ctx.strokeStyle = textMuted; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(sx + s / 2, sy + s / 2, s / 2 - 1, 0, Math.PI * 2); ctx.stroke();
+}
+function genRadioEmptySvg(w, h, variant) {
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var s = 22, sx = (w - s) / 2, sy = (h - s) / 2;
+  return svgWrap(w, h, '', svgCircle(sx + s / 2, sy + s / 2, s / 2 - 1, 'transparent', textMuted, 2));
+}
+function renderSelectDropdown(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var iw = 200, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy, iw, ih, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, ix, iy, iw, ih, 8); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = '14px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('请选择', ix + 14, iy + ih / 2);
+  ctx.fillStyle = borderColor;
+  ctx.beginPath(); ctx.moveTo(ix + iw - 22, iy + ih / 2 - 3); ctx.lineTo(ix + iw - 16, iy + ih / 2 + 3); ctx.lineTo(ix + iw - 10, iy + ih / 2 - 3); ctx.fill();
+}
+function genSelectDropdownSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var iw = 200, ih = 40, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  var arrow = svgPath('M' + (ix + iw - 22) + ',' + (iy + ih / 2 - 3) + ' L' + (ix + iw - 16) + ',' + (iy + ih / 2 + 3) + ' L' + (ix + iw - 10) + ',' + (iy + ih / 2 - 3) + ' Z', borderColor);
+  return svgWrap(w, h, '', svgRect(ix, iy, iw, ih, 8, bgCard) + svgRect(ix, iy, iw, ih, 8, 'transparent', borderColor, 1.5) + svgText(ix + 14, iy + ih / 2 + 5, '请选择', textPrimary, '14px', 'start', getFont()) + arrow);
+}
+function renderSelectMulti(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var color = getVariantColor(variant);
+  var iw = 220, ih = 44, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ix, iy, iw, ih, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, ix, iy, iw, ih, 8); ctx.stroke();
+  var tags = ['A', 'B']; var tx = ix + 10;
+  tags.forEach(function(tag) {
+    ctx.fillStyle = color; roundRect(ctx, tx, iy + 10, 32, 24, 4); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(tag, tx + 16, iy + 22); tx += 40;
+  });
+  ctx.fillStyle = textPrimary; ctx.font = '14px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('+2', tx + 6, iy + ih / 2);
+}
+function genSelectMultiSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var color = getVariantColor(variant);
+  var iw = 220, ih = 44, ix = (w - iw) / 2, iy = (h - ih) / 2;
+  var r1 = svgRect(ix + 10, iy + 10, 32, 24, 4, color);
+  var t1 = svgText(ix + 26, iy + 24, 'A', '#ffffff', '12px', 'middle', getFont(), true);
+  var r2 = svgRect(ix + 50, iy + 10, 32, 24, 4, color);
+  var t2 = svgText(ix + 66, iy + 24, 'B', '#ffffff', '12px', 'middle', getFont(), true);
+  var t3 = svgText(ix + 96, iy + ih / 2 + 5, '+2', textPrimary, '14px', 'start', getFont());
+  return svgWrap(w, h, '', svgRect(ix, iy, iw, ih, 8, bgCard) + svgRect(ix, iy, iw, ih, 8, 'transparent', borderColor, 1.5) + r1 + t1 + r2 + t2 + t3);
+}
+function renderSegmentControl(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var tw = 240, th = 36, tx = (w - tw) / 2, ty = (h - th) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, tx, ty, tw, th, 8); ctx.fill();
+  var seg = tw / 3;
+  ctx.fillStyle = color; roundRect(ctx, tx + seg + 2, ty + 2, seg - 4, th - 4, 6); ctx.fill();
+  var tabs = ['日', '周', '月'];
+  tabs.forEach(function(tab, i) {
+    ctx.fillStyle = i === 1 ? '#ffffff' : textMuted; ctx.font = 'bold 13px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(tab, tx + i * seg + seg / 2, ty + th / 2);
+  });
+}
+function genSegmentControlSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var tw = 240, th = 36, tx = (w - tw) / 2, ty = (h - th) / 2;
+  var seg = tw / 3;
+  var active = svgRect(tx + seg + 2, ty + 2, seg - 4, th - 4, 6, color);
+  var t1 = svgText(tx + seg / 2, ty + th / 2 + 5, '日', textMuted, '13px', 'middle', getFont(), true);
+  var t2 = svgText(tx + seg + seg / 2, ty + th / 2 + 5, '周', '#ffffff', '13px', 'middle', getFont(), true);
+  var t3 = svgText(tx + seg * 2 + seg / 2, ty + th / 2 + 5, '月', textMuted, '13px', 'middle', getFont(), true);
+  return svgWrap(w, h, '', svgRect(tx, ty, tw, th, 8, bgCard) + active + t1 + t2 + t3);
+}
+function renderSliderSelect(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var sw = 220, sh = 6, sx = (w - sw) / 2, sy = (h - sh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, sx, sy, sw, sh, sh / 2); ctx.fill();
+  var grad = ctx.createLinearGradient(sx, sy, sx + sw * 0.65, sy);
+  grad.addColorStop(0, color); grad.addColorStop(1, color2);
+  ctx.fillStyle = grad; roundRect(ctx, sx, sy, sw * 0.65, sh, sh / 2); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(sx + sw * 0.65, sy + sh / 2, 10, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(sx + sw * 0.65, sy + sh / 2, 10, 0, Math.PI * 2); ctx.stroke();
+}
+function genSliderSelectSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var sw = 220, sh = 6, sx = (w - sw) / 2, sy = (h - sh) / 2;
+  var defs = svgGradient('gSlider', sx, sy, sx + sw * 0.65, sy, [['0%', color], ['100%', color2]]);
+  return svgWrap(w, h, defs, svgRect(sx, sy, sw, sh, 3, bgCard) + svgRect(sx, sy, sw * 0.65, sh, 3, 'url(#gSlider)') + svgCircle(sx + sw * 0.65, sy + sh / 2, 10, '#ffffff', color, 2));
+}
+function renderRatingStars(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var cx = w / 2 - 60, cy = h / 2;
+  for (var i = 0; i < 5; i++) { ctx.fillStyle = i < 3 ? color : textMuted; drawStar(ctx, cx + i * 26, cy, 10, 5); }
+}
+function drawStar(ctx, cx, cy, r, points) {
+  ctx.beginPath();
+  for (var i = 0; i < points * 2; i++) {
+    var angle = (Math.PI / points) * i - Math.PI / 2;
+    var radius = i % 2 === 0 ? r : r / 2;
+    var x = cx + Math.cos(angle) * radius;
+    var y = cy + Math.sin(angle) * radius;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.closePath(); ctx.fill();
+}
+function genRatingStarsSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var cx = w / 2 - 60, cy = h / 2;
+  var content = '';
+  for (var i = 0; i < 5; i++) { content += starPathSvg(cx + i * 26, cy, 10, 5, i < 3 ? color : textMuted); }
+  return svgWrap(w, h, '', content);
+}
+function starPathSvg(cx, cy, r, points, fill) {
+  var d = '';
+  for (var i = 0; i < points * 2; i++) {
+    var angle = (Math.PI / points) * i - Math.PI / 2;
+    var radius = i % 2 === 0 ? r : r / 2;
+    var x = cx + Math.cos(angle) * radius;
+    var y = cy + Math.sin(angle) * radius;
+    d += (i === 0 ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1) + ' ';
+  }
+  d += 'Z';
+  return '<path d="' + d + '" fill="' + fill + '"/>';
+}
+function renderColorPreset(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7'];
+  var s = 28, gap = 8;
+  var total = colors.length * (s + gap) - gap;
+  var sx = (w - total) / 2, sy = (h - s) / 2;
+  colors.forEach(function(c, i) {
+    ctx.fillStyle = c; ctx.beginPath(); ctx.arc(sx + i * (s + gap) + s / 2, sy + s / 2, s / 2, 0, Math.PI * 2); ctx.fill();
+    if (i === 3) { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(sx + i * (s + gap) + s / 2, sy + s / 2, s / 2 - 2, 0, Math.PI * 2); ctx.stroke(); }
+  });
+}
+function genColorPresetSvg(w, h, variant) {
+  var colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7'];
+  var s = 28, gap = 8;
+  var total = colors.length * (s + gap) - gap;
+  var sx = (w - total) / 2, sy = (h - s) / 2;
+  var content = '';
+  colors.forEach(function(c, i) {
+    content += svgCircle(sx + i * (s + gap) + s / 2, sy + s / 2, s / 2, c);
+    if (i === 3) content += svgCircle(sx + i * (s + gap) + s / 2, sy + s / 2, s / 2 - 2, 'transparent', '#ffffff', 2);
+  });
+  return svgWrap(w, h, '', content);
+}
+function renderStepper(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 40, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, bx, by, bw, bh, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; roundRect(ctx, bx, by, bw, bh, 8); ctx.stroke();
+  ctx.fillStyle = color; roundRect(ctx, bx, by, 40, bh, 8); ctx.fill(); roundRect(ctx, bx + bw - 40, by, 40, bh, 8); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 18px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('-', bx + 20, by + bh / 2); ctx.fillText('+', bx + bw - 20, by + bh / 2);
+  ctx.fillStyle = textPrimary; ctx.font = 'bold 16px ' + getMonoFont(); ctx.fillText('3', bx + bw / 2, by + bh / 2);
+}
+function genStepperSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 40, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var c = svgRect(bx, by, bw, bh, 8, bgCard);
+  c += svgRect(bx, by, bw, bh, 8, 'transparent', borderColor, 1.5);
+  c += svgRect(bx, by, 40, bh, 8, color); c += svgRect(bx + bw - 40, by, 40, bh, 8, color);
+  c += svgText(bx + 20, by + bh / 2 + 6, '-', '#ffffff', '18px', 'middle', getFont(), true);
+  c += svgText(bx + bw - 20, by + bh / 2 + 6, '+', '#ffffff', '18px', 'middle', getFont(), true);
+  c += svgText(bx + bw / 2, by + bh / 2 + 5, '3', textPrimary, '16px', 'middle', getMonoFont(), true);
+  return svgWrap(w, h, '', c);
+}
+/* ========== 4. Progress ========== */
+function renderProgressBar(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var textSecondary = cssVar('--text-secondary', '#9898b8');
+  var pw = 240, ph = 12, px = (w - pw) / 2, py = (h - ph) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, px, py, pw, ph, ph / 2); ctx.fill();
+  var grad = ctx.createLinearGradient(px, py, px + pw * 0.7, py);
+  grad.addColorStop(0, color); grad.addColorStop(1, color2);
+  ctx.fillStyle = grad; roundRect(ctx, px, py, pw * 0.7, ph, ph / 2); ctx.fill();
+  ctx.fillStyle = textSecondary; ctx.font = '12px ' + getMonoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText('70%', px + pw / 2, py + ph + 8);
+}
+function genProgressBarSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var textSecondary = cssVar('--text-secondary', '#9898b8');
+  var pw = 240, ph = 12, px = (w - pw) / 2, py = (h - ph) / 2;
+  var defs = svgGradient('g2', px, py, px + pw * 0.7, py, [['0%', color], ['100%', color2]]);
+  return svgWrap(w, h, defs, svgRect(px, py, pw, ph, 6, bgCard) + svgRect(px, py, pw * 0.7, ph, 6, 'url(#g2)') + svgText(px + pw / 2, py + ph + 8, '70%', textSecondary, '12px', 'middle', getMonoFont()));
+}
+function renderSlider(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var sw = 240, sh = 6, sx = (w - sw) / 2, sy = (h - sh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, sx, sy, sw, sh, sh / 2); ctx.fill();
+  var grad = ctx.createLinearGradient(sx, sy, sx + sw * 0.6, sy);
+  grad.addColorStop(0, color); grad.addColorStop(1, color2);
+  ctx.fillStyle = grad; roundRect(ctx, sx, sy, sw * 0.6, sh, sh / 2); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(sx + sw * 0.6, sy + sh / 2, 10, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(sx + sw * 0.6, sy + sh / 2, 10, 0, Math.PI * 2); ctx.stroke();
+}
+function genSliderSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var sw = 240, sh = 6, sx = (w - sw) / 2, sy = (h - sh) / 2;
+  var defs = svgGradient('g3', sx, sy, sx + sw * 0.6, sy, [['0%', color], ['100%', color2]]);
+  return svgWrap(w, h, defs, svgRect(sx, sy, sw, sh, 3, bgCard) + svgRect(sx, sy, sw * 0.6, sh, 3, 'url(#g3)') + svgCircle(sx + sw * 0.6, sy + sh / 2, 10, '#ffffff', color, 2));
+}
+function renderCircularProgress(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var cx = w / 2, cy = h / 2, r = 36;
+  ctx.strokeStyle = bgCard; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+  ctx.strokeStyle = color; ctx.lineWidth = 6; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * 0.65); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = 'bold 16px ' + getMonoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('65%', cx, cy);
+}
+function genCircularProgressSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var cx = w / 2, cy = h / 2, r = 36;
+  var arc = arcPath(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * 0.65);
+  return svgWrap(w, h, '', svgCircle(cx, cy, r, 'transparent', bgCard, 6) + svgPath(arc, 'none', color, 6) + svgText(cx, cy + 5, '65%', textPrimary, '16px', 'middle', getMonoFont(), true));
+}
+function arcPath(cx, cy, r, start, end) {
+  var x1 = cx + Math.cos(start) * r;
+  var y1 = cy + Math.sin(start) * r;
+  var x2 = cx + Math.cos(end) * r;
+  var y2 = cy + Math.sin(end) * r;
+  var large = (end - start) > Math.PI ? 1 : 0;
+  return 'M' + x1 + ',' + y1 + ' A' + r + ',' + r + ' 0 ' + large + ',1 ' + x2 + ',' + y2;
+}
+function renderLoadingBar(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var pw = 200, ph = 4, px = (w - pw) / 2, py = (h - ph) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, px, py, pw, ph, ph / 2); ctx.fill();
+  ctx.fillStyle = color; roundRect(ctx, px, py, pw * 0.5, ph, ph / 2); ctx.fill();
+  ctx.fillStyle = hexToRgba(color, 0.3); roundRect(ctx, px + pw * 0.6, py, pw * 0.15, ph, ph / 2); ctx.fill();
+}
+function genLoadingBarSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var pw = 200, ph = 4, px = (w - pw) / 2, py = (h - ph) / 2;
+  return svgWrap(w, h, '', svgRect(px, py, pw, ph, 2, bgCard) + svgRect(px, py, pw * 0.5, ph, 2, color) + svgRect(px + pw * 0.6, py, pw * 0.15, ph, 2, hexToRgba(color, 0.3)));
+}
+function renderSkeleton(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var cw = 220, ch = 80, cx = (w - cw) / 2, cy = (h - ch) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, cx, cy, cw, ch, 10); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, cx, cy, cw, ch, 10); ctx.stroke();
+  ctx.fillStyle = borderColor;
+  roundRect(ctx, cx + 12, cy + 12, 40, 40, 6); ctx.fill();
+  roundRect(ctx, cx + 64, cy + 14, 100, 10, 4); ctx.fill();
+  roundRect(ctx, cx + 64, cy + 32, 70, 8, 4); ctx.fill();
+  roundRect(ctx, cx + 12, cy + 62, cw - 24, 8, 4); ctx.fill();
+}
+function genSkeletonSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var cw = 220, ch = 80, cx = (w - cw) / 2, cy = (h - ch) / 2;
+  return svgWrap(w, h, '', svgRect(cx, cy, cw, ch, 10, bgCard) + svgRect(cx, cy, cw, ch, 10, 'transparent', borderColor, 1) + svgRect(cx + 12, cy + 12, 40, 40, 6, borderColor) + svgRect(cx + 64, cy + 14, 100, 10, 4, borderColor) + svgRect(cx + 64, cy + 32, 70, 8, 4, borderColor) + svgRect(cx + 12, cy + 62, cw - 24, 8, 4, borderColor));
+}
+
+/* ========== 5. Info ========== */
+function renderCardBasic(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var cw = 200, ch = 90, cx = (w - cw) / 2, cy = (h - ch) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, cx, cy, cw, ch, 12); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, cx, cy, cw, ch, 12); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = 'bold 14px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('卡片标题', cx + 16, cy + 16);
+  ctx.fillStyle = textMuted; ctx.font = '12px ' + getFont(); ctx.fillText('这是卡片描述内容', cx + 16, cy + 40);
+  ctx.fillStyle = color; ctx.font = '12px ' + getFont(); ctx.fillText('了解更多 →', cx + 16, cy + 62);
+}
+function genCardBasicSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var cw = 200, ch = 90, cx = (w - cw) / 2, cy = (h - ch) / 2;
+  return svgWrap(w, h, '', svgRect(cx, cy, cw, ch, 12, bgCard) + svgRect(cx, cy, cw, ch, 12, 'transparent', borderColor, 1) + svgText(cx + 16, cy + 16, '卡片标题', textPrimary, '14px', 'start', getFont(), true) + svgText(cx + 16, cy + 40, '这是卡片描述内容', textMuted, '12px', 'start', getFont()) + svgText(cx + 16, cy + 62, '了解更多 →', color, '12px', 'start', getFont()));
+}
+function renderBadgeInfo(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var badges = [{ text: 'NEW', bg: color, x: 0 }, { text: 'HOT', bg: color, x: 70 }, { text: 'VIP', bg: color, x: 130 }];
+  badges.forEach(function(b) {
+    var bw = 56, bh = 24;
+    var bx = (w - badges.length * 70 + b.x) / 2 + b.x;
+    var by = (h - bh) / 2;
+    ctx.fillStyle = b.bg; roundRect(ctx, bx, by, bw, bh, bh / 2); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 11px ' + getMonoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(b.text, bx + bw / 2, by + bh / 2);
+  });
+}
+function genBadgeInfoSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var badges = [{ text: 'NEW', bg: color, x: 0 }, { text: 'HOT', bg: color, x: 70 }, { text: 'VIP', bg: color, x: 130 }];
+  var c = '';
+  badges.forEach(function(b) {
+    var bw = 56, bh = 24;
+    var bx = (w - badges.length * 70 + b.x) / 2 + b.x;
+    var by = (h - bh) / 2;
+    c += svgRect(bx, by, bw, bh, 12, b.bg);
+    c += svgText(bx + bw / 2, by + bh / 2 + 4, b.text, '#ffffff', '11px', 'middle', getMonoFont(), true);
+  });
+  return svgWrap(w, h, '', c);
+}
+function renderTagGroup(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var tags = ['JavaScript', 'Python', 'Scratch', 'AI'];
+  var totalW = tags.length * 80 - 10;
+  var startX = (w - totalW) / 2;
+  tags.forEach(function(tag, i) {
+    var tw = 72, th = 28;
+    var tx = startX + i * 80;
+    var ty = (h - th) / 2;
+    ctx.fillStyle = hexToRgba(color, 0.15); roundRect(ctx, tx, ty, tw, th, th / 2); ctx.fill();
+    ctx.strokeStyle = hexToRgba(color, 0.3); ctx.lineWidth = 1; roundRect(ctx, tx, ty, tw, th, th / 2); ctx.stroke();
+    ctx.fillStyle = color; ctx.font = '12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(tag, tx + tw / 2, ty + th / 2);
+  });
+}
+function genTagGroupSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var tags = ['JavaScript', 'Python', 'Scratch', 'AI'];
+  var totalW = tags.length * 80 - 10;
+  var startX = (w - totalW) / 2;
+  var c = '';
+  tags.forEach(function(tag, i) {
+    var tw = 72, th = 28;
+    var tx = startX + i * 80;
+    var ty = (h - th) / 2;
+    c += svgRect(tx, ty, tw, th, 14, hexToRgba(color, 0.15), hexToRgba(color, 0.3), 1);
+    c += svgText(tx + tw / 2, ty + th / 2 + 4, tag, color, '12px', 'middle', getFont());
+  });
+  return svgWrap(w, h, '', c);
+}
+function renderTooltip(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var tw = 120, th = 36;
+  var tx = (w - tw) / 2, ty = (h - th) / 2 - 10;
+  ctx.fillStyle = borderColor; roundRect(ctx, tx, ty, tw, th, 8); ctx.fill();
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('提示信息', tx + tw / 2, ty + th / 2);
+  ctx.fillStyle = borderColor;
+  ctx.beginPath(); ctx.moveTo(tx + tw / 2 - 6, ty + th); ctx.lineTo(tx + tw / 2, ty + th + 8); ctx.lineTo(tx + tw / 2 + 6, ty + th); ctx.closePath(); ctx.fill();
+}
+function genTooltipSvg(w, h, variant) {
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var tw = 120, th = 36;
+  var tx = (w - tw) / 2, ty = (h - th) / 2 - 10;
+  var arrow = svgPath('M' + (tx + tw / 2 - 6) + ',' + (ty + th) + ' L' + (tx + tw / 2) + ',' + (ty + th + 8) + ' L' + (tx + tw / 2 + 6) + ',' + (ty + th) + ' Z', borderColor);
+  return svgWrap(w, h, '', svgRect(tx, ty, tw, th, 8, borderColor) + arrow + svgText(tx + tw / 2, ty + th / 2 + 5, '提示信息', textPrimary, '13px', 'middle', getFont()));
+}
+function renderAccordion(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var aw = 240, ah = 36, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ax, ay, aw, ah, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, ax, ay, aw, ah, 8); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = 'bold 13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('折叠面板标题', ax + 14, ay + ah / 2);
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.moveTo(ax + aw - 22, ay + ah / 2 - 3); ctx.lineTo(ax + aw - 16, ay + ah / 2 + 3); ctx.lineTo(ax + aw - 10, ay + ah / 2 - 3); ctx.fill();
+  ctx.fillStyle = bgCard; roundRect(ctx, ax, ay + ah + 4, aw, 40, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, ax, ay + ah + 4, aw, 40, 8); ctx.stroke();
+  ctx.fillStyle = textMuted; ctx.font = '12px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('这里是折叠面板的内容区域', ax + 14, ay + ah + 14);
+}
+function genAccordionSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var aw = 240, ah = 36, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  var arrow = svgPath('M' + (ax + aw - 22) + ',' + (ay + ah / 2 - 3) + ' L' + (ax + aw - 16) + ',' + (ay + ah / 2 + 3) + ' L' + (ax + aw - 10) + ',' + (ay + ah / 2 - 3) + ' Z', color);
+  var c2 = svgRect(ax, ay + ah + 4, aw, 40, 8, bgCard);
+  var br2 = svgRect(ax, ay + ah + 4, aw, 40, 8, 'transparent', borderColor, 1);
+  var t2 = svgText(ax + 14, ay + ah + 24, '这里是折叠面板的内容区域', textMuted, '12px', 'start', getFont());
+  return svgWrap(w, h, '', svgRect(ax, ay, aw, ah, 8, bgCard) + svgRect(ax, ay, aw, ah, 8, 'transparent', borderColor, 1) + svgText(ax + 14, ay + ah / 2 + 5, '折叠面板标题', textPrimary, '13px', 'start', getFont(), true) + arrow + c2 + br2 + t2);
+}
+function renderTimeline(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var items = [{ t: '创建项目', d: '10:00' }, { t: '提交代码', d: '11:30' }, { t: '发布上线', d: '14:00' }];
+  var startY = h / 2 - 30;
+  var lineX = w / 2 - 60;
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(lineX, startY); ctx.lineTo(lineX, startY + 60); ctx.stroke();
+  items.forEach(function(item, i) {
+    var y = startY + i * 30;
+    ctx.fillStyle = i === 2 ? color : borderColor; ctx.beginPath(); ctx.arc(lineX, y, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = textPrimary; ctx.font = '12px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(item.t, lineX + 14, y);
+    ctx.fillStyle = textMuted; ctx.font = '11px ' + getMonoFont(); ctx.textAlign = 'right';
+    ctx.fillText(item.d, lineX - 10, y);
+  });
+}
+function genTimelineSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var items = [{ t: '创建项目', d: '10:00' }, { t: '提交代码', d: '11:30' }, { t: '发布上线', d: '14:00' }];
+  var startY = h / 2 - 30;
+  var lineX = w / 2 - 60;
+  var line = svgPath('M' + lineX + ',' + startY + ' L' + lineX + ',' + (startY + 60), 'none', borderColor, 2);
+  var content = line;
+  items.forEach(function(item, i) {
+    var y = startY + i * 30;
+    var c = i === 2 ? color : borderColor;
+    content += svgCircle(lineX, y, 5, c);
+    content += svgText(lineX + 14, y + 4, item.t, textPrimary, '12px', 'start', getFont());
+    content += svgText(lineX - 10, y + 4, item.d, textMuted, '11px', 'end', getMonoFont());
+  });
+  return svgWrap(w, h, '', content);
+}
+function renderStatNumber(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textSecondary = cssVar('--text-secondary', '#9898b8');
+  ctx.fillStyle = color; ctx.font = 'bold 32px ' + getMonoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('1,234', w / 2, h / 2 - 10);
+  ctx.fillStyle = textSecondary; ctx.font = '12px ' + getFont(); ctx.textAlign = 'center';
+  ctx.fillText('总用户数', w / 2, h / 2 + 18);
+}
+function genStatNumberSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textSecondary = cssVar('--text-secondary', '#9898b8');
+  return svgWrap(w, h, '', svgText(w / 2, h / 2 - 6, '1,234', color, '32px', 'middle', getMonoFont(), true) + svgText(w / 2, h / 2 + 22, '总用户数', textSecondary, '12px', 'middle', getFont()));
+}
+function renderAvatarGroup(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var r = 18, cx = w / 2 - 40;
+  var colors = [color, cssVar('--accent-secondary', '#22d3ee'), cssVar('--accent-purple', '#a855f7'), bgCard];
+  colors.forEach(function(c, i) {
+    ctx.fillStyle = c; ctx.beginPath(); ctx.arc(cx + i * 26, h / 2, r, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = bgPrimary; ctx.lineWidth = 2; ctx.stroke();
+  });
+  ctx.fillStyle = textPrimary; ctx.font = 'bold 11px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('+3', cx + 3 * 26, h / 2);
+}
+function genAvatarGroupSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var r = 18, cx = w / 2 - 40;
+  var colors = [color, cssVar('--accent-secondary', '#22d3ee'), cssVar('--accent-purple', '#a855f7'), bgCard];
+  var content = '';
+  colors.forEach(function(c, i) { content += svgCircle(cx + i * 26, h / 2, r, c, bgPrimary, 2); });
+  content += svgText(cx + 3 * 26, h / 2 + 4, '+3', textPrimary, '11px', 'middle', getFont(), true);
+  return svgWrap(w, h, '', content);
+}
+function renderRatingDisplay(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var cx = w / 2 - 50, cy = h / 2;
+  for (var i = 0; i < 5; i++) { ctx.fillStyle = i < 4 ? color : textMuted; drawStar(ctx, cx + i * 22, cy - 6, 8, 5); }
+  ctx.fillStyle = textPrimary; ctx.font = 'bold 14px ' + getMonoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('4.0', w / 2 + 70, cy - 6);
+}
+function genRatingDisplaySvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var cx = w / 2 - 50, cy = h / 2;
+  var content = '';
+  for (var i = 0; i < 5; i++) { content += starPathSvg(cx + i * 22, cy - 6, 8, 5, i < 4 ? color : textMuted); }
+  content += svgText(w / 2 + 70, cy - 2, '4.0', textPrimary, '14px', 'middle', getMonoFont(), true);
+  return svgWrap(w, h, '', content);
+}
+function renderStatusIndicator(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var statuses = [{ l: '在线', on: true }, { l: '离线', on: false }, { l: '忙碌', on: false }];
+  var startX = w / 2 - 70;
+  statuses.forEach(function(s, i) {
+    var x = startX + i * 50;
+    ctx.fillStyle = s.on ? color : textMuted; ctx.beginPath(); ctx.arc(x, h / 2, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = textPrimary; ctx.font = '12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(s.l, x + 14, h / 2);
+  });
+}
+function genStatusIndicatorSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var statuses = [{ l: '在线', on: true }, { l: '离线', on: false }, { l: '忙碌', on: false }];
+  var startX = w / 2 - 70;
+  var content = '';
+  statuses.forEach(function(s, i) {
+    var x = startX + i * 50;
+    content += svgCircle(x, h / 2, 6, s.on ? color : textMuted);
+    content += svgText(x + 14, h / 2 + 4, s.l, textPrimary, '12px', 'middle', getFont());
+  });
+  return svgWrap(w, h, '', content);
+}
+/* ========== 6. Navigation ========== */
+function renderNavbar(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgSecondary = cssVar('--bg-secondary', '#12121a');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var nw = 300, nh = 48, nx = (w - nw) / 2, ny = (h - nh) / 2;
+  ctx.fillStyle = bgSecondary; roundRect(ctx, nx, ny, nw, nh, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, nx, ny, nw, nh, 8); ctx.stroke();
+  var items = ['首页', '发现', '设置'];
+  var itemW = nw / items.length;
+  items.forEach(function(item, i) {
+    if (i === 0) { ctx.fillStyle = hexToRgba(color, 0.2); roundRect(ctx, nx + i * itemW, ny, itemW, nh, 8); ctx.fill(); ctx.fillStyle = color2; }
+    else { ctx.fillStyle = textMuted; }
+    ctx.font = '13px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(item, nx + i * itemW + itemW / 2, ny + nh / 2);
+  });
+}
+function genNavbarSvg(w, h, variant) {
+  var bgSecondary = cssVar('--bg-secondary', '#12121a');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var nw = 300, nh = 48, nx = (w - nw) / 2, ny = (h - nh) / 2;
+  var items = ['首页', '发现', '设置'];
+  var itemW = nw / items.length;
+  var c = svgRect(nx, ny, nw, nh, 8, bgSecondary);
+  c += svgRect(nx, ny, nw, nh, 8, 'transparent', borderColor, 1);
+  c += svgRect(nx, ny, itemW, nh, 8, hexToRgba(color, 0.2));
+  items.forEach(function(item, i) {
+    var col = i === 0 ? color2 : textMuted;
+    c += svgText(nx + i * itemW + itemW / 2, ny + nh / 2 + 5, item, col, '13px', 'middle', getFont());
+  });
+  return svgWrap(w, h, '', c);
+}
+function renderTabbar(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgSecondary = cssVar('--bg-secondary', '#12121a');
+  var color = getVariantColor(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var tw = 280, th = 44, tx = (w - tw) / 2, ty = (h - th) / 2;
+  ctx.fillStyle = bgSecondary; roundRect(ctx, tx, ty, tw, th, 8); ctx.fill();
+  var tabs = ['全部', '进行中', '已完成'];
+  var tabW = tw / tabs.length;
+  tabs.forEach(function(tab, i) {
+    if (i === 1) { ctx.fillStyle = color; roundRect(ctx, tx + i * tabW + 4, ty + 4, tabW - 8, th - 8, 6); ctx.fill(); ctx.fillStyle = '#ffffff'; }
+    else { ctx.fillStyle = textMuted; }
+    ctx.font = '13px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(tab, tx + i * tabW + tabW / 2, ty + th / 2);
+  });
+}
+function genTabbarSvg(w, h, variant) {
+  var bgSecondary = cssVar('--bg-secondary', '#12121a');
+  var color = getVariantColor(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var tw = 280, th = 44, tx = (w - tw) / 2, ty = (h - th) / 2;
+  var tabs = ['全部', '进行中', '已完成'];
+  var tabW = tw / tabs.length;
+  var c = svgRect(tx, ty, tw, th, 8, bgSecondary);
+  c += svgRect(tx + tabW + 4, ty + 4, tabW - 8, th - 8, 6, color);
+  tabs.forEach(function(tab, i) {
+    var col = i === 1 ? '#ffffff' : textMuted;
+    c += svgText(tx + i * tabW + tabW / 2, ty + th / 2 + 5, tab, col, '13px', 'middle', getFont());
+  });
+  return svgWrap(w, h, '', c);
+}
+function renderBreadcrumb(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var items = ['首页', '分类', '详情'];
+  var x = w / 2 - 80;
+  items.forEach(function(item, i) {
+    ctx.fillStyle = i === 2 ? color : textMuted; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(item, x, h / 2);
+    x += ctx.measureText(item).width + 8;
+    if (i < 2) { ctx.fillStyle = textMuted; ctx.fillText('>', x, h / 2); x += 18; }
+  });
+}
+function genBreadcrumbSvg(w, h, variant) {
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var items = ['首页', '分类', '详情'];
+  var x = w / 2 - 80;
+  var content = '';
+  items.forEach(function(item, i) {
+    var col = i === 2 ? color : textMuted;
+    content += svgText(x, h / 2 + 5, item, col, '13px', 'start', getFont());
+    x += 30;
+    if (i < 2) { content += svgText(x, h / 2 + 5, '>', textMuted, '13px', 'start', getFont()); x += 18; }
+  });
+  return svgWrap(w, h, '', content);
+}
+function renderPagination(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var pages = ['<', '1', '2', '3', '>'];
+  var startX = w / 2 - pages.length * 14;
+  pages.forEach(function(p, i) {
+    var px = startX + i * 32;
+    if (i === 2) { ctx.fillStyle = color; roundRect(ctx, px - 4, h / 2 - 14, 28, 28, 6); ctx.fill(); ctx.fillStyle = '#ffffff'; }
+    else { ctx.fillStyle = i === 0 || i === 4 ? textMuted : textPrimary; }
+    ctx.font = 'bold 13px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(p, px + 10, h / 2);
+  });
+}
+function genPaginationSvg(w, h, variant) {
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var pages = ['<', '1', '2', '3', '>'];
+  var startX = w / 2 - pages.length * 14;
+  var content = '';
+  pages.forEach(function(p, i) {
+    var px = startX + i * 32;
+    if (i === 2) { content += svgRect(px - 4, h / 2 - 14, 28, 28, 6, color); content += svgText(px + 10, h / 2 + 5, p, '#ffffff', '13px', 'middle', getFont(), true); }
+    else { var col = i === 0 || i === 4 ? textMuted : textPrimary; content += svgText(px + 10, h / 2 + 5, p, col, '13px', 'middle', getFont(), true); }
+  });
+  return svgWrap(w, h, '', content);
+}
+function renderStepBar(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var steps = ['填写', '确认', '完成'];
+  var sw = 220, sx = (w - sw) / 2, sy = h / 2;
+  ctx.strokeStyle = bgCard; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + sw, sy); ctx.stroke();
+  ctx.strokeStyle = color; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + sw * 0.5, sy); ctx.stroke();
+  steps.forEach(function(step, i) {
+    var x = sx + i * (sw / 2);
+    ctx.fillStyle = i <= 1 ? color : bgCard;
+    ctx.beginPath(); ctx.arc(x, sy, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = i <= 1 ? color : textMuted; ctx.font = '12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(step, x, sy + 16);
+  });
+}
+function genStepBarSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var steps = ['填写', '确认', '完成'];
+  var sw = 220, sx = (w - sw) / 2, sy = h / 2;
+  var line1 = svgPath('M' + sx + ',' + sy + ' L' + (sx + sw) + ',' + sy, 'none', bgCard, 3);
+  var line2 = svgPath('M' + sx + ',' + sy + ' L' + (sx + sw * 0.5) + ',' + sy, 'none', color, 3);
+  var content = line1 + line2;
+  steps.forEach(function(step, i) {
+    var x = sx + i * (sw / 2);
+    content += svgCircle(x, sy, 8, i <= 1 ? color : bgCard);
+    content += svgText(x, sy + 20, step, i <= 1 ? color : textMuted, '12px', 'middle', getFont());
+  });
+  return svgWrap(w, h, '', content);
+}
+function renderSidebar(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgSecondary = cssVar('--bg-secondary', '#12121a');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var sw = 160, sh = 100, sx = (w - sw) / 2, sy = (h - sh) / 2;
+  ctx.fillStyle = bgSecondary; roundRect(ctx, sx, sy, sw, sh, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, sx, sy, sw, sh, 8); ctx.stroke();
+  var items = ['仪表盘', '项目', '设置'];
+  items.forEach(function(item, i) {
+    ctx.fillStyle = i === 0 ? hexToRgba(color, 0.15) : 'transparent';
+    roundRect(ctx, sx + 4, sy + 8 + i * 28, sw - 8, 24, 4); ctx.fill();
+    ctx.fillStyle = i === 0 ? color : textMuted; ctx.font = '12px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(item, sx + 14, sy + 20 + i * 28);
+  });
+}
+function genSidebarSvg(w, h, variant) {
+  var bgSecondary = cssVar('--bg-secondary', '#12121a');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var sw = 160, sh = 100, sx = (w - sw) / 2, sy = (h - sh) / 2;
+  var c = svgRect(sx, sy, sw, sh, 8, bgSecondary);
+  c += svgRect(sx, sy, sw, sh, 8, 'transparent', borderColor, 1);
+  var items = ['仪表盘', '项目', '设置'];
+  items.forEach(function(item, i) {
+    if (i === 0) c += svgRect(sx + 4, sy + 8 + i * 28, sw - 8, 24, 4, hexToRgba(color, 0.15));
+    var col = i === 0 ? color : textMuted;
+    c += svgText(sx + 14, sy + 24 + i * 28, item, col, '12px', 'start', getFont());
+  });
+  return svgWrap(w, h, '', c);
+}
+function renderDropdownNav(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 36, bx = (w - bw) / 2, by = (h - bh) / 2 - 20;
+  ctx.fillStyle = bgCard; roundRect(ctx, bx, by, bw, bh, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, bx, by, bw, bh, 8); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('产品', bx + 14, by + bh / 2);
+  ctx.fillStyle = textMuted;
+  ctx.beginPath(); ctx.moveTo(bx + bw - 18, by + bh / 2 - 2); ctx.lineTo(bx + bw - 12, by + bh / 2 + 4); ctx.lineTo(bx + bw - 6, by + bh / 2 - 2); ctx.fill();
+  ctx.fillStyle = bgCard; roundRect(ctx, bx, by + bh + 4, bw, 60, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, bx, by + bh + 4, bw, 60, 8); ctx.stroke();
+  var items = ['功能A', '功能B', '功能C'];
+  items.forEach(function(item, i) {
+    ctx.fillStyle = i === 0 ? color : textMuted; ctx.font = '12px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(item, bx + 14, by + bh + 18 + i * 18);
+  });
+}
+function genDropdownNavSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var bw = 140, bh = 36, bx = (w - bw) / 2, by = (h - bh) / 2 - 20;
+  var arrow = svgPath('M' + (bx + bw - 18) + ',' + (by + bh / 2 - 2) + ' L' + (bx + bw - 12) + ',' + (by + bh / 2 + 4) + ' L' + (bx + bw - 6) + ',' + (by + bh / 2 - 2) + ' Z', textMuted);
+  var d = svgRect(bx, by + bh + 4, bw, 60, 8, bgCard);
+  var dbr = svgRect(bx, by + bh + 4, bw, 60, 8, 'transparent', borderColor, 1);
+  var c = svgRect(bx, by, bw, bh, 8, bgCard) + svgRect(bx, by, bw, bh, 8, 'transparent', borderColor, 1) + svgText(bx + 14, by + bh / 2 + 5, '产品', textPrimary, '13px', 'start', getFont()) + arrow + d + dbr;
+  var items = ['功能A', '功能B', '功能C'];
+  items.forEach(function(item, i) { c += svgText(bx + 14, by + bh + 22 + i * 18, item, i === 0 ? color : textMuted, '12px', 'start', getFont()); });
+  return svgWrap(w, h, '', c);
+}
+function renderMenuBar(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgSecondary = cssVar('--bg-secondary', '#12121a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var mw = 280, mh = 40, mx = (w - mw) / 2, my = (h - mh) / 2;
+  ctx.fillStyle = bgSecondary; roundRect(ctx, mx, my, mw, mh, 8); ctx.fill();
+  var items = ['文件', '编辑', '查看', '帮助'];
+  var itemW = mw / items.length;
+  items.forEach(function(item, i) {
+    ctx.fillStyle = i === 1 ? color : textMuted; ctx.font = '13px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(item, mx + i * itemW + itemW / 2, my + mh / 2);
+  });
+}
+function genMenuBarSvg(w, h, variant) {
+  var bgSecondary = cssVar('--bg-secondary', '#12121a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var mw = 280, mh = 40, mx = (w - mw) / 2, my = (h - mh) / 2;
+  var c = svgRect(mx, my, mw, mh, 8, bgSecondary);
+  var items = ['文件', '编辑', '查看', '帮助'];
+  var itemW = mw / items.length;
+  items.forEach(function(item, i) {
+    var col = i === 1 ? color : textMuted;
+    c += svgText(mx + i * itemW + itemW / 2, my + mh / 2 + 5, item, col, '13px', 'middle', getFont());
+  });
+  return svgWrap(w, h, '', c);
+}
+function renderToolbar(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var color = getVariantColor(variant);
+  var tw = 240, th = 36, tx = (w - tw) / 2, ty = (h - th) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, tx, ty, tw, th, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, tx, ty, tw, th, 8); ctx.stroke();
+  var icons = ['B', 'I', 'U'];
+  icons.forEach(function(icon, i) {
+    ctx.fillStyle = i === 0 ? color : borderColor;
+    roundRect(ctx, tx + 10 + i * 40, ty + 6, 32, 24, 4); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(icon, tx + 26 + i * 40, ty + 18);
+  });
+}
+function genToolbarSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var color = getVariantColor(variant);
+  var tw = 240, th = 36, tx = (w - tw) / 2, ty = (h - th) / 2;
+  var c = svgRect(tx, ty, tw, th, 8, bgCard) + svgRect(tx, ty, tw, th, 8, 'transparent', borderColor, 1);
+  var icons = ['B', 'I', 'U'];
+  icons.forEach(function(icon, i) {
+    c += svgRect(tx + 10 + i * 40, ty + 6, 32, 24, 4, i === 0 ? color : borderColor);
+    c += svgText(tx + 26 + i * 40, ty + 22, icon, '#ffffff', '12px', 'middle', getFont(), true);
+  });
+  return svgWrap(w, h, '', c);
+}
+function renderBackToTop(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var s = 44, sx = (w - s) / 2, sy = (h - s) / 2;
+  ctx.fillStyle = color; roundRect(ctx, sx, sy, s, s, 10); ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath(); ctx.moveTo(sx + s / 2, sy + 14); ctx.lineTo(sx + 14, sy + 30); ctx.lineTo(sx + s - 14, sy + 30); ctx.closePath(); ctx.fill();
+}
+function genBackToTopSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var s = 44, sx = (w - s) / 2, sy = (h - s) / 2;
+  var arrow = svgPath('M' + (sx + s / 2) + ',' + (sy + 14) + ' L' + (sx + 14) + ',' + (sy + 30) + ' L' + (sx + s - 14) + ',' + (sy + 30) + ' Z', '#ffffff');
+  return svgWrap(w, h, '', svgRect(sx, sy, s, s, 10, color) + arrow);
+}
+/* ========== 7. Feedback ========== */
+function renderAlertSuccess(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var aw = 260, ah = 40, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  ctx.fillStyle = hexToRgba(color, 0.1); roundRect(ctx, ax, ay, aw, ah, 8); ctx.fill();
+  ctx.strokeStyle = hexToRgba(color, 0.3); ctx.lineWidth = 1; roundRect(ctx, ax, ay, aw, ah, 8); ctx.stroke();
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(ax + 20, ay + ah / 2, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('✓', ax + 20, ay + ah / 2);
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('操作成功', ax + 40, ay + ah / 2);
+}
+function genAlertSuccessSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var aw = 260, ah = 40, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  var c = svgRect(ax, ay, aw, ah, 8, hexToRgba(color, 0.1), hexToRgba(color, 0.3), 1);
+  c += svgCircle(ax + 20, ay + ah / 2, 8, color);
+  c += svgText(ax + 20, ay + ah / 2 + 4, '✓', '#ffffff', '12px', 'middle', getFont(), true);
+  c += svgText(ax + 40, ay + ah / 2 + 5, '操作成功', textPrimary, '13px', 'start', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderAlertWarning(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var aw = 260, ah = 40, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  ctx.fillStyle = hexToRgba(color, 0.1); roundRect(ctx, ax, ay, aw, ah, 8); ctx.fill();
+  ctx.strokeStyle = hexToRgba(color, 0.3); ctx.lineWidth = 1; roundRect(ctx, ax, ay, aw, ah, 8); ctx.stroke();
+  ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(ax + 20, ay + 12); ctx.lineTo(ax + 28, ay + 28); ctx.lineTo(ax + 12, ay + 28); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('!', ax + 20, ay + ah / 2 + 1);
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('请注意', ax + 40, ay + ah / 2);
+}
+function genAlertWarningSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var aw = 260, ah = 40, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  var tri = svgPath('M' + (ax + 20) + ',' + (ay + 12) + ' L' + (ax + 28) + ',' + (ay + 28) + ' L' + (ax + 12) + ',' + (ay + 28) + ' Z', color);
+  var c = svgRect(ax, ay, aw, ah, 8, hexToRgba(color, 0.1), hexToRgba(color, 0.3), 1);
+  c += tri + svgText(ax + 20, ay + ah / 2 + 5, '!', '#ffffff', '12px', 'middle', getFont(), true);
+  c += svgText(ax + 40, ay + ah / 2 + 5, '请注意', textPrimary, '13px', 'start', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderAlertError(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var aw = 260, ah = 40, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  ctx.fillStyle = hexToRgba(color, 0.1); roundRect(ctx, ax, ay, aw, ah, 8); ctx.fill();
+  ctx.strokeStyle = hexToRgba(color, 0.3); ctx.lineWidth = 1; roundRect(ctx, ax, ay, aw, ah, 8); ctx.stroke();
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(ax + 20, ay + ah / 2, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(ax + 16, ay + ah / 2 - 4); ctx.lineTo(ax + 24, ay + ah / 2 + 4); ctx.moveTo(ax + 24, ay + ah / 2 - 4); ctx.lineTo(ax + 16, ay + ah / 2 + 4); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('出错了', ax + 40, ay + ah / 2);
+}
+function genAlertErrorSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var aw = 260, ah = 40, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  var x = svgPath('M' + (ax + 16) + ',' + (ay + ah / 2 - 4) + ' L' + (ax + 24) + ',' + (ay + ah / 2 + 4) + ' M' + (ax + 24) + ',' + (ay + ah / 2 - 4) + ' L' + (ax + 16) + ',' + (ay + ah / 2 + 4), '', '#ffffff', 2);
+  var c = svgRect(ax, ay, aw, ah, 8, hexToRgba(color, 0.1), hexToRgba(color, 0.3), 1);
+  c += svgCircle(ax + 20, ay + ah / 2, 8, color) + x;
+  c += svgText(ax + 40, ay + ah / 2 + 5, '出错了', textPrimary, '13px', 'start', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderAlertInfo(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var aw = 260, ah = 40, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  ctx.fillStyle = hexToRgba(color, 0.1); roundRect(ctx, ax, ay, aw, ah, 8); ctx.fill();
+  ctx.strokeStyle = hexToRgba(color, 0.3); ctx.lineWidth = 1; roundRect(ctx, ax, ay, aw, ah, 8); ctx.stroke();
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(ax + 20, ay + ah / 2, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('i', ax + 20, ay + ah / 2);
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('提示信息', ax + 40, ay + ah / 2);
+}
+function genAlertInfoSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var aw = 260, ah = 40, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  var c = svgRect(ax, ay, aw, ah, 8, hexToRgba(color, 0.1), hexToRgba(color, 0.3), 1);
+  c += svgCircle(ax + 20, ay + ah / 2, 8, color);
+  c += svgText(ax + 20, ay + ah / 2 + 4, 'i', '#ffffff', '12px', 'middle', getFont(), true);
+  c += svgText(ax + 40, ay + ah / 2 + 5, '提示信息', textPrimary, '13px', 'start', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderAlertLoading(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var aw = 260, ah = 40, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  ctx.fillStyle = hexToRgba(color, 0.1); roundRect(ctx, ax, ay, aw, ah, 8); ctx.fill();
+  ctx.strokeStyle = hexToRgba(color, 0.3); ctx.lineWidth = 1; roundRect(ctx, ax, ay, aw, ah, 8); ctx.stroke();
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(ax + 20, ay + ah / 2, 6, 0, Math.PI * 1.5); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('加载中...', ax + 40, ay + ah / 2);
+}
+function genAlertLoadingSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var aw = 260, ah = 40, ax = (w - aw) / 2, ay = (h - ah) / 2;
+  var arc = svgPath('M' + (ax + 20) + ',' + (ay + ah / 2 - 6) + ' A6,6 0 1,1 ' + (ax + 26) + ',' + (ay + ah / 2), '', color, 2);
+  var c = svgRect(ax, ay, aw, ah, 8, hexToRgba(color, 0.1), hexToRgba(color, 0.3), 1);
+  c += arc + svgText(ax + 40, ay + ah / 2 + 5, '加载中...', textPrimary, '13px', 'start', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderConfirmDialog(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var dw = 220, dh = 80, dx = (w - dw) / 2, dy = (h - dh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, dx, dy, dw, dh, 12); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, dx, dy, dw, dh, 12); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = 'bold 13px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText('确认删除？', dx + dw / 2, dy + 14);
+  ctx.fillStyle = color; roundRect(ctx, dx + 30, dy + 44, 60, 26, 6); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = '12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('确认', dx + 60, dy + 57);
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, dx + 110, dy + 44, 60, 26, 6); ctx.stroke();
+  ctx.fillStyle = textMuted; ctx.fillText('取消', dx + 140, dy + 57);
+}
+function genConfirmDialogSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var dw = 220, dh = 80, dx = (w - dw) / 2, dy = (h - dh) / 2;
+  var c = svgRect(dx, dy, dw, dh, 12, bgCard);
+  c += svgRect(dx, dy, dw, dh, 12, 'transparent', borderColor, 1);
+  c += svgText(dx + dw / 2, dy + 14, '确认删除？', textPrimary, '13px', 'middle', getFont(), true);
+  c += svgRect(dx + 30, dy + 44, 60, 26, 6, color);
+  c += svgText(dx + 60, dy + 59, '确认', '#ffffff', '12px', 'middle', getFont());
+  c += svgRect(dx + 110, dy + 44, 60, 26, 6, 'transparent', borderColor, 1);
+  c += svgText(dx + 140, dy + 59, '取消', textMuted, '12px', 'middle', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderNotificationCard(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var nw = 240, nh = 60, nx = (w - nw) / 2, ny = (h - nh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, nx, ny, nw, nh, 10); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, nx, ny, nw, nh, 10); ctx.stroke();
+  ctx.fillStyle = color; roundRect(ctx, nx + 10, ny + 14, 32, 32, 6); ctx.fill();
+  ctx.fillStyle = textPrimary; ctx.font = 'bold 12px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('新消息', nx + 52, ny + 14);
+  ctx.fillStyle = textMuted; ctx.font = '11px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('您有一条新通知', nx + 52, ny + 34);
+}
+function genNotificationCardSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var nw = 240, nh = 60, nx = (w - nw) / 2, ny = (h - nh) / 2;
+  var c = svgRect(nx, ny, nw, nh, 10, bgCard);
+  c += svgRect(nx, ny, nw, nh, 10, 'transparent', borderColor, 1);
+  c += svgRect(nx + 10, ny + 14, 32, 32, 6, color);
+  c += svgText(nx + 52, ny + 24, '新消息', textPrimary, '12px', 'start', getFont(), true);
+  c += svgText(nx + 52, ny + 44, '您有一条新通知', textMuted, '11px', 'start', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderBadgeAlert(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var bw = 44, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, bx, by, bw, bh, 10); ctx.fill();
+  ctx.strokeStyle = cssVar('--border-color', '#2a2a4a'); ctx.lineWidth = 1; roundRect(ctx, bx, by, bw, bh, 10); ctx.stroke();
+  ctx.fillStyle = textPrimary; ctx.font = 'bold 16px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('🔔', bx + bw / 2, by + bh / 2);
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(bx + bw - 8, by + 8, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 9px ' + getMonoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('3', bx + bw - 8, by + 8);
+}
+function genBadgeAlertSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var bw = 44, bh = 44, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var c = svgRect(bx, by, bw, bh, 10, bgCard);
+  c += svgRect(bx, by, bw, bh, 10, 'transparent', borderColor, 1);
+  c += svgText(bx + bw / 2, by + bh / 2 + 5, '🔔', textPrimary, '16px', 'middle', getFont(), true);
+  c += svgCircle(bx + bw - 8, by + 8, 6, color);
+  c += svgText(bx + bw - 8, by + 12, '3', '#ffffff', '9px', 'middle', getMonoFont(), true);
+  return svgWrap(w, h, '', c);
+}
+function renderEmptyState(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(w / 2, h / 2 - 10, 20, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(w / 2 - 8, h / 2 - 14); ctx.lineTo(w / 2 + 8, h / 2 - 14); ctx.stroke();
+  ctx.beginPath(); ctx.arc(w / 2 - 6, h / 2 - 16, 2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(w / 2 + 6, h / 2 - 16, 2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(w / 2, h / 2 - 4, 4, 0, Math.PI); ctx.stroke();
+  ctx.fillStyle = textMuted; ctx.font = '12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText('暂无数据', w / 2, h / 2 + 18);
+}
+function genEmptyStateSvg(w, h, variant) {
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var c = svgCircle(w / 2, h / 2 - 10, 20, 'transparent', borderColor, 2);
+  c += svgPath('M' + (w / 2 - 8) + ',' + (h / 2 - 14) + ' L' + (w / 2 + 8) + ',' + (h / 2 - 14), '', borderColor, 2);
+  c += svgCircle(w / 2 - 6, h / 2 - 16, 2, borderColor);
+  c += svgCircle(w / 2 + 6, h / 2 - 16, 2, borderColor);
+  c += svgPath('M' + (w / 2 - 4) + ',' + (h / 2 - 4) + ' A4,4 0 0,0 ' + (w / 2 + 4) + ',' + (h / 2 - 4), 'none', borderColor, 2);
+  c += svgText(w / 2, h / 2 + 28, '暂无数据', textMuted, '12px', 'middle', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderOfflineState(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(w / 2, h / 2 - 10, 18, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(w / 2 - 10, h / 2 - 16); ctx.lineTo(w / 2 + 10, h / 2 - 4); ctx.stroke();
+  ctx.fillStyle = textMuted; ctx.font = '12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText('离线状态', w / 2, h / 2 + 16);
+}
+function genOfflineStateSvg(w, h, variant) {
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var c = svgCircle(w / 2, h / 2 - 10, 18, 'transparent', borderColor, 2);
+  c += svgPath('M' + (w / 2 - 10) + ',' + (h / 2 - 16) + ' L' + (w / 2 + 10) + ',' + (h / 2 - 4), '', borderColor, 2);
+  c += svgText(w / 2, h / 2 + 26, '离线状态', textMuted, '12px', 'middle', getFont());
+  return svgWrap(w, h, '', c);
+}
+/* ========== 8. Data ========== */
+function renderTableHeader(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgSecondary = cssVar('--bg-secondary', '#12121a');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var tw = 280, th = 36, tx = (w - tw) / 2, ty = (h - th) / 2;
+  ctx.fillStyle = bgSecondary; roundRect(ctx, tx, ty, tw, th, 6); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, tx, ty, tw, th, 6); ctx.stroke();
+  var cols = ['名称', '状态', '操作'];
+  var cw = tw / cols.length;
+  cols.forEach(function(col, i) {
+    ctx.fillStyle = i === 0 ? color : textMuted; ctx.font = 'bold 12px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(col, tx + i * cw + cw / 2, ty + th / 2);
+  });
+}
+function genTableHeaderSvg(w, h, variant) {
+  var bgSecondary = cssVar('--bg-secondary', '#12121a');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var tw = 280, th = 36, tx = (w - tw) / 2, ty = (h - th) / 2;
+  var c = svgRect(tx, ty, tw, th, 6, bgSecondary);
+  c += svgRect(tx, ty, tw, th, 6, 'transparent', borderColor, 1);
+  var cols = ['名称', '状态', '操作'];
+  var cw = tw / cols.length;
+  cols.forEach(function(col, i) {
+    var colr = i === 0 ? color : textMuted;
+    c += svgText(tx + i * cw + cw / 2, ty + th / 2 + 5, col, colr, '12px', 'middle', getFont(), true);
+  });
+  return svgWrap(w, h, '', c);
+}
+function renderListItem(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var lw = 260, lh = 44, lx = (w - lw) / 2, ly = (h - lh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, lx, ly, lw, lh, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, lx, ly, lw, lh, 8); ctx.stroke();
+  ctx.fillStyle = color; roundRect(ctx, lx + 10, ly + 10, 24, 24, 4); ctx.fill();
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('列表项标题', lx + 44, ly + lh / 2);
+  ctx.fillStyle = textMuted; ctx.font = '11px ' + getFont(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  ctx.fillText('12:00', lx + lw - 14, ly + lh / 2);
+}
+function genListItemSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var lw = 260, lh = 44, lx = (w - lw) / 2, ly = (h - lh) / 2;
+  var c = svgRect(lx, ly, lw, lh, 8, bgCard);
+  c += svgRect(lx, ly, lw, lh, 8, 'transparent', borderColor, 1);
+  c += svgRect(lx + 10, ly + 10, 24, 24, 4, color);
+  c += svgText(lx + 44, ly + lh / 2 + 5, '列表项标题', textPrimary, '13px', 'start', getFont());
+  c += svgText(lx + lw - 14, ly + lh / 2 + 5, '12:00', textMuted, '11px', 'end', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderTreeNode(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  ctx.strokeStyle = textMuted; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(40, h / 2 - 16); ctx.lineTo(40, h / 2 + 16); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(40, h / 2); ctx.lineTo(60, h / 2); ctx.stroke();
+  ctx.fillStyle = color; roundRect(ctx, 14, h / 2 - 8, 16, 16, 2); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 11px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('-', 22, h / 2);
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('根节点', 64, h / 2);
+  ctx.fillStyle = textMuted; ctx.font = '12px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('├─ 子节点A', 64, h / 2 + 18);
+}
+function genTreeNodeSvg(w, h, variant) {
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var line1 = svgPath('M40,' + (h / 2 - 16) + ' L40,' + (h / 2 + 16), '', textMuted, 1.5);
+  var line2 = svgPath('M40,' + (h / 2) + ' L60,' + (h / 2), '', textMuted, 1.5);
+  var c = line1 + line2;
+  c += svgRect(14, h / 2 - 8, 16, 16, 2, color);
+  c += svgText(22, h / 2 + 4, '-', '#ffffff', '11px', 'middle', getFont(), true);
+  c += svgText(64, h / 2 + 5, '根节点', textPrimary, '13px', 'start', getFont());
+  c += svgText(64, h / 2 + 23, '├─ 子节点A', textMuted, '12px', 'start', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderChartPlaceholder(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var cw = 220, ch = 80, cx = (w - cw) / 2, cy = (h - ch) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, cx, cy, cw, ch, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, cx, cy, cw, ch, 8); ctx.stroke();
+  var grad = ctx.createLinearGradient(cx, cy + ch, cx, cy);
+  grad.addColorStop(0, hexToRgba(color, 0.4));
+  grad.addColorStop(1, hexToRgba(color2, 0.1));
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.moveTo(cx + 10, cy + ch - 10);
+  ctx.lineTo(cx + 50, cy + ch - 40); ctx.lineTo(cx + 100, cy + ch - 25);
+  ctx.lineTo(cx + 150, cy + ch - 55); ctx.lineTo(cx + 190, cy + ch - 20);
+  ctx.lineTo(cx + 190, cy + ch - 10); ctx.lineTo(cx + 10, cy + ch - 10);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(cx + 10, cy + ch - 10);
+  ctx.lineTo(cx + 50, cy + ch - 40); ctx.lineTo(cx + 100, cy + ch - 25);
+  ctx.lineTo(cx + 150, cy + ch - 55); ctx.lineTo(cx + 190, cy + ch - 20); ctx.stroke();
+}
+function genChartPlaceholderSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var cw = 220, ch = 80, cx = (w - cw) / 2, cy = (h - ch) / 2;
+  var defs = svgGradient('gChart', cx, cy + ch, cx, cy, [['0%', hexToRgba(color, 0.4)], ['100%', hexToRgba(color2, 0.1)]]);
+  var area = svgPath('M' + (cx + 10) + ',' + (cy + ch - 10) + ' L' + (cx + 50) + ',' + (cy + ch - 40) + ' L' + (cx + 100) + ',' + (cy + ch - 25) + ' L' + (cx + 150) + ',' + (cy + ch - 55) + ' L' + (cx + 190) + ',' + (cy + ch - 20) + ' L' + (cx + 190) + ',' + (cy + ch - 10) + ' L' + (cx + 10) + ',' + (cy + ch - 10) + ' Z', 'url(#gChart)');
+  var line = svgPath('M' + (cx + 10) + ',' + (cy + ch - 10) + ' L' + (cx + 50) + ',' + (cy + ch - 40) + ' L' + (cx + 100) + ',' + (cy + ch - 25) + ' L' + (cx + 150) + ',' + (cy + ch - 55) + ' L' + (cx + 190) + ',' + (cy + ch - 20), 'none', color, 2);
+  return svgWrap(w, h, defs, svgRect(cx, cy, cw, ch, 8, bgCard) + svgRect(cx, cy, cw, ch, 8, 'transparent', borderColor, 1) + area + line);
+}
+function renderCalendarCell(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var cw = 200, ch = 70, cx = (w - cw) / 2, cy = (h - ch) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, cx, cy, cw, ch, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, cx, cy, cw, ch, 8); ctx.stroke();
+  ctx.fillStyle = textMuted; ctx.font = '10px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText('日', cx + 16, cy + 8); ctx.fillText('一', cx + 44, cy + 8); ctx.fillText('二', cx + 72, cy + 8);
+  ctx.fillText('三', cx + 100, cy + 8); ctx.fillText('四', cx + 128, cy + 8); ctx.fillText('五', cx + 156, cy + 8); ctx.fillText('六', cx + 184, cy + 8);
+  ctx.fillStyle = textPrimary; ctx.font = '11px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('12', cx + 72, cy + 36);
+  ctx.fillStyle = color; roundRect(ctx, cx + 60, cy + 26, 24, 20, 4); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.fillText('12', cx + 72, cy + 36);
+}
+function genCalendarCellSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var cw = 200, ch = 70, cx = (w - cw) / 2, cy = (h - ch) / 2;
+  var c = svgRect(cx, cy, cw, ch, 8, bgCard) + svgRect(cx, cy, cw, ch, 8, 'transparent', borderColor, 1);
+  var days = ['日', '一', '二', '三', '四', '五', '六'];
+  days.forEach(function(d, i) { c += svgText(cx + 16 + i * 28, cy + 16, d, textMuted, '10px', 'middle', getFont()); });
+  c += svgText(cx + 72, cy + 40, '12', textPrimary, '11px', 'middle', getFont());
+  c += svgRect(cx + 60, cy + 26, 24, 20, 4, color);
+  c += svgText(cx + 72, cy + 40, '12', '#ffffff', '11px', 'middle', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderCardGrid(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var gw = 220, gh = 70, gx = (w - gw) / 2, gy = (h - gh) / 2;
+  var cols = 3, rows = 2, cw = gw / cols, ch = gh / rows;
+  for (var r = 0; r < rows; r++) {
+    for (var c = 0; c < cols; c++) {
+      ctx.fillStyle = c === 1 && r === 0 ? color : bgCard;
+      roundRect(ctx, gx + c * cw + 2, gy + r * ch + 2, cw - 4, ch - 4, 4); ctx.fill();
+      if (c !== 1 || r !== 0) { ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, gx + c * cw + 2, gy + r * ch + 2, cw - 4, ch - 4, 4); ctx.stroke(); }
+    }
+  }
+}
+function genCardGridSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var color = getVariantColor(variant);
+  var gw = 220, gh = 70, gx = (w - gw) / 2, gy = (h - gh) / 2;
+  var cols = 3, rows = 2, cw = gw / cols, ch = gh / rows;
+  var content = '';
+  for (var r = 0; r < rows; r++) {
+    for (var c = 0; c < cols; c++) {
+      var fill = c === 1 && r === 0 ? color : bgCard;
+      content += svgRect(gx + c * cw + 2, gy + r * ch + 2, cw - 4, ch - 4, 4, fill);
+      if (c !== 1 || r !== 0) content += svgRect(gx + c * cw + 2, gy + r * ch + 2, cw - 4, ch - 4, 4, 'transparent', borderColor, 1);
+    }
+  }
+  return svgWrap(w, h, '', content);
+}
+function renderWaterfallItem(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var ww = 100, wh = 80, wx = (w - ww * 2 - 16) / 2, wy = (h - wh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, wx, wy, ww, wh, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, wx, wy, ww, wh, 8); ctx.stroke();
+  ctx.fillStyle = color; roundRect(ctx, wx + 8, wy + 8, ww - 16, 40, 4); ctx.fill();
+  ctx.fillStyle = textMuted; roundRect(ctx, wx + 8, wy + 54, ww - 16, 8, 2); ctx.fill();
+  ctx.fillStyle = bgCard; roundRect(ctx, wx + ww + 16, wy + 10, ww, wh - 20, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, wx + ww + 16, wy + 10, ww, wh - 20, 8); ctx.stroke();
+  ctx.fillStyle = color; roundRect(ctx, wx + ww + 24, wy + 18, ww - 16, 30, 4); ctx.fill();
+}
+function genWaterfallItemSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var ww = 100, wh = 80, wx = (w - ww * 2 - 16) / 2, wy = (h - wh) / 2;
+  var c = svgRect(wx, wy, ww, wh, 8, bgCard) + svgRect(wx, wy, ww, wh, 8, 'transparent', borderColor, 1);
+  c += svgRect(wx + 8, wy + 8, ww - 16, 40, 4, color);
+  c += svgRect(wx + 8, wy + 54, ww - 16, 8, 2, textMuted);
+  c += svgRect(wx + ww + 16, wy + 10, ww, wh - 20, 8, bgCard);
+  c += svgRect(wx + ww + 16, wy + 10, ww, wh - 20, 8, 'transparent', borderColor, 1);
+  c += svgRect(wx + ww + 24, wy + 18, ww - 16, 30, 4, color);
+  return svgWrap(w, h, '', c);
+}
+function renderGalleryItem(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var gw = 100, gh = 70, gx = (w - gw * 2 - 16) / 2, gy = (h - gh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, gx, gy, gw, gh, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, gx, gy, gw, gh, 8); ctx.stroke();
+  ctx.fillStyle = color; roundRect(ctx, gx + 4, gy + 4, gw - 8, gh - 24, 4); ctx.fill();
+  ctx.fillStyle = textMuted; roundRect(ctx, gx + 4, gy + gh - 14, gw - 8, 6, 2); ctx.fill();
+  ctx.fillStyle = bgCard; roundRect(ctx, gx + gw + 16, gy, gw, gh, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, gx + gw + 16, gy, gw, gh, 8); ctx.stroke();
+  ctx.fillStyle = color; roundRect(ctx, gx + gw + 20, gy + 4, gw - 8, gh - 24, 4); ctx.fill();
+}
+function genGalleryItemSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var gw = 100, gh = 70, gx = (w - gw * 2 - 16) / 2, gy = (h - gh) / 2;
+  var c = svgRect(gx, gy, gw, gh, 8, bgCard) + svgRect(gx, gy, gw, gh, 8, 'transparent', borderColor, 1);
+  c += svgRect(gx + 4, gy + 4, gw - 8, gh - 24, 4, color);
+  c += svgRect(gx + 4, gy + gh - 14, gw - 8, 6, 2, textMuted);
+  c += svgRect(gx + gw + 16, gy, gw, gh, 8, bgCard);
+  c += svgRect(gx + gw + 16, gy, gw, gh, 8, 'transparent', borderColor, 1);
+  c += svgRect(gx + gw + 20, gy + 4, gw - 8, gh - 24, 4, color);
+  return svgWrap(w, h, '', c);
+}
+function renderFileItem(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var fw = 240, fh = 40, fx = (w - fw) / 2, fy = (h - fh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, fx, fy, fw, fh, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, fx, fy, fw, fh, 8); ctx.stroke();
+  ctx.fillStyle = color; roundRect(ctx, fx + 10, fy + 8, 24, 24, 4); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 10px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('PDF', fx + 22, fy + 20);
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('document.pdf', fx + 44, fy + fh / 2);
+  ctx.fillStyle = textMuted; ctx.font = '11px ' + getFont(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  ctx.fillText('2.4MB', fx + fw - 14, fy + fh / 2);
+}
+function genFileItemSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var fw = 240, fh = 40, fx = (w - fw) / 2, fy = (h - fh) / 2;
+  var c = svgRect(fx, fy, fw, fh, 8, bgCard) + svgRect(fx, fy, fw, fh, 8, 'transparent', borderColor, 1);
+  c += svgRect(fx + 10, fy + 8, 24, 24, 4, color);
+  c += svgText(fx + 22, fy + 22, 'PDF', '#ffffff', '10px', 'middle', getFont(), true);
+  c += svgText(fx + 44, fy + fh / 2 + 5, 'document.pdf', textPrimary, '13px', 'start', getFont());
+  c += svgText(fx + fw - 14, fy + fh / 2 + 5, '2.4MB', textMuted, '11px', 'end', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderUserItem(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var uw = 240, uh = 44, ux = (w - uw) / 2, uy = (h - uh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, ux, uy, uw, uh, 8); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, ux, uy, uw, uh, 8); ctx.stroke();
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(ux + 22, uy + uh / 2, 14, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 11px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('U', ux + 22, uy + uh / 2);
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('用户名', ux + 44, uy + uh / 2 - 2);
+  ctx.fillStyle = textMuted; ctx.font = '11px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('user@example.com', ux + 44, uy + uh / 2 + 12);
+}
+function genUserItemSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var uw = 240, uh = 44, ux = (w - uw) / 2, uy = (h - uh) / 2;
+  var c = svgRect(ux, uy, uw, uh, 8, bgCard) + svgRect(ux, uy, uw, uh, 8, 'transparent', borderColor, 1);
+  c += svgCircle(ux + 22, uy + uh / 2, 14, color);
+  c += svgText(ux + 22, uy + uh / 2 + 4, 'U', '#ffffff', '11px', 'middle', getFont(), true);
+  c += svgText(ux + 44, uy + uh / 2 + 3, '用户名', textPrimary, '13px', 'start', getFont());
+  c += svgText(ux + 44, uy + uh / 2 + 17, 'user@example.com', textMuted, '11px', 'start', getFont());
+  return svgWrap(w, h, '', c);
+}
+/* ========== 9. Media ========== */
+function renderPlayButton(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var s = 56, sx = (w - s) / 2, sy = (h - s) / 2;
+  ctx.fillStyle = hexToRgba(color, 0.2); ctx.beginPath(); ctx.arc(sx + s / 2, sy + s / 2, s / 2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(sx + s / 2 - 8, sy + 14); ctx.lineTo(sx + s / 2 - 8, sy + s - 14); ctx.lineTo(sx + s / 2 + 12, sy + s / 2); ctx.closePath(); ctx.fill();
+}
+function genPlayButtonSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var s = 56, sx = (w - s) / 2, sy = (h - s) / 2;
+  var tri = svgPath('M' + (sx + s / 2 - 8) + ',' + (sy + 14) + ' L' + (sx + s / 2 - 8) + ',' + (sy + s - 14) + ' L' + (sx + s / 2 + 12) + ',' + (sy + s / 2) + ' Z', color);
+  return svgWrap(w, h, '', svgCircle(sx + s / 2, sy + s / 2, s / 2, hexToRgba(color, 0.2)) + tri);
+}
+function renderPauseButton(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var s = 56, sx = (w - s) / 2, sy = (h - s) / 2;
+  ctx.fillStyle = hexToRgba(color, 0.2); ctx.beginPath(); ctx.arc(sx + s / 2, sy + s / 2, s / 2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = color; roundRect(ctx, sx + s / 2 - 8, sy + 14, 6, s - 28, 2); ctx.fill();
+  roundRect(ctx, sx + s / 2 + 2, sy + 14, 6, s - 28, 2); ctx.fill();
+}
+function genPauseButtonSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var s = 56, sx = (w - s) / 2, sy = (h - s) / 2;
+  var c = svgCircle(sx + s / 2, sy + s / 2, s / 2, hexToRgba(color, 0.2));
+  c += svgRect(sx + s / 2 - 8, sy + 14, 6, s - 28, 2, color);
+  c += svgRect(sx + s / 2 + 2, sy + 14, 6, s - 28, 2, color);
+  return svgWrap(w, h, '', c);
+}
+function renderVolumeSlider(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var sw = 160, sh = 6, sx = (w - sw) / 2 + 20, sy = (h - sh) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, sx, sy, sw, sh, sh / 2); ctx.fill();
+  var grad = ctx.createLinearGradient(sx, sy, sx + sw * 0.6, sy);
+  grad.addColorStop(0, color); grad.addColorStop(1, color2);
+  ctx.fillStyle = grad; roundRect(ctx, sx, sy, sw * 0.6, sh, sh / 2); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(sx + sw * 0.6, sy + sh / 2, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(sx + sw * 0.6, sy + sh / 2, 8, 0, Math.PI * 2); ctx.stroke();
+  ctx.fillStyle = textMuted; ctx.font = '14px ' + getFont(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  ctx.fillText('🔊', sx - 10, sy + sh / 2);
+}
+function genVolumeSliderSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var sw = 160, sh = 6, sx = (w - sw) / 2 + 20, sy = (h - sh) / 2;
+  var defs = svgGradient('gVol', sx, sy, sx + sw * 0.6, sy, [['0%', color], ['100%', color2]]);
+  var c = svgRect(sx, sy, sw, sh, 3, bgCard);
+  c += svgRect(sx, sy, sw * 0.6, sh, 3, 'url(#gVol)');
+  c += svgCircle(sx + sw * 0.6, sy + sh / 2, 8, '#ffffff', color, 2);
+  c += svgText(sx - 10, sy + sh / 2 + 5, '🔊', textMuted, '14px', 'end', getFont());
+  return svgWrap(w, h, defs, c);
+}
+function renderMediaProgress(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var pw = 200, ph = 4, px = (w - pw) / 2, py = (h - ph) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, px, py, pw, ph, ph / 2); ctx.fill();
+  var grad = ctx.createLinearGradient(px, py, px + pw * 0.4, py);
+  grad.addColorStop(0, color); grad.addColorStop(1, color2);
+  ctx.fillStyle = grad; roundRect(ctx, px, py, pw * 0.4, ph, ph / 2); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(px + pw * 0.4, py + ph / 2, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = textMuted; ctx.font = '10px ' + getMonoFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('1:24', px, py + ph + 6);
+  ctx.fillStyle = textMuted; ctx.font = '10px ' + getMonoFont(); ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+  ctx.fillText('3:45', px + pw, py + ph + 6);
+}
+function genMediaProgressSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var color = getVariantColor(variant);
+  var color2 = getVariantColorSecondary(variant);
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var pw = 200, ph = 4, px = (w - pw) / 2, py = (h - ph) / 2;
+  var defs = svgGradient('gMp', px, py, px + pw * 0.4, py, [['0%', color], ['100%', color2]]);
+  var c = svgRect(px, py, pw, ph, 2, bgCard);
+  c += svgRect(px, py, pw * 0.4, ph, 2, 'url(#gMp)');
+  c += svgCircle(px + pw * 0.4, py + ph / 2, 6, '#ffffff');
+  c += svgText(px, py + ph + 14, '1:24', textMuted, '10px', 'start', getMonoFont());
+  c += svgText(px + pw, py + ph + 14, '3:45', textMuted, '10px', 'end', getMonoFont());
+  return svgWrap(w, h, defs, c);
+}
+function renderFullscreenButton(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var s = 40, sx = (w - s) / 2, sy = (h - s) / 2;
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  ctx.strokeRect(sx + 6, sy + 6, s - 12, s - 12);
+  ctx.beginPath(); ctx.moveTo(sx + 6, sy + 14); ctx.lineTo(sx + 6, sy + 6); ctx.lineTo(sx + 14, sy + 6); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sx + s - 6, sy + 14); ctx.lineTo(sx + s - 6, sy + 6); ctx.lineTo(sx + s - 14, sy + 6); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sx + 6, sy + s - 14); ctx.lineTo(sx + 6, sy + s - 6); ctx.lineTo(sx + 14, sy + s - 6); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sx + s - 6, sy + s - 14); ctx.lineTo(sx + s - 6, sy + s - 6); ctx.lineTo(sx + s - 14, sy + s - 6); ctx.stroke();
+}
+function genFullscreenButtonSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var s = 40, sx = (w - s) / 2, sy = (h - s) / 2;
+  var c = svgRect(sx + 6, sy + 6, s - 12, s - 12, 0, 'transparent', color, 2);
+  c += svgPath('M' + (sx + 6) + ',' + (sy + 14) + ' L' + (sx + 6) + ',' + (sy + 6) + ' L' + (sx + 14) + ',' + (sy + 6), '', color, 2);
+  c += svgPath('M' + (sx + s - 6) + ',' + (sy + 14) + ' L' + (sx + s - 6) + ',' + (sy + 6) + ' L' + (sx + s - 14) + ',' + (sy + 6), '', color, 2);
+  c += svgPath('M' + (sx + 6) + ',' + (sy + s - 14) + ' L' + (sx + 6) + ',' + (sy + s - 6) + ' L' + (sx + 14) + ',' + (sy + s - 6), '', color, 2);
+  c += svgPath('M' + (sx + s - 6) + ',' + (sy + s - 14) + ' L' + (sx + s - 6) + ',' + (sy + s - 6) + ' L' + (sx + s - 14) + ',' + (sy + s - 6), '', color, 2);
+  return svgWrap(w, h, '', c);
+}
+
+/* ========== 10. Social ========== */
+function renderLikeButton(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var bw = 100, bh = 40, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.fillStyle = hexToRgba(color, 0.1); roundRect(ctx, bx, by, bw, bh, 10); ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 1.5; roundRect(ctx, bx, by, bw, bh, 10); ctx.stroke();
+  ctx.fillStyle = color; ctx.font = '16px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('♥', bx + 24, by + bh / 2);
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('128', bx + 44, by + bh / 2);
+}
+function genLikeButtonSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var bw = 100, bh = 40, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var c = svgRect(bx, by, bw, bh, 10, hexToRgba(color, 0.1), color, 1.5);
+  c += svgText(bx + 24, by + bh / 2 + 5, '♥', color, '16px', 'middle', getFont());
+  c += svgText(bx + 44, by + bh / 2 + 5, '128', textPrimary, '13px', 'start', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderCommentBox(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var cw = 240, ch = 60, cx = (w - cw) / 2, cy = (h - ch) / 2;
+  ctx.fillStyle = bgCard; roundRect(ctx, cx, cy, cw, ch, 10); ctx.fill();
+  ctx.strokeStyle = borderColor; ctx.lineWidth = 1; roundRect(ctx, cx, cy, cw, ch, 10); ctx.stroke();
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(cx + 22, cy + ch / 2, 14, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 11px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('A', cx + 22, cy + ch / 2);
+  ctx.fillStyle = textMuted; ctx.font = '12px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('写下你的评论...', cx + 46, cy + ch / 2);
+  ctx.fillStyle = color; roundRect(ctx, cx + cw - 50, cy + ch - 26, 40, 20, 4); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = '10px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('发送', cx + cw - 30, cy + ch - 16);
+}
+function genCommentBoxSvg(w, h, variant) {
+  var bgCard = cssVar('--bg-card', '#1a1a2e');
+  var borderColor = cssVar('--border-color', '#2a2a4a');
+  var textMuted = cssVar('--text-muted', '#6868a8');
+  var color = getVariantColor(variant);
+  var cw = 240, ch = 60, cx = (w - cw) / 2, cy = (h - ch) / 2;
+  var c = svgRect(cx, cy, cw, ch, 10, bgCard) + svgRect(cx, cy, cw, ch, 10, 'transparent', borderColor, 1);
+  c += svgCircle(cx + 22, cy + ch / 2, 14, color);
+  c += svgText(cx + 22, cy + ch / 2 + 4, 'A', '#ffffff', '11px', 'middle', getFont(), true);
+  c += svgText(cx + 46, cy + ch / 2 + 5, '写下你的评论...', textMuted, '12px', 'start', getFont());
+  c += svgRect(cx + cw - 50, cy + ch - 26, 40, 20, 4, color);
+  c += svgText(cx + cw - 30, cy + ch - 12, '发送', '#ffffff', '10px', 'middle', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderShareButton(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var bw = 100, bh = 40, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.fillStyle = hexToRgba(color, 0.1); roundRect(ctx, bx, by, bw, bh, 10); ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 1.5; roundRect(ctx, bx, by, bw, bh, 10); ctx.stroke();
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(bx + 24, by + bh / 2 - 8); ctx.lineTo(bx + 44, by + bh / 2 - 4); ctx.lineTo(bx + 24, by + bh / 2 + 8); ctx.stroke();
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(bx + 24, by + bh / 2 - 8, 3, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(bx + 44, by + bh / 2 - 4, 3, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(bx + 24, by + bh / 2 + 8, 3, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('分享', bx + 54, by + bh / 2);
+}
+function genShareButtonSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var bw = 100, bh = 40, bx = (w - bw) / 2, by = (h - bh) / 2;
+  var c = svgRect(bx, by, bw, bh, 10, hexToRgba(color, 0.1), color, 1.5);
+  c += svgPath('M' + (bx + 24) + ',' + (by + bh / 2 - 8) + ' L' + (bx + 44) + ',' + (by + bh / 2 - 4) + ' L' + (bx + 24) + ',' + (by + bh / 2 + 8), '', color, 2);
+  c += svgCircle(bx + 24, by + bh / 2 - 8, 3, color);
+  c += svgCircle(bx + 44, by + bh / 2 - 4, 3, color);
+  c += svgCircle(bx + 24, by + bh / 2 + 8, 3, color);
+  c += svgText(bx + 54, by + bh / 2 + 5, '分享', textPrimary, '13px', 'start', getFont());
+  return svgWrap(w, h, '', c);
+}
+function renderFollowButton(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var bw = 100, bh = 36, bx = (w - bw) / 2, by = (h - bh) / 2;
+  ctx.fillStyle = color; roundRect(ctx, bx, by, bw, bh, 10); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.font = 'bold 13px ' + getFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('+ 关注', bx + bw / 2, by + bh / 2);
+}
+function genFollowButtonSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var bw = 100, bh = 36, bx = (w - bw) / 2, by = (h - bh) / 2;
+  return svgWrap(w, h, '', svgRect(bx, by, bw, bh, 10, color) + svgText(bx + bw / 2, by + bh / 2 + 5, '+ 关注', '#ffffff', '13px', 'middle', getFont(), true));
+}
+function renderMessageBubble(ctx, w, h, variant) {
+  ctx.clearRect(0, 0, w, h);
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var mw = 180, mh = 44, mx = (w - mw) / 2, my = (h - mh) / 2;
+  ctx.fillStyle = color; roundRect(ctx, mx, my, mw, mh, 12); ctx.fill();
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.moveTo(mx + 12, my + mh); ctx.lineTo(mx + 4, my + mh + 10); ctx.lineTo(mx + 24, my + mh); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = textPrimary; ctx.font = '13px ' + getFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('这是一条消息', mx + 16, my + mh / 2);
+}
+function genMessageBubbleSvg(w, h, variant) {
+  var color = getVariantColor(variant);
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var mw = 180, mh = 44, mx = (w - mw) / 2, my = (h - mh) / 2;
+  var tail = svgPath('M' + (mx + 12) + ',' + (my + mh) + ' L' + (mx + 4) + ',' + (my + mh + 10) + ' L' + (mx + 24) + ',' + (my + mh) + ' Z', color);
+  return svgWrap(w, h, '', svgRect(mx, my, mw, mh, 12, color) + tail + svgText(mx + 16, my + mh / 2 + 5, '这是一条消息', textPrimary, '13px', 'start', getFont()));
+}
+/* ========== Component Registry ========== */
+var COMPONENTS = [
+  { id: 'btn-rounded', name: '圆角按钮', cat: 'buttons', render: renderBtnRounded, genSvg: genBtnRoundedSvg },
+  { id: 'btn-pill', name: '胶囊按钮', cat: 'buttons', render: renderBtnPill, genSvg: genBtnPillSvg },
+  { id: 'btn-gradient', name: '渐变按钮', cat: 'buttons', render: renderBtnGradient, genSvg: genBtnGradientSvg },
+  { id: 'btn-outline', name: '描边按钮', cat: 'buttons', render: renderBtnOutline, genSvg: genBtnOutlineSvg },
+  { id: 'btn-icon', name: '图标按钮', cat: 'buttons', render: renderBtnIcon, genSvg: genBtnIconSvg },
+  { id: 'btn-ghost', name: '幽灵按钮', cat: 'buttons', render: renderBtnGhost, genSvg: genBtnGhostSvg },
+  { id: 'btn-dropdown', name: '下拉按钮', cat: 'buttons', render: renderBtnDropdown, genSvg: genBtnDropdownSvg },
+  { id: 'btn-group', name: '分组按钮', cat: 'buttons', render: renderBtnGroup, genSvg: genBtnGroupSvg },
+  { id: 'btn-loading', name: '加载按钮', cat: 'buttons', render: renderBtnLoading, genSvg: genBtnLoadingSvg },
+  { id: 'btn-fab', name: '悬浮按钮', cat: 'buttons', render: renderBtnFab, genSvg: genBtnFabSvg },
+  { id: 'input-text', name: '文本输入框', cat: 'inputs', render: renderInputText, genSvg: genInputTextSvg },
+  { id: 'input-search', name: '搜索框', cat: 'inputs', render: renderInputSearch, genSvg: genInputSearchSvg },
+  { id: 'input-number', name: '数字输入框', cat: 'inputs', render: renderInputNumber, genSvg: genInputNumberSvg },
+  { id: 'input-password', name: '密码输入框', cat: 'inputs', render: renderInputPassword, genSvg: genInputPasswordSvg },
+  { id: 'input-textarea', name: '文本域', cat: 'inputs', render: renderInputTextarea, genSvg: genInputTextareaSvg },
+  { id: 'input-tag', name: '标签输入框', cat: 'inputs', render: renderInputTag, genSvg: genInputTagSvg },
+  { id: 'input-autocomplete', name: '自动完成框', cat: 'inputs', render: renderInputAutocomplete, genSvg: genInputAutocompleteSvg },
+  { id: 'input-color', name: '颜色选择器', cat: 'inputs', render: renderInputColor, genSvg: genInputColorSvg },
+  { id: 'input-date', name: '日期选择器', cat: 'inputs', render: renderInputDate, genSvg: genInputDateSvg },
+  { id: 'input-file', name: '文件上传', cat: 'inputs', render: renderInputFile, genSvg: genInputFileSvg },
+  { id: 'toggle-on', name: '开关(开)', cat: 'selection', render: renderToggleOn, genSvg: genToggleOnSvg },
+  { id: 'toggle-off', name: '开关(关)', cat: 'selection', render: renderToggleOff, genSvg: genToggleOffSvg },
+  { id: 'checkbox-checked', name: '复选框(选中)', cat: 'selection', render: renderCheckboxChecked, genSvg: genCheckboxCheckedSvg },
+  { id: 'checkbox-empty', name: '复选框(空)', cat: 'selection', render: renderCheckboxEmpty, genSvg: genCheckboxEmptySvg },
+  { id: 'radio-selected', name: '单选按钮(选中)', cat: 'selection', render: renderRadioSelected, genSvg: genRadioSelectedSvg },
+  { id: 'radio-empty', name: '单选按钮(空)', cat: 'selection', render: renderRadioEmpty, genSvg: genRadioEmptySvg },
+  { id: 'select-dropdown', name: '下拉菜单', cat: 'selection', render: renderSelectDropdown, genSvg: genSelectDropdownSvg },
+  { id: 'select-multi', name: '多选下拉', cat: 'selection', render: renderSelectMulti, genSvg: genSelectMultiSvg },
+  { id: 'segment-control', name: '分段控制器', cat: 'selection', render: renderSegmentControl, genSvg: genSegmentControlSvg },
+  { id: 'slider-select', name: '滑块选择', cat: 'selection', render: renderSliderSelect, genSvg: genSliderSelectSvg },
+  { id: 'rating-stars', name: '评分星星', cat: 'selection', render: renderRatingStars, genSvg: genRatingStarsSvg },
+  { id: 'color-preset', name: '颜色预设', cat: 'selection', render: renderColorPreset, genSvg: genColorPresetSvg },
+  { id: 'stepper', name: '步进器', cat: 'selection', render: renderStepper, genSvg: genStepperSvg },
+  { id: 'progress-bar', name: '进度条', cat: 'progress', render: renderProgressBar, genSvg: genProgressBarSvg },
+  { id: 'slider', name: '滑块', cat: 'progress', render: renderSlider, genSvg: genSliderSvg },
+  { id: 'circular-progress', name: '圆形进度', cat: 'progress', render: renderCircularProgress, genSvg: genCircularProgressSvg },
+  { id: 'loading-bar', name: '加载条', cat: 'progress', render: renderLoadingBar, genSvg: genLoadingBarSvg },
+  { id: 'skeleton', name: '骨架屏', cat: 'progress', render: renderSkeleton, genSvg: genSkeletonSvg },
+  { id: 'card-basic', name: '基础卡片', cat: 'info', render: renderCardBasic, genSvg: genCardBasicSvg },
+  { id: 'badge-info', name: '信息徽章', cat: 'info', render: renderBadgeInfo, genSvg: genBadgeInfoSvg },
+  { id: 'tag-group', name: '标签组', cat: 'info', render: renderTagGroup, genSvg: genTagGroupSvg },
+  { id: 'tooltip', name: '提示框', cat: 'info', render: renderTooltip, genSvg: genTooltipSvg },
+  { id: 'accordion', name: '折叠面板', cat: 'info', render: renderAccordion, genSvg: genAccordionSvg },
+  { id: 'timeline', name: '时间线', cat: 'info', render: renderTimeline, genSvg: genTimelineSvg },
+  { id: 'stat-number', name: '统计数字', cat: 'info', render: renderStatNumber, genSvg: genStatNumberSvg },
+  { id: 'avatar-group', name: '头像组', cat: 'info', render: renderAvatarGroup, genSvg: genAvatarGroupSvg },
+  { id: 'rating-display', name: '评分展示', cat: 'info', render: renderRatingDisplay, genSvg: genRatingDisplaySvg },
+  { id: 'status-indicator', name: '状态指示', cat: 'info', render: renderStatusIndicator, genSvg: genStatusIndicatorSvg },
+  { id: 'navbar', name: '导航栏', cat: 'navigation', render: renderNavbar, genSvg: genNavbarSvg },
+  { id: 'tabbar', name: '标签栏', cat: 'navigation', render: renderTabbar, genSvg: genTabbarSvg },
+  { id: 'breadcrumb', name: '面包屑', cat: 'navigation', render: renderBreadcrumb, genSvg: genBreadcrumbSvg },
+  { id: 'pagination', name: '分页器', cat: 'navigation', render: renderPagination, genSvg: genPaginationSvg },
+  { id: 'step-bar', name: '步骤条', cat: 'navigation', render: renderStepBar, genSvg: genStepBarSvg },
+  { id: 'sidebar', name: '侧边栏', cat: 'navigation', render: renderSidebar, genSvg: genSidebarSvg },
+  { id: 'dropdown-nav', name: '下拉导航', cat: 'navigation', render: renderDropdownNav, genSvg: genDropdownNavSvg },
+  { id: 'menu-bar', name: '菜单栏', cat: 'navigation', render: renderMenuBar, genSvg: genMenuBarSvg },
+  { id: 'toolbar', name: '工具栏', cat: 'navigation', render: renderToolbar, genSvg: genToolbarSvg },
+  { id: 'back-to-top', name: '返回顶部', cat: 'navigation', render: renderBackToTop, genSvg: genBackToTopSvg },
+  { id: 'alert-success', name: '成功提示', cat: 'feedback', render: renderAlertSuccess, genSvg: genAlertSuccessSvg },
+  { id: 'alert-warning', name: '警告提示', cat: 'feedback', render: renderAlertWarning, genSvg: genAlertWarningSvg },
+  { id: 'alert-error', name: '错误提示', cat: 'feedback', render: renderAlertError, genSvg: genAlertErrorSvg },
+  { id: 'alert-info', name: '信息提示', cat: 'feedback', render: renderAlertInfo, genSvg: genAlertInfoSvg },
+  { id: 'alert-loading', name: '加载提示', cat: 'feedback', render: renderAlertLoading, genSvg: genAlertLoadingSvg },
+  { id: 'confirm-dialog', name: '确认对话框', cat: 'feedback', render: renderConfirmDialog, genSvg: genConfirmDialogSvg },
+  { id: 'notification-card', name: '通知卡片', cat: 'feedback', render: renderNotificationCard, genSvg: genNotificationCardSvg },
+  { id: 'badge-alert', name: '徽章提示', cat: 'feedback', render: renderBadgeAlert, genSvg: genBadgeAlertSvg },
+  { id: 'empty-state', name: '空状态', cat: 'feedback', render: renderEmptyState, genSvg: genEmptyStateSvg },
+  { id: 'offline-state', name: '离线状态', cat: 'feedback', render: renderOfflineState, genSvg: genOfflineStateSvg },
+  { id: 'table-header', name: '表格头部', cat: 'data', render: renderTableHeader, genSvg: genTableHeaderSvg },
+  { id: 'list-item', name: '列表项', cat: 'data', render: renderListItem, genSvg: genListItemSvg },
+  { id: 'tree-node', name: '树形节点', cat: 'data', render: renderTreeNode, genSvg: genTreeNodeSvg },
+  { id: 'chart-placeholder', name: '图表占位', cat: 'data', render: renderChartPlaceholder, genSvg: genChartPlaceholderSvg },
+  { id: 'calendar-cell', name: '日历格子', cat: 'data', render: renderCalendarCell, genSvg: genCalendarCellSvg },
+  { id: 'card-grid', name: '卡片网格', cat: 'data', render: renderCardGrid, genSvg: genCardGridSvg },
+  { id: 'waterfall-item', name: '瀑布流项', cat: 'data', render: renderWaterfallItem, genSvg: genWaterfallItemSvg },
+  { id: 'gallery-item', name: '画廊项', cat: 'data', render: renderGalleryItem, genSvg: genGalleryItemSvg },
+  { id: 'file-item', name: '文件项', cat: 'data', render: renderFileItem, genSvg: genFileItemSvg },
+  { id: 'user-item', name: '用户项', cat: 'data', render: renderUserItem, genSvg: genUserItemSvg },
+  { id: 'play-button', name: '播放按钮', cat: 'media', render: renderPlayButton, genSvg: genPlayButtonSvg },
+  { id: 'pause-button', name: '暂停按钮', cat: 'media', render: renderPauseButton, genSvg: genPauseButtonSvg },
+  { id: 'volume-slider', name: '音量滑块', cat: 'media', render: renderVolumeSlider, genSvg: genVolumeSliderSvg },
+  { id: 'media-progress', name: '进度条', cat: 'media', render: renderMediaProgress, genSvg: genMediaProgressSvg },
+  { id: 'fullscreen-button', name: '全屏按钮', cat: 'media', render: renderFullscreenButton, genSvg: genFullscreenButtonSvg },
+  { id: 'like-button', name: '点赞按钮', cat: 'social', render: renderLikeButton, genSvg: genLikeButtonSvg },
+  { id: 'comment-box', name: '评论框', cat: 'social', render: renderCommentBox, genSvg: genCommentBoxSvg },
+  { id: 'share-button', name: '分享按钮', cat: 'social', render: renderShareButton, genSvg: genShareButtonSvg },
+  { id: 'follow-button', name: '关注按钮', cat: 'social', render: renderFollowButton, genSvg: genFollowButtonSvg },
+  { id: 'message-bubble', name: '消息气泡', cat: 'social', render: renderMessageBubble, genSvg: genMessageBubbleSvg }
+];
+
+/* ========== UI Logic ========== */
+function showToast(msg, type) {
+  type = type || 'ok';
+  var stack = document.getElementById('toastStack');
+  var el = document.createElement('div');
+  el.className = 'toast-msg ' + type;
+  el.textContent = msg;
+  stack.appendChild(el);
+  setTimeout(function() {
+    el.classList.add('out');
+    setTimeout(function() { el.remove(); }, 300);
+  }, 2500);
+}
+
+function updateProgress(pct) {
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function renderGrid() {
+  updateProgress(30);
+  var grid = document.getElementById('assetGrid');
+  grid.innerHTML = '';
+  var filtered = COMPONENTS.filter(function(c) {
+    var catMatch = currentFilter === 'all' || c.cat === currentFilter;
+    var searchMatch = !searchQuery || c.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1;
+    return catMatch && searchMatch;
+  });
+  filtered.forEach(function(comp, idx) {
+    var card = document.createElement('div');
+    card.className = 'ui-card';
+    card.dataset.id = comp.id;
+    if (selection.has(comp.id)) card.classList.add('selected');
+    var check = document.createElement('input');
+    check.type = 'checkbox';
+    check.className = 'ui-card-check';
+    check.checked = selection.has(comp.id);
+    check.onchange = function(e) { e.stopPropagation(); toggleSelect(comp.id); };
+    var preview = document.createElement('div');
+    preview.className = 'ui-card-preview';
+    var canvas = document.createElement('canvas');
+    canvas.width = PREVIEW_W; canvas.height = PREVIEW_H;
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = PREVIEW_W * dpr; canvas.height = PREVIEW_H * dpr;
+    canvas.style.width = PREVIEW_W + 'px'; canvas.style.height = PREVIEW_H + 'px';
+    ctx.scale(dpr, dpr);
+    try { comp.render(ctx, PREVIEW_W, PREVIEW_H, currentVariant); } catch(e) {}
+    preview.appendChild(canvas);
+    var info = document.createElement('div');
+    info.className = 'ui-card-info';
+    var name = document.createElement('div');
+    name.className = 'ui-card-name';
+    name.textContent = comp.name;
+    var actions = document.createElement('div');
+    actions.className = 'ui-card-actions';
+    ['PNG', 'JPG', 'SVG'].forEach(function(fmt) {
+      var btn = document.createElement('button');
+      btn.className = 'btn btn-sm';
+      btn.textContent = fmt;
+      btn.onclick = function(e) { e.stopPropagation(); downloadComponent(comp, fmt); };
+      actions.appendChild(btn);
+    });
+    info.appendChild(name); info.appendChild(actions);
+    card.appendChild(check); card.appendChild(preview); card.appendChild(info);
+    card.onclick = function(e) {
+      if (e.target === check) return;
+      var cvs = document.createElement('canvas');
+      cvs.width = EXPORT_W; cvs.height = EXPORT_H;
+      var cx = cvs.getContext('2d');
+      var dpr2 = window.devicePixelRatio || 1;
+      cvs.width = EXPORT_W * dpr2; cvs.height = EXPORT_H * dpr2;
+      cx.scale(dpr2, dpr2);
+      try { comp.render(cx, EXPORT_W, EXPORT_H, currentVariant); } catch(e) {}
+      var url = cvs.toDataURL('image/png');
+      var win = window.open();
+      win.document.write('<img src="' + url + '" style="max-width:100%">');
+    };
+    grid.appendChild(card);
+  });
+  updateProgress(100);
+  setTimeout(function() { updateProgress(0); }, 400);
+}
+
+function downloadComponent(comp, fmt) {
+  try {
+    if (fmt === 'SVG') {
+      var svg = comp.genSvg(EXPORT_W, EXPORT_H, currentVariant);
+      var blob = new Blob([svg], { type: 'image/svg+xml' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = comp.id + '_' + currentVariant + '.svg'; a.click();
+      URL.revokeObjectURL(url);
+    } else {
+      var cvs = document.createElement('canvas');
+      cvs.width = EXPORT_W; cvs.height = EXPORT_H;
+      var cx = cvs.getContext('2d');
+      var dpr = window.devicePixelRatio || 1;
+      cvs.width = EXPORT_W * dpr; cvs.height = EXPORT_H * dpr;
+      cx.scale(dpr, dpr);
+      comp.render(cx, EXPORT_W, EXPORT_H, currentVariant);
+      var mime = fmt === 'JPG' ? 'image/jpeg' : 'image/png';
+      var url = cvs.toDataURL(mime, 0.92);
+      var a = document.createElement('a');
+      a.href = url; a.download = comp.id + '_' + currentVariant + '.' + fmt.toLowerCase(); a.click();
+    }
+    showToast(comp.name + ' ' + fmt + ' 已下载', 'ok');
+  } catch(e) { showToast('下载失败: ' + e.message, 'err'); }
+}
+
+function toggleSelect(id) {
+  if (selection.has(id)) selection.delete(id); else selection.add(id);
+  updateSelectionUI();
+  renderGrid();
+}
+
+function toggleSelectAll(checked) {
+  if (checked) COMPONENTS.forEach(function(c) { selection.add(c.id); });
+  else selection.clear();
+  updateSelectionUI();
+  renderGrid();
+}
+
+function updateSelectionUI() {
+  var bar = document.getElementById('batchBar');
+  var count = document.getElementById('batchCount');
+  count.textContent = selection.size;
+  bar.classList.toggle('hidden', selection.size === 0);
+  document.getElementById('selectAll').checked = selection.size === COMPONENTS.length && COMPONENTS.length > 0;
+}
+
+function clearSelection() {
+  selection.clear();
+  updateSelectionUI();
+  renderGrid();
+}
+
+function batchDownload() {
+  if (selection.size === 0) { showToast('请先选择组件', 'err'); return; }
+  updateProgress(10);
+  var zip = new JSZip();
+  var folder = zip.folder('ui-components');
+  var done = 0;
+  var total = selection.size;
+  COMPONENTS.forEach(function(comp) {
+    if (!selection.has(comp.id)) return;
+    var svg = comp.genSvg(EXPORT_W, EXPORT_H, currentVariant);
+    folder.file(comp.id + '_' + currentVariant + '.svg', svg);
+    done++;
+    updateProgress(10 + Math.floor(done / total * 80));
+  });
+  zip.generateAsync({ type: 'blob' }).then(function(blob) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'ui-components-' + currentVariant + '.zip'; a.click();
+    URL.revokeObjectURL(url);
+    updateProgress(100);
+    setTimeout(function() { updateProgress(0); }, 500);
+    showToast('批量下载完成 (' + done + '个)', 'ok');
+  });
+}
+
+function filterBy(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.style-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.cat === cat); });
+  renderGrid();
+}
+
+function filterVariant(variant) {
+  currentVariant = variant;
+  document.querySelectorAll('.variant-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.variant === variant); });
+  renderGrid();
+}
+
+function handleSearch(q) {
+  searchQuery = q.trim();
+  renderGrid();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.fonts.ready.then(function() { fontsLoaded = true; renderGrid(); });
+  setTimeout(function() { if (!fontsLoaded) renderGrid(); }, 800);
+});
+</script>
+</body>
+</html>

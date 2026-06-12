@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>背景素材 - 图形化编程素材库</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/themes.css">
+<link rel="stylesheet" href="css/common.css">
+<style>
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #222240;
+  --border-color: #2a2a4a;
+  --border-glow: #4f46e5;
+  --text-primary: #e8e8f0;
+  --text-secondary: #9898b8;
+  --text-muted: #6868a8;
+  --accent-purple: #a855f7;
+  --accent-green: #34d399;
+  --accent-orange: #fb923c;
+  --accent-pink: #f472b6;
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px var(--accent-glow);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+body {
+  font-family: 'Noto Sans SC', 'Space Grotesk', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 { font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.topbar-inner {
+  max-width: 1400px; margin: 0 auto; padding: 0 24px;
+}
+
+.topbar-header {
+  display: flex; align-items: center; justify-content: space-between; padding: 16px 0;
+}
+
+.logo-area {
+  display: flex; align-items: center; gap: 12px;
+}
+
+.logo-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+
+.logo-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.topbar-actions {
+  display: flex; align-items: center; gap: 12px;
+}
+
+.main-content {
+  max-width: 1400px; margin: 0 auto; padding: 24px;
+}
+
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+
+.section-title {
+  font-size: 24px; font-weight: 700; color: var(--text-primary);
+}
+
+.section-subtitle {
+  font-size: 14px; color: var(--text-secondary); margin-top: 4px;
+}
+
+.batch-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.batch-bar.hidden { display: none; }
+
+.batch-count {
+  background: var(--accent); color: white;
+  padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;
+}
+
+.btn {
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card); color: var(--text-primary);
+  transition: all var(--transition-fast);
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.btn:hover { background: var(--bg-card-hover); border-color: var(--accent); }
+
+.btn-primary {
+  background: var(--accent); border-color: var(--accent); color: white;
+}
+
+.btn-primary:hover { background: var(--accent-hover); box-shadow: var(--shadow-glow); }
+
+.btn-danger { border-color: #ef4444; color: #ef4444; }
+.btn-danger:hover { background: rgba(239, 68, 68, 0.15); }
+
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+
+.style-tabs {
+  display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+}
+
+.style-tab {
+  padding: 8px 16px; border-radius: var(--radius-xl);
+  font-size: 13px; cursor: pointer;
+  border: 1px solid var(--border-color);
+  background: transparent; color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.style-tab:hover {
+  border-color: var(--accent); color: var(--text-primary);
+}
+
+.style-tab.active {
+  background: var(--accent); color: white;
+  border-color: var(--accent); box-shadow: var(--shadow-glow);
+}
+
+.bg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.bg-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  position: relative;
+  cursor: pointer;
+}
+
+.bg-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-glow);
+}
+
+.bg-card.selected {
+  border-color: var(--accent-secondary);
+  box-shadow: 0 0 16px var(--accent-glow);
+}
+
+.bg-card-check {
+  position: absolute; top: 12px; left: 12px; z-index: 5;
+  width: 22px; height: 22px;
+  accent-color: var(--accent-secondary);
+  cursor: pointer;
+}
+
+.bg-card-preview {
+  width: 100%; aspect-ratio: 4/3;
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+
+.bg-card-preview canvas {
+  width: 100%; height: 100%;
+  display: block;
+}
+
+.bg-card-info {
+  padding: 14px;
+}
+
+.bg-card-name {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.bg-card-actions {
+  display: flex; gap: 8px;
+}
+
+.bg-card-actions .btn { flex: 1; justify-content: center; }
+
+.progress-track {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+  z-index: 9999; transition: width 0.3s ease;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.toast-stack {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%); z-index: 10001;
+  display: flex; flex-direction: column; gap: 8px;
+  align-items: center; pointer-events: none;
+}
+
+.toast-msg {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  color: var(--text-primary); padding: 12px 24px;
+  border-radius: 12px; font-size: 0.88rem; font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  animation: toastSlide 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+  white-space: nowrap; pointer-events: auto; display: flex; align-items: center; gap: 8px;
+}
+
+.toast-msg.out { animation: toastOut 0.25s ease forwards; }
+.toast-msg.ok { border-color: #34d399; border-left: 3px solid #34d399; }
+.toast-msg.err { border-color: #f87171; border-left: 3px solid #f87171; }
+
+@keyframes toastSlide {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(20px); }
+}
+
+.theme-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid transparent; cursor: pointer;
+  transition: all 0.2s ease; padding: 0;
+}
+
+.theme-btn:hover { transform: scale(1.15); }
+.theme-btn.active { border-color: var(--accent-secondary); box-shadow: 0 0 10px var(--accent-glow); }
+
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 8px 16px;
+  min-width: 240px;
+}
+
+.search-box input {
+  background: transparent; border: none; outline: none;
+  color: var(--text-primary); font-size: 13px;
+  font-family: 'Noto Sans SC', sans-serif;
+  width: 100%;
+}
+
+.search-box input::placeholder { color: var(--text-muted); }
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  z-index: 20000; display: none; align-items: center; justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal-panel {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg); max-width: 900px; width: 92%;
+  max-height: 90vh; overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  animation: modalSlide 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid var(--border-color);
+}
+
+.modal-title { font-size: 16px; font-weight: 600; }
+
+.modal-close {
+  background: none; border: none; color: var(--text-secondary);
+  font-size: 20px; cursor: pointer; padding: 4px;
+}
+
+.modal-close:hover { color: var(--text-primary); }
+
+.modal-body {
+  padding: 20px; display: flex; flex-direction: column; gap: 16px;
+  align-items: center;
+}
+
+.modal-canvas-wrap {
+  width: 100%; max-width: 800px; aspect-ratio: 16/9;
+  background: var(--bg-secondary); border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.modal-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
+
+.modal-actions {
+  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .bg-grid { grid-template-columns: 1fr; }
+  .topbar-inner { padding: 0 12px; }
+  .section-header { flex-direction: column; align-items: flex-start; }
+  .search-box { width: 100%; min-width: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-track" id="progressBar" style="width:0%"></div>
+<div class="toast-stack" id="toastStack"></div>
+
+<div class="modal-overlay" id="previewModal" onclick="closePreview(event)">
+  <div class="modal-panel" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle">预览</span>
+      <button class="modal-close" onclick="closePreview()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-canvas-wrap"><canvas id="modalCanvas" width="1920" height="1080"></canvas></div>
+      <div class="modal-actions" id="modalActions"></div>
+    </div>
+  </div>
+</div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-header">
+      <div class="logo-area">
+        <div class="logo-icon">&#9783;</div>
+        <span class="logo-text">背景素材库</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="theme-btn" data-theme-btn="dark-tech" onclick="__theme.switch('dark-tech')" style="background:#0a0a0f;border-color:#6366f1;"></button>
+        <button class="theme-btn" data-theme-btn="light-clean" onclick="__theme.switch('light-clean')" style="background:#f8f9fa;border-color:#2563eb;"></button>
+        <button class="theme-btn" data-theme-btn="kids-color" onclick="__theme.switch('kids-color')" style="background:#fff8e7;border-color:#ff6b6b;"></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="main-content">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">背景素材</h2>
+      <p class="section-subtitle">Canvas 生成的编程项目背景图案，支持多种风格和分辨率导出</p>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="搜索背景名称..." oninput="handleSearch(this.value)">
+      </div>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary);cursor:pointer;">
+        <input type="checkbox" id="bgSelectAll" onchange="toggleSelectAll(this.checked)" style="accent-color:var(--accent-secondary);"> 全选
+      </label>
+    </div>
+  </div>
+
+  <div class="batch-bar hidden" id="batchBar">
+    <span class="batch-count" id="batchCount">0</span>
+    <span style="font-size:13px;color:var(--text-secondary);">已选择</span>
+    <button class="btn btn-primary" onclick="batchDownload()">批量下载 (ZIP)</button>
+    <button class="btn btn-danger" onclick="clearSelection()">取消选择</button>
+  </div>
+
+  <div class="style-tabs" id="subTabs">
+    <div class="style-tab active" data-cat="all" onclick="filterBy('all')">全部</div>
+    <div class="style-tab" data-cat="grid" onclick="filterBy('grid')">网格图案</div>
+    <div class="style-tab" data-cat="gradient" onclick="filterBy('gradient')">渐变背景</div>
+    <div class="style-tab" data-cat="geometric" onclick="filterBy('geometric')">几何图案</div>
+    <div class="style-tab" data-cat="space" onclick="filterBy('space')">太空科技</div>
+    <div class="style-tab" data-cat="education" onclick="filterBy('education')">教育场景</div>
+    <div class="style-tab" data-cat="nature" onclick="filterBy('nature')">自然风景</div>
+    <div class="style-tab" data-cat="abstract" onclick="filterBy('abstract')">抽象艺术</div>
+    <div class="style-tab" data-cat="retro" onclick="filterBy('retro')">复古风格</div>
+    <div class="style-tab" data-cat="festival" onclick="filterBy('festival')">节日氛围</div>
+    <div class="style-tab" data-cat="business" onclick="filterBy('business')">商务简约</div>
+  </div>
+
+  <div class="bg-grid" id="assetGrid"></div>
+</main>
+
+<script src="js/theme.js"></script>
+<script src="js/export.js"></script>
+<script>
+var fontsLoaded = false;
+var currentFilter = 'all';
+var searchQuery = '';
+var selection = new Set();
+var previewIdx = -1;
+
+function cssVar(name, fallback) {
+  try {
+    var val = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return val || fallback;
+  } catch(e) { return fallback; }
+}
+
+function hexToRgba(hex, alpha) {
+  var r = parseInt(hex.slice(1, 3), 16);
+  var g = parseInt(hex.slice(3, 5), 16);
+  var b = parseInt(hex.slice(5, 7), 16);
+  return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  r = Math.max(0, Math.min(r, Math.min(w, h) / 2));
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+var bgPatterns = [
+  { id: 'grid-square', name: '方形网格', category: 'grid', render: renderGridSquare },
+  { id: 'grid-iso', name: '等距网格', category: 'grid', render: renderGridIso },
+  { id: 'grid-dot', name: '点阵网格', category: 'grid', render: renderGridDot },
+  { id: 'grid-hex', name: '六边形网格', category: 'grid', render: renderGridHex },
+  { id: 'grid-diamond', name: '菱形网格', category: 'grid', render: renderGridDiamond },
+  { id: 'grad-warm', name: '暖色渐变', category: 'gradient', render: renderGradWarm },
+  { id: 'grad-cool', name: '冷色渐变', category: 'gradient', render: renderGradCool },
+  { id: 'grad-neon', name: '霓虹渐变', category: 'gradient', render: renderGradNeon },
+  { id: 'grad-pastel', name: '柔和渐变', category: 'gradient', render: renderGradPastel },
+  { id: 'grad-sunset', name: '日落渐变', category: 'gradient', render: renderGradSunset },
+  { id: 'geo-circle', name: '圆形图案', category: 'geometric', render: renderGeoCircle },
+  { id: 'geo-triangle', name: '三角图案', category: 'geometric', render: renderGeoTriangle },
+  { id: 'geo-hex', name: '六边形图案', category: 'geometric', render: renderGeoHex },
+  { id: 'geo-wave', name: '波浪线条', category: 'geometric', render: renderGeoWave },
+  { id: 'geo-spiral', name: '螺旋图案', category: 'geometric', render: renderGeoSpiral },
+  { id: 'space-stars', name: '星空背景', category: 'space', render: renderSpaceStars },
+  { id: 'space-circuit', name: '电路纹理', category: 'space', render: renderSpaceCircuit },
+  { id: 'space-binary', name: '二进制矩阵', category: 'space', render: renderSpaceBinary },
+  { id: 'space-dataflow', name: '数据流', category: 'space', render: renderSpaceDataflow },
+  { id: 'space-radar', name: '雷达扫描', category: 'space', render: renderSpaceRadar },
+  { id: 'edu-blackboard', name: '教室黑板', category: 'education', render: renderEduBlackboard },
+  { id: 'edu-notebook', name: '课本页面', category: 'education', render: renderEduNotebook },
+  { id: 'edu-playground', name: '操场草坪', category: 'education', render: renderEduPlayground },
+  { id: 'edu-lab', name: '实验室桌面', category: 'education', render: renderEduLab },
+  { id: 'edu-blocks', name: '积木面板', category: 'education', render: renderEduBlocks },
+  { id: 'nature-ocean', name: '海洋波浪', category: 'nature', render: renderNatureOcean },
+  { id: 'nature-forest', name: '森林小径', category: 'nature', render: renderNatureForest },
+  { id: 'nature-city', name: '城市天际线', category: 'nature', render: renderNatureCity },
+  { id: 'nature-mountain', name: '星空山峦', category: 'nature', render: renderNatureMountain },
+  { id: 'nature-sakura', name: '樱花飘落', category: 'nature', render: renderNatureSakura },
+  { id: 'abs-fluid', name: '流体渐变', category: 'abstract', render: renderAbsFluid },
+  { id: 'abs-particle', name: '粒子爆炸', category: 'abstract', render: renderAbsParticle },
+  { id: 'abs-light', name: '光线折射', category: 'abstract', render: renderAbsLight },
+  { id: 'abs-noise', name: '噪点纹理', category: 'abstract', render: renderAbsNoise },
+  { id: 'abs-glitch', name: '故障艺术', category: 'abstract', render: renderAbsGlitch },
+  { id: 'retro-pixel', name: '像素网格', category: 'retro', render: renderRetroPixel },
+  { id: 'retro-scanline', name: '扫描线', category: 'retro', render: renderRetroScanline },
+  { id: 'retro-tape', name: '磁带纹理', category: 'retro', render: renderRetroTape },
+  { id: 'retro-grad', name: '复古渐变', category: 'retro', render: renderRetroGrad },
+  { id: 'retro-dots', name: '点阵打印', category: 'retro', render: renderRetroDots },
+  { id: 'fest-redpacket', name: '春节红包', category: 'festival', render: renderFestRedpacket },
+  { id: 'fest-snow', name: '圣诞雪花', category: 'festival', render: renderFestSnow },
+  { id: 'fest-pumpkin', name: '万圣节南瓜', category: 'festival', render: renderFestPumpkin },
+  { id: 'fest-heart', name: '情人节爱心', category: 'festival', render: renderFestHeart },
+  { id: 'fest-ribbon', name: '生日彩带', category: 'festival', render: renderFestRibbon },
+  { id: 'biz-white', name: '极简白', category: 'business', render: renderBizWhite },
+  { id: 'biz-navy', name: '深蓝商务', category: 'business', render: renderBizNavy },
+  { id: 'biz-gray', name: '浅灰纹理', category: 'business', render: renderBizGray },
+  { id: 'biz-paper', name: '纸张质感', category: 'business', render: renderBizPaper },
+  { id: 'biz-leather', name: '皮革纹理', category: 'business', render: renderBizLeather }
+];
+
+function seededRandom(seed) {
+  var x = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+function renderGridSquare(ctx, w, h) {
+  var bgSecondary = cssVar('--bg-secondary', '#0f1729');
+  var accent = cssVar('--accent', '#6366f1');
+  ctx.fillStyle = bgSecondary;
+  ctx.fillRect(0, 0, w, h);
+  var step = 40;
+  ctx.strokeStyle = hexToRgba(accent, 0.15);
+  ctx.lineWidth = 1;
+  for (var x = 0; x <= w; x += step) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (var y = 0; y <= h; y += step) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+  ctx.strokeStyle = hexToRgba(accent, 0.35);
+  ctx.lineWidth = 1;
+  var bigStep = step * 5;
+  for (var x2 = 0; x2 <= w; x2 += bigStep) {
+    ctx.beginPath(); ctx.moveTo(x2, 0); ctx.lineTo(x2, h); ctx.stroke();
+  }
+  for (var y2 = 0; y2 <= h; y2 += bigStep) {
+    ctx.beginPath(); ctx.moveTo(0, y2); ctx.lineTo(w, y2); ctx.stroke();
+  }
+}
+
+function renderGridIso(ctx, w, h) {
+  var bgSecondary = cssVar('--bg-secondary', '#0f1729');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  ctx.fillStyle = bgSecondary;
+  ctx.fillRect(0, 0, w, h);
+  var size = 40;
+  var hh = size * Math.sqrt(3) / 2;
+  ctx.strokeStyle = hexToRgba(accentSecondary, 0.12);
+  ctx.lineWidth = 1;
+  for (var row = -1; row < h / hh + 1; row++) {
+    for (var col = -1; col < w / size + 1; col++) {
+      var cx = col * size * 1.5;
+      var cy = row * hh + (col % 2 ? hh / 2 : 0);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - hh / 2);
+      ctx.lineTo(cx + size / 2, cy);
+      ctx.lineTo(cx, cy + hh / 2);
+      ctx.lineTo(cx - size / 2, cy);
+      ctx.closePath();
+      ctx.stroke();
+    }
+  }
+}
+
+function renderGridDot(ctx, w, h) {
+  var bgSecondary = cssVar('--bg-secondary', '#0f1729');
+  var accent = cssVar('--accent', '#6366f1');
+  ctx.fillStyle = bgSecondary;
+  ctx.fillRect(0, 0, w, h);
+  var step = 30;
+  ctx.fillStyle = hexToRgba(accent, 0.3);
+  for (var x = step; x < w; x += step) {
+    for (var y = step; y < h; y += step) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+
+function renderGridHex(ctx, w, h) {
+  var bgSecondary = cssVar('--bg-secondary', '#0f1729');
+  var accentPurple = cssVar('--accent-purple', '#a855f7');
+  ctx.fillStyle = bgSecondary;
+  ctx.fillRect(0, 0, w, h);
+  var size = 28;
+  var hh = size * Math.sqrt(3);
+  ctx.strokeStyle = hexToRgba(accentPurple, 0.18);
+  ctx.lineWidth = 1;
+  for (var row = -1; row < h / hh + 1; row++) {
+    for (var col = -1; col < w / (size * 1.5) + 1; col++) {
+      var cx = col * size * 1.5;
+      var cy = row * hh + (col % 2 ? hh / 2 : 0);
+      ctx.beginPath();
+      for (var i = 0; i < 6; i++) {
+        var angle = Math.PI / 3 * i - Math.PI / 6;
+        var px = cx + size * Math.cos(angle);
+        var py = cy + size * Math.sin(angle);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+  }
+}
+
+function renderGridDiamond(ctx, w, h) {
+  var bgSecondary = cssVar('--bg-secondary', '#0f1729');
+  var accentPink = cssVar('--accent-pink', '#f472b6');
+  ctx.fillStyle = bgSecondary;
+  ctx.fillRect(0, 0, w, h);
+  var step = 50;
+  ctx.strokeStyle = hexToRgba(accentPink, 0.15);
+  ctx.lineWidth = 1;
+  for (var x = 0; x <= w + step; x += step) {
+    for (var y = 0; y <= h + step; y += step) {
+      ctx.beginPath();
+      ctx.moveTo(x, y - step / 2);
+      ctx.lineTo(x + step / 2, y);
+      ctx.lineTo(x, y + step / 2);
+      ctx.lineTo(x - step / 2, y);
+      ctx.closePath();
+      ctx.stroke();
+    }
+  }
+}
+
+function renderGradWarm(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accentOrange = cssVar('--accent-orange', '#fb923c');
+  var accentPink = cssVar('--accent-pink', '#f472b6');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var grad = ctx.createLinearGradient(0, 0, w, h);
+  grad.addColorStop(0, hexToRgba(accentOrange, 0.25));
+  grad.addColorStop(0.5, hexToRgba(accentPink, 0.15));
+  grad.addColorStop(1, hexToRgba(accentOrange, 0.05));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 5; i++) {
+    var gx = (w / 6) * (i + 1);
+    var gy = h * 0.3 + seededRandom(i + 10) * h * 0.4;
+    var gr = ctx.createRadialGradient(gx, gy, 0, gx, gy, 250);
+    gr.addColorStop(0, hexToRgba(accentOrange, 0.12));
+    gr.addColorStop(1, hexToRgba(accentOrange, 0));
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, w, h);
+  }
+}
+
+function renderGradCool(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var grad = ctx.createLinearGradient(0, 0, w, h);
+  grad.addColorStop(0, hexToRgba(accent, 0.2));
+  grad.addColorStop(0.5, hexToRgba(accentSecondary, 0.1));
+  grad.addColorStop(1, hexToRgba(accent, 0.05));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 4; i++) {
+    var gx = (w / 5) * (i + 1);
+    var gy = h * 0.2 + seededRandom(i + 20) * h * 0.6;
+    var gr = ctx.createRadialGradient(gx, gy, 0, gx, gy, 300);
+    gr.addColorStop(0, hexToRgba(accentSecondary, 0.1));
+    gr.addColorStop(1, hexToRgba(accentSecondary, 0));
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, w, h);
+  }
+}
+
+function renderGradNeon(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#05050f');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  var accentPurple = cssVar('--accent-purple', '#a855f7');
+  var accentPink = cssVar('--accent-pink', '#f472b6');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var colors = [hexToRgba(accent, 0.15), hexToRgba(accentSecondary, 0.12), hexToRgba(accentPurple, 0.12), hexToRgba(accentPink, 0.1)];
+  for (var i = 0; i < colors.length; i++) {
+    var gx = (w / (colors.length + 1)) * (i + 1);
+    var gy = h * 0.5 + Math.sin(i) * h * 0.2;
+    var gr = ctx.createRadialGradient(gx, gy, 0, gx, gy, 350);
+    gr.addColorStop(0, colors[i]);
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, w, h);
+  }
+}
+
+function renderGradPastel(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accentPurple = cssVar('--accent-purple', '#a855f7');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  var accentPink = cssVar('--accent-pink', '#f472b6');
+  var accentGreen = cssVar('--accent-green', '#34d399');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var pastels = [hexToRgba(accentPurple, 0.08), hexToRgba(accentSecondary, 0.08), hexToRgba(accentPink, 0.08), hexToRgba(accentGreen, 0.08)];
+  for (var i = 0; i < 8; i++) {
+    var gx = seededRandom(i + 30) * w;
+    var gy = seededRandom(i + 40) * h;
+    var gr = ctx.createRadialGradient(gx, gy, 0, gx, gy, 200 + seededRandom(i + 50) * 300);
+    gr.addColorStop(0, pastels[i % pastels.length]);
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, w, h);
+  }
+}
+
+function renderGradSunset(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accentOrange = cssVar('--accent-orange', '#fb923c');
+  var accentPink = cssVar('--accent-pink', '#f472b6');
+  var accentPurple = cssVar('--accent-purple', '#a855f7');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, hexToRgba(accentPurple, 0.3));
+  grad.addColorStop(0.4, hexToRgba(accentPink, 0.2));
+  grad.addColorStop(0.7, hexToRgba(accentOrange, 0.15));
+  grad.addColorStop(1, hexToRgba(accentPurple, 0.05));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 3; i++) {
+    var gx = (w / 4) * (i + 1);
+    var gy = h * 0.6;
+    var gr = ctx.createRadialGradient(gx, gy, 0, gx, gy, 400);
+    gr.addColorStop(0, hexToRgba(accentOrange, 0.08));
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, w, h);
+  }
+}
+
+function renderGeoCircle(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a1a');
+  var accent = cssVar('--accent', '#6366f1');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var step = 80;
+  for (var x = step / 2; x < w + step; x += step) {
+    for (var y = step / 2; y < h + step; y += step) {
+      var r = 20 + seededRandom(Math.floor(x) + Math.floor(y)) * 20;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.strokeStyle = hexToRgba(accent, 0.1 + seededRandom(Math.floor(x * y)) * 0.2);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+}
+
+function renderGeoTriangle(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a1a');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var size = 60;
+  var hh = size * Math.sqrt(3) / 2;
+  for (var row = 0; row < h / hh + 1; row++) {
+    for (var col = 0; col < w / (size / 2) + 1; col++) {
+      var cx = col * size / 2;
+      var cy = row * hh;
+      if (col % 2 === 1) cy += hh / 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + size / 2, cy + hh);
+      ctx.lineTo(cx - size / 2, cy + hh);
+      ctx.closePath();
+      ctx.strokeStyle = hexToRgba(accentSecondary, 0.08 + seededRandom(row * 100 + col) * 0.12);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+}
+
+function renderGeoHex(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a1a');
+  var accentPurple = cssVar('--accent-purple', '#a855f7');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var size = 35;
+  var hh = size * Math.sqrt(3);
+  for (var row = -1; row < h / hh + 1; row++) {
+    for (var col = -1; col < w / (size * 1.5) + 1; col++) {
+      var cx = col * size * 1.5;
+      var cy = row * hh + (col % 2 ? hh / 2 : 0);
+      ctx.beginPath();
+      for (var i = 0; i < 6; i++) {
+        var angle = Math.PI / 3 * i - Math.PI / 6;
+        var px = cx + size * Math.cos(angle);
+        var py = cy + size * Math.sin(angle);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = hexToRgba(accentPurple, 0.1 + seededRandom(row * 50 + col) * 0.15);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+}
+
+function renderGeoWave(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a1a');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  var accent = cssVar('--accent', '#6366f1');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  for (var wave = 0; wave < 8; wave++) {
+    ctx.beginPath();
+    var baseY = h * 0.1 + wave * h * 0.11;
+    ctx.moveTo(0, baseY);
+    for (var wx = 0; wx <= w; wx += 3) {
+      var wy = baseY + Math.sin(wx * 0.008 + wave * 0.7) * h * 0.04;
+      ctx.lineTo(wx, wy);
+    }
+    ctx.strokeStyle = hexToRgba(wave % 2 === 0 ? accent : accentSecondary, 0.12);
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+}
+
+function renderGeoSpiral(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a1a');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var cx = w / 2, cy = h / 2;
+  for (var s = 0; s < 3; s++) {
+    ctx.beginPath();
+    var offset = s * Math.PI * 2 / 3;
+    for (var t = 0; t < Math.PI * 12; t += 0.05) {
+      var r = 10 + t * 8;
+      var px = cx + r * Math.cos(t + offset);
+      var py = cy + r * Math.sin(t + offset);
+      if (t === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = hexToRgba(s === 1 ? accentSecondary : accent, 0.15);
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+}
+
+function renderSpaceStars(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#020208');
+  var textSecondary = cssVar('--text-secondary', '#8a8a9a');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 300; i++) {
+    var sx = seededRandom(i) * w;
+    var sy = seededRandom(i + 100) * h;
+    var sr = seededRandom(i + 200) * 2;
+    var sa = 0.3 + seededRandom(i + 300) * 0.7;
+    ctx.beginPath();
+    ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,' + sa + ')';
+    ctx.fill();
+  }
+  for (var j = 0; j < 3; j++) {
+    var nx = seededRandom(j + 400) * w;
+    var ny = seededRandom(j + 500) * h;
+    var nr = 1 + seededRandom(j + 600) * 1.5;
+    var ng = ctx.createRadialGradient(nx, ny, 0, nx, ny, nr * 8);
+    ng.addColorStop(0, 'rgba(200,220,255,0.8)');
+    ng.addColorStop(0.3, 'rgba(100,150,255,0.2)');
+    ng.addColorStop(1, 'rgba(100,150,255,0)');
+    ctx.fillStyle = ng;
+    ctx.fillRect(nx - nr * 8, ny - nr * 8, nr * 16, nr * 16);
+  }
+}
+
+function renderSpaceCircuit(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#050510');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = hexToRgba(accentSecondary, 0.15);
+  ctx.lineWidth = 1.5;
+  var nodes = [];
+  for (var i = 0; i < 40; i++) {
+    nodes.push({ x: seededRandom(i + 700) * w, y: seededRandom(i + 800) * h });
+  }
+  for (var a = 0; a < nodes.length; a++) {
+    for (var b = a + 1; b < nodes.length; b++) {
+      var dx = nodes[b].x - nodes[a].x;
+      var dy = nodes[b].y - nodes[a].y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 200) {
+        ctx.beginPath();
+        var mx = (nodes[a].x + nodes[b].x) / 2;
+        ctx.moveTo(nodes[a].x, nodes[a].y);
+        ctx.lineTo(mx, nodes[a].y);
+        ctx.lineTo(mx, nodes[b].y);
+        ctx.lineTo(nodes[b].x, nodes[b].y);
+        ctx.stroke();
+      }
+    }
+    ctx.beginPath();
+    ctx.arc(nodes[a].x, nodes[a].y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = hexToRgba(accentSecondary, 0.4);
+    ctx.fill();
+  }
+}
+
+function renderSpaceBinary(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#020208');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var fontFam = fontsLoaded ? "'Space Grotesk', monospace" : 'monospace';
+  ctx.font = '14px ' + fontFam;
+  var cols = Math.floor(w / 20);
+  for (var c = 0; c < cols; c++) {
+    var y = seededRandom(c + 900) * h;
+    var len = 5 + Math.floor(seededRandom(c + 1000) * 20);
+    for (var l = 0; l < len; l++) {
+      var ch = seededRandom(c + l + 1100) > 0.5 ? '1' : '0';
+      var alpha = Math.max(0.05, 0.4 - l * 0.02);
+      ctx.fillStyle = hexToRgba(accentSecondary, alpha);
+      ctx.fillText(ch, c * 20, y + l * 18);
+    }
+  }
+}
+
+function renderSpaceDataflow(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#020208');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 20; i++) {
+    var x = seededRandom(i + 1200) * w;
+    var y = seededRandom(i + 1300) * h;
+    var len = 50 + seededRandom(i + 1400) * 150;
+    var angle = seededRandom(i + 1500) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+    ctx.strokeStyle = hexToRgba(i % 2 === 0 ? accent : accentSecondary, 0.15);
+    ctx.lineWidth = 1 + seededRandom(i + 1600) * 2;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(x + Math.cos(angle) * len, y + Math.sin(angle) * len, 3, 0, Math.PI * 2);
+    ctx.fillStyle = hexToRgba(i % 2 === 0 ? accent : accentSecondary, 0.5);
+    ctx.fill();
+  }
+}
+
+function renderSpaceRadar(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#020208');
+  var accentGreen = cssVar('--accent-green', '#34d399');
+  var accent = cssVar('--accent', '#6366f1');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var cx = w / 2, cy = h / 2;
+  var maxR = Math.min(w, h) * 0.45;
+  ctx.strokeStyle = hexToRgba(accentGreen, 0.2);
+  ctx.lineWidth = 1;
+  for (var r = maxR / 5; r <= maxR; r += maxR / 5) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  for (var d = 0; d < 8; d++) {
+    var angle = (Math.PI * 2 / 8) * d;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(angle) * maxR, cy + Math.sin(angle) * maxR);
+    ctx.stroke();
+  }
+  var sweep = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
+  sweep.addColorStop(0, hexToRgba(accentGreen, 0));
+  sweep.addColorStop(0.7, hexToRgba(accentGreen, 0.05));
+  sweep.addColorStop(1, hexToRgba(accentGreen, 0.15));
+  ctx.fillStyle = sweep;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.arc(cx, cy, maxR, -Math.PI / 4, 0);
+  ctx.closePath();
+  ctx.fill();
+  for (var bl = 0; bl < 5; bl++) {
+    var br = (maxR / 5) * (bl + 1);
+    var bx = cx + br * Math.cos(-Math.PI / 8);
+    var by = cy + br * Math.sin(-Math.PI / 8);
+    ctx.beginPath();
+    ctx.arc(bx, by, 4, 0, Math.PI * 2);
+    ctx.fillStyle = hexToRgba(accent, 0.6);
+    ctx.fill();
+  }
+}
+
+function renderEduBlackboard(ctx, w, h) {
+  var margin = w * 0.04;
+  var accentOrange = cssVar('--accent-orange', '#fb923c');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  ctx.fillStyle = hexToRgba(accentOrange, 0.4);
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = hexToRgba(accentOrange, 0.6);
+  ctx.fillRect(margin * 0.5, margin * 0.5, w - margin, h - margin);
+  ctx.fillStyle = '#2d5a27';
+  ctx.fillRect(margin, margin, w - margin * 2, h - margin * 2);
+  for (var i = 0; i < 60; i++) {
+    var dx = margin + seededRandom(i + 1700) * (w - margin * 2);
+    var dy = margin + seededRandom(i + 1800) * (h - margin * 2);
+    var dr = 0.5 + seededRandom(i + 1900) * 2;
+    ctx.fillStyle = 'rgba(255,255,255,' + (0.03 + seededRandom(i + 2000) * 0.06) + ')';
+    ctx.beginPath();
+    ctx.arc(dx, dy, dr, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.fillStyle = hexToRgba(textPrimary, 0.7);
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.font = 'bold ' + (w * 0.045) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Hello World!', w / 2, h * 0.35);
+  ctx.font = (w * 0.035) + 'px ' + fontFam;
+  ctx.fillText('x = 42 + y', w / 2, h * 0.55);
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.lineWidth = 1;
+  for (var j = 0; j < 5; j++) {
+    var ly = h * 0.7 + j * (h * 0.05);
+    ctx.beginPath(); ctx.moveTo(w * 0.3, ly); ctx.lineTo(w * 0.7, ly); ctx.stroke();
+  }
+}
+
+function renderEduNotebook(ctx, w, h) {
+  var textPrimary = cssVar('--text-primary', '#1a1a2e');
+  var textSecondary = cssVar('--text-secondary', '#5a5a6a');
+  var accentDanger = cssVar('--danger', '#dc2626');
+  ctx.fillStyle = '#f5f0e0';
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = '#ede5d0';
+  ctx.fillRect(w * 0.04, 0, w * 0.03, h);
+  ctx.strokeStyle = 'rgba(180,160,140,0.3)';
+  ctx.lineWidth = 1;
+  var lineH = h * 0.07;
+  for (var y = lineH; y < h; y += lineH) {
+    ctx.beginPath(); ctx.moveTo(w * 0.08, y); ctx.lineTo(w * 0.95, y); ctx.stroke();
+  }
+  ctx.fillStyle = hexToRgba(accentDanger, 0.8);
+  ctx.fillRect(w * 0.04, 0, w * 0.03, h * 0.06);
+  ctx.strokeStyle = 'rgba(200,50,50,0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(w * 0.04, h * 0.06); ctx.lineTo(w * 0.07, h * 0.06); ctx.stroke();
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(textPrimary, 0.9);
+  ctx.font = 'bold ' + (w * 0.035) + 'px ' + fontFam;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText('第一章 变量与数据类型', w * 0.1, h * 0.02);
+  ctx.fillStyle = hexToRgba(textSecondary, 0.9);
+  ctx.font = (w * 0.025) + 'px ' + fontFam;
+  ctx.fillText('变量是用来存储数据的容器...', w * 0.1, h * 0.12);
+  ctx.fillText('int a = 10;', w * 0.1, h * 0.20);
+  ctx.fillText('float b = 3.14;', w * 0.1, h * 0.28);
+}
+
+function renderEduPlayground(ctx, w, h) {
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  var accentGreen = cssVar('--accent-green', '#34d399');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var sky = ctx.createLinearGradient(0, 0, 0, h * 0.6);
+  sky.addColorStop(0, hexToRgba(accentSecondary, 0.6));
+  sky.addColorStop(0.5, hexToRgba(accentSecondary, 0.3));
+  sky.addColorStop(1, hexToRgba(accentSecondary, 0.1));
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h * 0.6);
+  ctx.fillStyle = hexToRgba(accentGreen, 0.5);
+  ctx.fillRect(0, h * 0.55, w, h * 0.45);
+  ctx.fillStyle = hexToRgba(accentGreen, 0.6);
+  ctx.fillRect(0, h * 0.55, w, h * 0.03);
+  ctx.fillStyle = '#e8d5b0';
+  ctx.fillRect(0, h * 0.62, w, h * 0.02);
+  ctx.fillStyle = hexToRgba(textPrimary, 0.5);
+  ctx.strokeStyle = hexToRgba(textPrimary, 0.3);
+  ctx.lineWidth = 2;
+  var trackY = h * 0.68;
+  for (var lane = 0; lane < 3; lane++) {
+    ctx.beginPath();
+    ctx.moveTo(0, trackY + lane * h * 0.06);
+    ctx.lineTo(w, trackY + lane * h * 0.06);
+    ctx.stroke();
+  }
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  for (var dash = 0; dash < 8; dash++) {
+    ctx.fillRect(dash * w / 8 + w * 0.02, trackY + 3 * h * 0.06 + 2, w * 0.03, h * 0.02);
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = 'rgba(40,80,40,0.6)';
+  ctx.font = 'bold ' + (w * 0.04) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('操场', w / 2, h * 0.82);
+}
+
+function renderEduLab(ctx, w, h) {
+  var textSecondary = cssVar('--text-secondary', '#8a8a9a');
+  var accent = cssVar('--accent', '#6366f1');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  ctx.fillStyle = '#d0d0d0';
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = '#b0b0b0';
+  ctx.fillRect(0, h * 0.65, w, h * 0.35);
+  ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+  ctx.lineWidth = 1;
+  for (var x = 0; x < w; x += 30) {
+    ctx.beginPath(); ctx.moveTo(x, h * 0.65); ctx.lineTo(x, h); ctx.stroke();
+  }
+  ctx.fillStyle = '#c8c8c8';
+  ctx.fillRect(w * 0.1, h * 0.5, w * 0.08, h * 0.15);
+  ctx.strokeStyle = '#888888';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(w * 0.1, h * 0.5, w * 0.08, h * 0.15);
+  ctx.fillStyle = '#e8e8e8';
+  ctx.fillRect(w * 0.14, h * 0.35, w * 0.03, h * 0.15);
+  ctx.fillStyle = hexToRgba(accent, 0.5);
+  ctx.fillRect(w * 0.25, h * 0.4, w * 0.04, h * 0.25);
+  ctx.strokeStyle = hexToRgba(accent, 0.7);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(w * 0.25, h * 0.4, w * 0.04, h * 0.25);
+  ctx.fillStyle = hexToRgba(accent, 0.3);
+  ctx.fillRect(w * 0.32, h * 0.38, w * 0.04, h * 0.27);
+  ctx.fillStyle = 'rgba(200,200,255,0.5)';
+  ctx.fillRect(w * 0.33, h * 0.40, w * 0.02, h * 0.08);
+  ctx.fillStyle = '#cc4444';
+  ctx.fillRect(w * 0.45, h * 0.45, w * 0.06, h * 0.02);
+  ctx.fillRect(w * 0.46, h * 0.42, w * 0.04, h * 0.03);
+  ctx.fillStyle = hexToRgba(accent, 0.8);
+  ctx.font = (w * 0.025) + 'px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('H2O', w * 0.7, h * 0.5);
+  ctx.fillStyle = '#666666';
+  ctx.font = 'bold ' + (w * 0.03) + 'px sans-serif';
+  ctx.fillText('实验室', w / 2, h * 0.85);
+}
+
+function renderEduBlocks(ctx, w, h) {
+  var textPrimary = cssVar('--text-primary', '#1a1a2e');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentOrange = cssVar('--accent-orange', '#fb923c');
+  var accentGreen = cssVar('--accent-green', '#34d399');
+  var accentPurple = cssVar('--accent-purple', '#a855f7');
+  var accentDanger = cssVar('--danger', '#dc2626');
+  ctx.fillStyle = '#f0f0f0';
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+  ctx.lineWidth = 0.5;
+  var step = 25;
+  for (var x = 0; x <= w; x += step) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (var y = 0; y <= h; y += step) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+  ctx.lineWidth = 1;
+  var blocks = [
+    { x: w * 0.05, y: h * 0.08, w: w * 0.35, h: h * 0.12, color: accent, text: '当 绿旗 被点击' },
+    { x: w * 0.05, y: h * 0.24, w: w * 0.40, h: h * 0.12, color: accentOrange, text: '重复执行 10 次' },
+    { x: w * 0.08, y: h * 0.40, w: w * 0.30, h: h * 0.12, color: accentGreen, text: '移动 10 步' },
+    { x: w * 0.08, y: h * 0.56, w: w * 0.28, h: h * 0.12, color: accentPurple, text: '向右旋转 15度' },
+    { x: w * 0.05, y: h * 0.72, w: w * 0.20, h: h * 0.12, color: accentDanger, text: '停止' }
+  ];
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  for (var i = 0; i < blocks.length; i++) {
+    var b = blocks[i];
+    ctx.fillStyle = b.color;
+    roundRect(ctx, b.x, b.y, b.w, b.h, 8);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold ' + (w * 0.025) + 'px ' + fontFam;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(b.text, b.x + w * 0.02, b.y + b.h / 2);
+  }
+}
+
+function renderNatureOcean(ctx, w, h) {
+  var accent = cssVar('--accent', '#6366f1');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, hexToRgba(accent, 0.4));
+  grad.addColorStop(0.3, hexToRgba(accentSecondary, 0.3));
+  grad.addColorStop(0.6, hexToRgba(accent, 0.2));
+  grad.addColorStop(1, hexToRgba(accent, 0.1));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = hexToRgba(textPrimary, 0.15);
+  ctx.lineWidth = 1.5;
+  for (var wave = 0; wave < 6; wave++) {
+    ctx.beginPath();
+    var baseY = h * 0.15 + wave * h * 0.12;
+    ctx.moveTo(0, baseY + Math.sin(0) * h * 0.03);
+    for (var wx = 0; wx <= w; wx += 5) {
+      var wy = baseY + Math.sin(wx * 0.01 + wave * 1.5) * h * 0.03;
+      ctx.lineTo(wx, wy);
+    }
+    ctx.stroke();
+  }
+  ctx.fillStyle = hexToRgba(textPrimary, 0.05);
+  for (var f = 0; f < 3; f++) {
+    ctx.beginPath();
+    var fby = h * 0.15 + f * h * 0.2;
+    ctx.moveTo(0, fby + Math.sin(0) * h * 0.03);
+    for (var fx = 0; fx <= w; fx += 3) {
+      var fwy = fby + Math.sin(fx * 0.008 + f * 2) * h * 0.04;
+      ctx.lineTo(fx, fwy);
+    }
+    ctx.lineTo(w, fby + h * 0.05);
+    ctx.lineTo(0, fby + h * 0.05);
+    ctx.closePath();
+    ctx.fill();
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(textPrimary, 0.3);
+  ctx.font = 'bold ' + (w * 0.04) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('~ ~ ~ 海洋 ~ ~ ~', w / 2, h * 0.9);
+}
+
+function renderNatureForest(ctx, w, h) {
+  var accentGreen = cssVar('--accent-green', '#34d399');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var sky = ctx.createLinearGradient(0, 0, 0, h * 0.5);
+  sky.addColorStop(0, hexToRgba(accentGreen, 0.5));
+  sky.addColorStop(0.5, hexToRgba(accentGreen, 0.3));
+  sky.addColorStop(1, hexToRgba(accentGreen, 0.15));
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h * 0.5);
+  ctx.fillStyle = hexToRgba(accentGreen, 0.4);
+  ctx.fillRect(0, h * 0.45, w, h * 0.55);
+  ctx.fillStyle = hexToRgba(accentGreen, 0.5);
+  ctx.fillRect(0, h * 0.45, w, h * 0.03);
+  var trees = [];
+  for (var t = 0; t < 10; t++) {
+    trees.push({ x: seededRandom(t + 2100) * w, s: 0.5 + seededRandom(t + 2200) * 0.8, shade: seededRandom(t + 2300) * 30 });
+  }
+  trees.sort(function(a, b) { return a.s - b.s; });
+  for (var ti = 0; ti < trees.length; ti++) {
+    var tr = trees[ti];
+    var th = tr.s * h * 0.3;
+    var tw = tr.s * w * 0.08;
+    ctx.fillStyle = '#3a5a2a';
+    ctx.fillRect(tr.x - tw * 0.08, h * 0.45 - th, tw * 0.16, th);
+    ctx.fillStyle = '#2a5a2a';
+    ctx.beginPath();
+    ctx.moveTo(tr.x, h * 0.42 - th);
+    ctx.lineTo(tr.x - tw / 2, h * 0.45 - th * 0.3);
+    ctx.lineTo(tr.x + tw / 2, h * 0.45 - th * 0.3);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#3a6a3a';
+    ctx.beginPath();
+    ctx.moveTo(tr.x, h * 0.38 - th);
+    ctx.lineTo(tr.x - tw * 0.6, h * 0.45 - th * 0.6);
+    ctx.lineTo(tr.x + tw * 0.6, h * 0.45 - th * 0.6);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.fillStyle = 'rgba(255,255,200,0.08)';
+  for (var ray = 0; ray < 5; ray++) {
+    var rx = w * 0.2 + ray * w * 0.15;
+    ctx.beginPath();
+    ctx.moveTo(rx, 0);
+    ctx.lineTo(rx - w * 0.05, h * 0.5);
+    ctx.lineTo(rx + w * 0.05, h * 0.5);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.fillStyle = '#5a3a1a';
+  ctx.fillRect(0, h * 0.75, w, h * 0.02);
+  ctx.fillStyle = '#7a5a3a';
+  for (var path = 0; path < 3; path++) {
+    var pp = w * 0.15 + path * w * 0.3;
+    ctx.beginPath();
+    ctx.moveTo(pp - w * 0.02, h * 0.75);
+    ctx.quadraticCurveTo(pp, h * 0.82, pp + w * 0.02, h);
+    ctx.lineTo(pp - w * 0.02 + w * 0.03, h);
+    ctx.lineTo(pp - w * 0.02 + w * 0.01, h * 0.75);
+    ctx.closePath();
+    ctx.fill();
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(textPrimary, 0.3);
+  ctx.font = (w * 0.03) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('森 林 小 径', w / 2, h * 0.05);
+}
+
+function renderNatureCity(ctx, w, h) {
+  var accentOrange = cssVar('--accent-orange', '#fb923c');
+  var accentPurple = cssVar('--accent-purple', '#a855f7');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var sky = ctx.createLinearGradient(0, 0, 0, h * 0.7);
+  sky.addColorStop(0, hexToRgba(accentPurple, 0.3));
+  sky.addColorStop(0.3, hexToRgba(accentOrange, 0.5));
+  sky.addColorStop(0.6, hexToRgba(accentOrange, 0.3));
+  sky.addColorStop(1, hexToRgba(accentOrange, 0.15));
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h * 0.7);
+  ctx.fillStyle = hexToRgba(accentPurple, 0.15);
+  ctx.fillRect(0, h * 0.65, w, h * 0.35);
+  var buildings = [
+    { x: 0, bw: w * 0.08, bh: h * 0.25 },
+    { x: w * 0.06, bw: w * 0.06, bh: h * 0.30 },
+    { x: w * 0.1, bw: w * 0.10, bh: h * 0.20 },
+    { x: w * 0.18, bw: w * 0.05, bh: h * 0.35 },
+    { x: w * 0.22, bw: w * 0.08, bh: h * 0.28 },
+    { x: w * 0.28, bw: w * 0.12, bh: h * 0.22 },
+    { x: w * 0.38, bw: w * 0.06, bh: h * 0.32 },
+    { x: w * 0.43, bw: w * 0.09, bh: h * 0.18 },
+    { x: w * 0.5, bw: w * 0.07, bh: h * 0.30 },
+    { x: w * 0.56, bw: w * 0.10, bh: h * 0.24 },
+    { x: w * 0.64, bw: w * 0.06, bh: h * 0.33 },
+    { x: w * 0.69, bw: w * 0.08, bh: h * 0.26 },
+    { x: w * 0.75, bw: w * 0.05, bh: h * 0.35 },
+    { x: w * 0.79, bw: w * 0.09, bh: h * 0.20 },
+    { x: w * 0.86, bw: w * 0.07, bh: h * 0.30 }
+  ];
+  for (var b = 0; b < buildings.length; b++) {
+    var bd = buildings[b];
+    var bh = bd.bh;
+    ctx.fillStyle = hexToRgba(accentPurple, 0.25);
+    ctx.fillRect(bd.x, h * 0.65 - bh, bd.bw, bh);
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(bd.x, h * 0.65 - bh, bd.bw, bh);
+    ctx.fillStyle = 'rgba(255,200,100,' + (0.3 + seededRandom(b + 2400) * 0.4) + ')';
+    var winCols = Math.floor(bd.bw / (w * 0.015));
+    var winRows = Math.floor(bh / (h * 0.03));
+    for (var wr = 0; wr < winRows && wr < 8; wr++) {
+      for (var wc = 0; wc < winCols && wc < 3; wc++) {
+        if (seededRandom(b + wr + wc + 2500) > 0.3) {
+          ctx.fillRect(bd.x + w * 0.01 + wc * w * 0.018, h * 0.65 - bh + h * 0.02 + wr * h * 0.035, w * 0.01, h * 0.015);
+        }
+      }
+    }
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(textPrimary, 0.5);
+  ctx.font = 'bold ' + (w * 0.035) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('City Skyline', w / 2, h * 0.4);
+}
+
+function renderNatureMountain(ctx, w, h) {
+  var accentPurple = cssVar('--accent-purple', '#a855f7');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var sky = ctx.createLinearGradient(0, 0, 0, h);
+  sky.addColorStop(0, hexToRgba(accentPurple, 0.15));
+  sky.addColorStop(0.3, hexToRgba(accentPurple, 0.25));
+  sky.addColorStop(0.6, hexToRgba(accentPurple, 0.2));
+  sky.addColorStop(1, hexToRgba(accentPurple, 0.1));
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 150; i++) {
+    var sx = seededRandom(i + 2600) * w;
+    var sy = seededRandom(i + 2700) * h * 0.5;
+    var sr = seededRandom(i + 2800) * 1.5;
+    ctx.beginPath();
+    ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,' + (0.2 + seededRandom(i + 2900) * 0.5) + ')';
+    ctx.fill();
+  }
+  var peaks = [
+    { x: w * 0.1, hMult: 0.7 }, { x: w * 0.25, hMult: 0.9 },
+    { x: w * 0.4, hMult: 0.65 }, { x: w * 0.55, hMult: 0.85 },
+    { x: w * 0.7, hMult: 0.6 }, { x: w * 0.85, hMult: 0.8 }
+  ];
+  ctx.fillStyle = hexToRgba(accentPurple, 0.2);
+  ctx.beginPath();
+  ctx.moveTo(0, h);
+  for (var p = 0; p < peaks.length; p++) {
+    var pk = peaks[p];
+    ctx.lineTo(pk.x, h * (1 - pk.hMult));
+  }
+  ctx.lineTo(w, h);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = hexToRgba(accentPurple, 0.3);
+  ctx.beginPath();
+  ctx.moveTo(0, h);
+  for (var p2 = 0; p2 < peaks.length; p2++) {
+    var pk2 = peaks[p2];
+    ctx.lineTo(pk2.x + w * 0.03, h * (1 - pk2.hMult * 0.85));
+  }
+  ctx.lineTo(w, h);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function renderNatureSakura(ctx, w, h) {
+  var accentPink = cssVar('--accent-pink', '#f472b6');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var sky = ctx.createLinearGradient(0, 0, 0, h * 0.6);
+  sky.addColorStop(0, hexToRgba(accentPink, 0.15));
+  sky.addColorStop(1, hexToRgba(accentPink, 0.05));
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h * 0.6);
+  for (var i = 0; i < 80; i++) {
+    var sx = seededRandom(i + 3000) * w;
+    var sy = seededRandom(i + 3100) * h;
+    var size = 3 + seededRandom(i + 3200) * 6;
+    ctx.save();
+    ctx.translate(sx, sy);
+    ctx.rotate(seededRandom(i + 3300) * Math.PI * 2);
+    ctx.fillStyle = hexToRgba(accentPink, 0.4 + seededRandom(i + 3400) * 0.4);
+    ctx.beginPath();
+    for (var petal = 0; petal < 5; petal++) {
+      var angle = (Math.PI * 2 / 5) * petal;
+      var px = Math.cos(angle) * size;
+      var py = Math.sin(angle) * size;
+      if (petal === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(textPrimary, 0.3);
+  ctx.font = (w * 0.035) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('樱花飘落', w / 2, h * 0.9);
+}
+
+function renderAbsFluid(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  var accentPink = cssVar('--accent-pink', '#f472b6');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var blobs = [
+    { x: 0.3, y: 0.3, r: 0.35, c: hexToRgba(accent, 0.2) },
+    { x: 0.7, y: 0.4, r: 0.3, c: hexToRgba(accentSecondary, 0.15) },
+    { x: 0.5, y: 0.7, r: 0.4, c: hexToRgba(accentPink, 0.12) }
+  ];
+  for (var i = 0; i < blobs.length; i++) {
+    var b = blobs[i];
+    var gr = ctx.createRadialGradient(w * b.x, h * b.y, 0, w * b.x, h * b.y, w * b.r);
+    gr.addColorStop(0, b.c);
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, w, h);
+  }
+}
+
+function renderAbsParticle(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  var accentOrange = cssVar('--accent-orange', '#fb923c');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var cx = w / 2, cy = h / 2;
+  for (var i = 0; i < 200; i++) {
+    var angle = seededRandom(i + 3500) * Math.PI * 2;
+    var dist = seededRandom(i + 3600) * Math.min(w, h) * 0.45;
+    var px = cx + Math.cos(angle) * dist;
+    var py = cy + Math.sin(angle) * dist;
+    var size = 1 + seededRandom(i + 3700) * 4;
+    var colors = [accent, accentSecondary, accentOrange];
+    ctx.fillStyle = hexToRgba(colors[i % 3], 0.3 + seededRandom(i + 3800) * 0.5);
+    ctx.beginPath();
+    ctx.arc(px, py, size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function renderAbsLight(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accent = cssVar('--accent', '#6366f1');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 12; i++) {
+    var x1 = seededRandom(i + 3900) * w;
+    var y1 = seededRandom(i + 4000) * h;
+    var x2 = seededRandom(i + 4100) * w;
+    var y2 = seededRandom(i + 4200) * h;
+    var grad = ctx.createLinearGradient(x1, y1, x2, y2);
+    grad.addColorStop(0, hexToRgba(accent, 0));
+    grad.addColorStop(0.5, hexToRgba(accent, 0.15));
+    grad.addColorStop(1, hexToRgba(accent, 0));
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 1 + seededRandom(i + 4300) * 3;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+  for (var j = 0; j < 6; j++) {
+    var lx = seededRandom(j + 4400) * w;
+    var ly = seededRandom(j + 4500) * h;
+    var lr = 2 + seededRandom(j + 4600) * 4;
+    ctx.fillStyle = hexToRgba(textPrimary, 0.6);
+    ctx.beginPath();
+    ctx.arc(lx, ly, lr, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function renderAbsNoise(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var textSecondary = cssVar('--text-secondary', '#8a8a9a');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var imageData = ctx.getImageData(0, 0, w, h);
+  var data = imageData.data;
+  var baseR = parseInt(cssVar('--accent', '#6366f1').slice(1, 3), 16);
+  var baseG = parseInt(cssVar('--accent', '#6366f1').slice(3, 5), 16);
+  var baseB = parseInt(cssVar('--accent', '#6366f1').slice(5, 7), 16);
+  for (var i = 0; i < data.length; i += 4) {
+    var noise = seededRandom(Math.floor(i / 4) + 4700);
+    var alpha = noise * 30;
+    data[i] = baseR;
+    data[i + 1] = baseG;
+    data[i + 2] = baseB;
+    data[i + 3] = alpha;
+  }
+  ctx.putImageData(imageData, 0, 0);
+}
+
+function renderAbsGlitch(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  var accentDanger = cssVar('--danger', '#f87171');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 20; i++) {
+    var y = seededRandom(i + 4800) * h;
+    var height = 2 + seededRandom(i + 4900) * 20;
+    var offset = (seededRandom(i + 5000) - 0.5) * 40;
+    ctx.fillStyle = hexToRgba(i % 3 === 0 ? accentDanger : i % 3 === 1 ? accentSecondary : accent, 0.3);
+    ctx.fillRect(0, y, w, height);
+    if (Math.abs(offset) > 5) {
+      ctx.fillStyle = hexToRgba(i % 3 === 0 ? accentDanger : i % 3 === 1 ? accentSecondary : accent, 0.15);
+      ctx.fillRect(offset, y, w, height);
+    }
+  }
+  for (var j = 0; j < 8; j++) {
+    var x = seededRandom(j + 5100) * w;
+    var width = 2 + seededRandom(j + 5200) * 6;
+    ctx.fillStyle = hexToRgba(accentSecondary, 0.2);
+    ctx.fillRect(x, 0, width, h);
+  }
+}
+
+function renderRetroPixel(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentGreen = cssVar('--accent-green', '#34d399');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var pixelSize = 20;
+  for (var x = 0; x < w; x += pixelSize) {
+    for (var y = 0; y < h; y += pixelSize) {
+      if (seededRandom(Math.floor(x / pixelSize) + Math.floor(y / pixelSize) + 5300) > 0.7) {
+        ctx.fillStyle = hexToRgba((x + y) % (pixelSize * 4) === 0 ? accentGreen : accent, 0.15);
+        ctx.fillRect(x, y, pixelSize, pixelSize);
+      }
+    }
+  }
+  ctx.strokeStyle = hexToRgba(accent, 0.08);
+  ctx.lineWidth = 1;
+  for (var gx = 0; gx <= w; gx += pixelSize) {
+    ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke();
+  }
+  for (var gy = 0; gy <= h; gy += pixelSize) {
+    ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke();
+  }
+}
+
+function renderRetroScanline(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentGreen = cssVar('--accent-green', '#34d399');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  for (var y = 0; y < h; y += 4) {
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(0, y, w, 2);
+  }
+  ctx.strokeStyle = hexToRgba(accentGreen, 0.2);
+  ctx.lineWidth = 1;
+  for (var x = 0; x <= w; x += w / 20) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  var grad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w * 0.6);
+  grad.addColorStop(0, hexToRgba(accent, 0.05));
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+}
+
+function renderRetroTape(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var textSecondary = cssVar('--text-secondary', '#8a8a9a');
+  var accentOrange = cssVar('--accent-orange', '#fb923c');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 6; i++) {
+    var y = h * 0.1 + i * h * 0.14;
+    ctx.fillStyle = hexToRgba(textSecondary, 0.08);
+    ctx.fillRect(w * 0.1, y, w * 0.8, h * 0.08);
+    ctx.fillStyle = hexToRgba(accentOrange, 0.3);
+    ctx.fillRect(w * 0.12, y + h * 0.015, w * 0.15, h * 0.05);
+    ctx.fillStyle = hexToRgba(textSecondary, 0.15);
+    ctx.fillRect(w * 0.3, y + h * 0.02, w * 0.5, h * 0.01);
+    ctx.fillRect(w * 0.3, y + h * 0.04, w * 0.4, h * 0.01);
+  }
+}
+
+function renderRetroGrad(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentPink = cssVar('--accent-pink', '#f472b6');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var grad = ctx.createLinearGradient(0, 0, w, h);
+  grad.addColorStop(0, hexToRgba(accent, 0.25));
+  grad.addColorStop(0.3, hexToRgba(accentPink, 0.15));
+  grad.addColorStop(0.7, hexToRgba(accentSecondary, 0.1));
+  grad.addColorStop(1, hexToRgba(accent, 0.05));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 10; i++) {
+    var y = (h / 11) * (i + 1);
+    ctx.fillStyle = 'rgba(0,0,0,' + (0.1 + (i % 2) * 0.1) + ')';
+    ctx.fillRect(0, y, w, h / 22);
+  }
+}
+
+function renderRetroDots(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var textSecondary = cssVar('--text-secondary', '#8a8a9a');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var step = 12;
+  for (var x = step / 2; x < w; x += step) {
+    for (var y = step / 2; y < h; y += step) {
+      var r = 1 + seededRandom(Math.floor(x) + Math.floor(y) + 5400) * 2;
+      ctx.fillStyle = hexToRgba(textSecondary, 0.15 + seededRandom(Math.floor(x) + Math.floor(y) + 5500) * 0.25);
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+
+function renderFestRedpacket(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accentDanger = cssVar('--danger', '#dc2626');
+  var accentOrange = cssVar('--accent-orange', '#fb923c');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var grad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w * 0.6);
+  grad.addColorStop(0, hexToRgba(accentDanger, 0.3));
+  grad.addColorStop(1, hexToRgba(accentDanger, 0.05));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 8; i++) {
+    var px = seededRandom(i + 5600) * w;
+    var py = seededRandom(i + 5700) * h;
+    var pw = w * 0.08 + seededRandom(i + 5800) * w * 0.06;
+    var ph = pw * 1.4;
+    ctx.fillStyle = hexToRgba(accentDanger, 0.7);
+    roundRect(ctx, px - pw / 2, py - ph / 2, pw, ph, 4);
+    ctx.fill();
+    ctx.fillStyle = hexToRgba(accentOrange, 0.8);
+    ctx.beginPath();
+    ctx.arc(px, py - ph * 0.25, pw * 0.15, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(accentOrange, 0.6);
+  ctx.font = 'bold ' + (w * 0.05) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('恭喜发财', w / 2, h * 0.15);
+}
+
+function renderFestSnow(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, hexToRgba(accentSecondary, 0.15));
+  grad.addColorStop(1, hexToRgba(accentSecondary, 0.05));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 150; i++) {
+    var sx = seededRandom(i + 5900) * w;
+    var sy = seededRandom(i + 6000) * h;
+    var sr = 1 + seededRandom(i + 6100) * 3;
+    ctx.fillStyle = 'rgba(255,255,255,' + (0.3 + seededRandom(i + 6200) * 0.5) + ')';
+    ctx.beginPath();
+    ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(textPrimary, 0.4);
+  ctx.font = 'bold ' + (w * 0.04) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Merry Christmas', w / 2, h * 0.9);
+}
+
+function renderFestPumpkin(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accentOrange = cssVar('--accent-orange', '#fb923c');
+  var accentDanger = cssVar('--danger', '#dc2626');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var grad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w * 0.5);
+  grad.addColorStop(0, hexToRgba(accentOrange, 0.2));
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 6; i++) {
+    var px = seededRandom(i + 6300) * w;
+    var py = seededRandom(i + 6400) * h;
+    var size = w * 0.05 + seededRandom(i + 6500) * w * 0.04;
+    ctx.fillStyle = hexToRgba(accentOrange, 0.6);
+    ctx.beginPath();
+    ctx.ellipse(px, py, size, size * 0.85, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = hexToRgba(accentDanger, 0.3);
+    ctx.beginPath();
+    ctx.moveTo(px - size * 0.3, py - size * 0.2);
+    ctx.lineTo(px + size * 0.3, py - size * 0.2);
+    ctx.lineTo(px, py + size * 0.3);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = hexToRgba(accentOrange, 0.8);
+    ctx.fillRect(px - size * 0.05, py - size * 0.5, size * 0.1, size * 0.2);
+  }
+}
+
+function renderFestHeart(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accentPink = cssVar('--accent-pink', '#f472b6');
+  var accentDanger = cssVar('--danger', '#dc2626');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var grad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w * 0.5);
+  grad.addColorStop(0, hexToRgba(accentPink, 0.2));
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 30; i++) {
+    var hx = seededRandom(i + 6600) * w;
+    var hy = seededRandom(i + 6700) * h;
+    var size = w * 0.015 + seededRandom(i + 6800) * w * 0.03;
+    ctx.fillStyle = hexToRgba(i % 2 === 0 ? accentPink : accentDanger, 0.4 + seededRandom(i + 6900) * 0.4);
+    ctx.beginPath();
+    ctx.moveTo(hx, hy + size * 0.3);
+    ctx.bezierCurveTo(hx, hy - size * 0.3, hx - size * 0.6, hy - size * 0.3, hx - size * 0.6, hy);
+    ctx.bezierCurveTo(hx - size * 0.6, hy + size * 0.4, hx, hy + size * 0.7, hx, hy + size * 0.7);
+    ctx.bezierCurveTo(hx, hy + size * 0.7, hx + size * 0.6, hy + size * 0.4, hx + size * 0.6, hy);
+    ctx.bezierCurveTo(hx + size * 0.6, hy - size * 0.3, hx, hy - size * 0.3, hx, hy + size * 0.3);
+    ctx.fill();
+  }
+}
+
+function renderFestRibbon(ctx, w, h) {
+  var bgPrimary = cssVar('--bg-primary', '#0a0a0f');
+  var accent = cssVar('--accent', '#6366f1');
+  var accentSecondary = cssVar('--accent-secondary', '#22d3ee');
+  var accentPink = cssVar('--accent-pink', '#f472b6');
+  var accentOrange = cssVar('--accent-orange', '#fb923c');
+  var accentGreen = cssVar('--accent-green', '#34d399');
+  ctx.fillStyle = bgPrimary;
+  ctx.fillRect(0, 0, w, h);
+  var colors = [accent, accentSecondary, accentPink, accentOrange, accentGreen];
+  for (var i = 0; i < 40; i++) {
+    var sx = seededRandom(i + 7000) * w;
+    var sy = -20;
+    var ex = seededRandom(i + 7100) * w;
+    var ey = h + 20;
+    var cx1 = seededRandom(i + 7200) * w;
+    var cy1 = h * 0.3;
+    var cx2 = seededRandom(i + 7300) * w;
+    var cy2 = h * 0.7;
+    ctx.strokeStyle = hexToRgba(colors[i % colors.length], 0.3);
+    ctx.lineWidth = 2 + seededRandom(i + 7400) * 4;
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.bezierCurveTo(cx1, cy1, cx2, cy2, ex, ey);
+    ctx.stroke();
+  }
+  for (var j = 0; j < 20; j++) {
+    var rx = seededRandom(j + 7500) * w;
+    var ry = seededRandom(j + 7600) * h;
+    ctx.fillStyle = hexToRgba(colors[j % colors.length], 0.5);
+    ctx.beginPath();
+    ctx.arc(rx, ry, 3 + seededRandom(j + 7700) * 5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function renderBizWhite(ctx, w, h) {
+  var textPrimary = cssVar('--text-primary', '#1a1a2e');
+  var textSecondary = cssVar('--text-secondary', '#5a5a6a');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = hexToRgba(textSecondary, 0.08);
+  ctx.lineWidth = 1;
+  for (var x = 0; x <= w; x += 60) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (var y = 0; y <= h; y += 60) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(textPrimary, 0.06);
+  ctx.font = 'bold ' + (w * 0.08) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('MINIMAL', w / 2, h / 2);
+}
+
+function renderBizNavy(ctx, w, h) {
+  var accent = cssVar('--accent', '#6366f1');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  ctx.fillStyle = '#0a1628';
+  ctx.fillRect(0, 0, w, h);
+  var grad = ctx.createLinearGradient(0, 0, w, h);
+  grad.addColorStop(0, hexToRgba(accent, 0.15));
+  grad.addColorStop(1, hexToRgba(accent, 0.05));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = hexToRgba(accent, 0.1);
+  ctx.lineWidth = 1;
+  for (var x = 0; x <= w; x += 80) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (var y = 0; y <= h; y += 80) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(textPrimary, 0.06);
+  ctx.font = 'bold ' + (w * 0.07) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('BUSINESS', w / 2, h / 2);
+}
+
+function renderBizGray(ctx, w, h) {
+  var textSecondary = cssVar('--text-secondary', '#8a8a9a');
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  ctx.fillStyle = '#e8e8ec';
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 200; i++) {
+    var x = seededRandom(i + 7800) * w;
+    var y = seededRandom(i + 7900) * h;
+    var size = 1 + seededRandom(i + 8000) * 2;
+    ctx.fillStyle = hexToRgba(textSecondary, 0.1);
+    ctx.fillRect(x, y, size, size);
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(textPrimary, 0.04);
+  ctx.font = 'bold ' + (w * 0.08) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('TEXTURE', w / 2, h / 2);
+}
+
+function renderBizPaper(ctx, w, h) {
+  var textPrimary = cssVar('--text-primary', '#1a1a2e');
+  var textSecondary = cssVar('--text-secondary', '#5a5a6a');
+  ctx.fillStyle = '#f8f6f0';
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 500; i++) {
+    var x = seededRandom(i + 8100) * w;
+    var y = seededRandom(i + 8200) * h;
+    ctx.fillStyle = 'rgba(0,0,0,' + (0.01 + seededRandom(i + 8300) * 0.02) + ')';
+    ctx.fillRect(x, y, 1, 1);
+  }
+  ctx.strokeStyle = hexToRgba(textSecondary, 0.06);
+  ctx.lineWidth = 0.5;
+  for (var x2 = 0; x2 <= w; x2 += 40) {
+    ctx.beginPath(); ctx.moveTo(x2, 0); ctx.lineTo(x2, h); ctx.stroke();
+  }
+  for (var y2 = 0; y2 <= h; y2 += 40) {
+    ctx.beginPath(); ctx.moveTo(0, y2); ctx.lineTo(w, y2); ctx.stroke();
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(textPrimary, 0.04);
+  ctx.font = 'bold ' + (w * 0.08) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('PAPER', w / 2, h / 2);
+}
+
+function renderBizLeather(ctx, w, h) {
+  var textPrimary = cssVar('--text-primary', '#e8e8f0');
+  var accentOrange = cssVar('--accent-orange', '#fb923c');
+  ctx.fillStyle = '#3a2a1a';
+  ctx.fillRect(0, 0, w, h);
+  for (var i = 0; i < 800; i++) {
+    var x = seededRandom(i + 8400) * w;
+    var y = seededRandom(i + 8500) * h;
+    var size = 0.5 + seededRandom(i + 8600) * 2;
+    ctx.fillStyle = 'rgba(0,0,0,' + (0.1 + seededRandom(i + 8700) * 0.2) + ')';
+    ctx.fillRect(x, y, size, size);
+  }
+  for (var j = 0; j < 400; j++) {
+    var x2 = seededRandom(j + 8800) * w;
+    var y2 = seededRandom(j + 8900) * h;
+    var size2 = 0.5 + seededRandom(j + 9000) * 1.5;
+    ctx.fillStyle = hexToRgba(accentOrange, 0.05);
+    ctx.fillRect(x2, y2, size2, size2);
+  }
+  ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+  ctx.lineWidth = 1;
+  for (var s = 0; s < 4; s++) {
+    ctx.beginPath();
+    ctx.moveTo(0, h * 0.2 + s * h * 0.2);
+    ctx.lineTo(w, h * 0.2 + s * h * 0.2);
+    ctx.stroke();
+  }
+  var fontFam = fontsLoaded ? "'Noto Sans SC', sans-serif" : 'sans-serif';
+  ctx.fillStyle = hexToRgba(textPrimary, 0.05);
+  ctx.font = 'bold ' + (w * 0.07) + 'px ' + fontFam;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('LEATHER', w / 2, h / 2);
+}
+
+function getFilteredPatterns() {
+  return bgPatterns.filter(function(bg) {
+    var catMatch = currentFilter === 'all' || bg.category === currentFilter;
+    var searchMatch = !searchQuery || bg.name.indexOf(searchQuery) >= 0 || bg.id.indexOf(searchQuery) >= 0;
+    return catMatch && searchMatch;
+  });
+}
+
+function renderAssets() {
+  var container = document.getElementById('assetGrid');
+  var filtered = getFilteredPatterns();
+  var html = '';
+  filtered.forEach(function(bg) {
+    var idx = bgPatterns.indexOf(bg);
+    var selected = selection.has(idx) ? ' selected' : '';
+    var checked = selection.has(idx) ? ' checked' : '';
+    html += '<div class="bg-card' + selected + '" data-idx="' + idx + '" onclick="openPreview(' + idx + ')">';
+    html += '<input type="checkbox" class="bg-card-check"' + checked + ' onchange="toggleItem(' + idx + ')" onclick="event.stopPropagation()">';
+    html += '<div class="bg-card-preview"><canvas id="bg-canvas-' + idx + '" width="800" height="600"></canvas></div>';
+    html += '<div class="bg-card-info"><div class="bg-card-name">' + bg.name + '</div>';
+    html += '<div class="bg-card-actions">';
+    html += '<button class="btn btn-sm" onclick="event.stopPropagation();downloadSingle(' + idx + ', \'png\')">PNG</button>';
+    html += '<button class="btn btn-sm" onclick="event.stopPropagation();downloadSingle(' + idx + ', \'jpg\')">JPG</button>';
+    html += '</div></div></div>';
+  });
+  container.innerHTML = html;
+  filtered.forEach(function(bg) {
+    var idx = bgPatterns.indexOf(bg);
+    var canvas = document.getElementById('bg-canvas-' + idx);
+    if (canvas) bg.render(canvas.getContext('2d'), 800, 600);
+  });
+}
+
+function openPreview(idx) {
+  previewIdx = idx;
+  var bg = bgPatterns[idx];
+  var modal = document.getElementById('previewModal');
+  var title = document.getElementById('modalTitle');
+  var canvas = document.getElementById('modalCanvas');
+  var actions = document.getElementById('modalActions');
+  title.textContent = bg.name + ' - 预览';
+  bg.render(canvas.getContext('2d'), 1920, 1080);
+  actions.innerHTML = '<button class="btn btn-primary" onclick="downloadSingle(' + idx + ', \'png\')">下载 PNG</button>' +
+    '<button class="btn btn-primary" onclick="downloadSingle(' + idx + ', \'jpg\')">下载 JPG</button>' +
+    '<button class="btn" onclick="closePreview()">关闭</button>';
+  modal.classList.add('active');
+}
+
+function closePreview(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('previewModal').classList.remove('active');
+  previewIdx = -1;
+}
+
+function downloadSingle(idx, format) {
+  var c = document.createElement('canvas');
+  c.width = 1920;
+  c.height = 1080;
+  bgPatterns[idx].render(c.getContext('2d'), 1920, 1080);
+  if (format === 'png') {
+    __export.exportPngTransparent(c, bgPatterns[idx].name);
+  } else {
+    __export.exportJpg(c, bgPatterns[idx].name, 0.95);
+  }
+}
+
+function batchDownload() {
+  if (selection.size === 0) { __export.toast('请先选择背景图案', 'err'); return; }
+  var files = [];
+  var arr = Array.from(selection).sort(function(a, b) { return a - b; });
+  arr.forEach(function(idx, i) {
+    var c = document.createElement('canvas');
+    c.width = 1920;
+    c.height = 1080;
+    bgPatterns[idx].render(c.getContext('2d'), 1920, 1080);
+    var name = bgPatterns[idx].name;
+    __export.setProgress(Math.round((i / arr.length) * 80));
+    files.push({ name: name + '.png', canvas: c });
+  });
+  __export.batchDownloadZip(
+    files.map(function(f) { return { name: f.name, data: canvasToBlobPromise(f.canvas, 'image/png') }; }),
+    '背景素材'
+  );
+}
+
+function canvasToBlobPromise(canvas, mimeType) {
+  return new Promise(function(resolve) {
+    canvas.toBlob(function(b) { resolve(b); }, mimeType, 0.95);
+  });
+}
+
+function toggleItem(idx) {
+  if (selection.has(idx)) selection.delete(idx);
+  else selection.add(idx);
+  updateUI();
+}
+
+function toggleSelectAll(checked) {
+  selection.clear();
+  if (checked) {
+    var filtered = getFilteredPatterns();
+    filtered.forEach(function(bg) {
+      selection.add(bgPatterns.indexOf(bg));
+    });
+  }
+  updateUI();
+}
+
+function clearSelection() {
+  selection.clear();
+  updateUI();
+}
+
+function updateUI() {
+  var bar = document.getElementById('batchBar');
+  var count = selection.size;
+  document.getElementById('batchCount').textContent = count;
+  bar.classList.toggle('hidden', count === 0);
+  document.querySelectorAll('.bg-card').forEach(function(card) {
+    var idx = parseInt(card.dataset.idx);
+    card.classList.toggle('selected', selection.has(idx));
+    var cb = card.querySelector('.bg-card-check');
+    if (cb) cb.checked = selection.has(idx);
+  });
+  var allFiltered = getFilteredPatterns();
+  var allSelected = allFiltered.length > 0 && allFiltered.every(function(bg) { return selection.has(bgPatterns.indexOf(bg)); });
+  document.getElementById('bgSelectAll').checked = allSelected;
+}
+
+function filterBy(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('#subTabs .style-tab').forEach(function(t) {
+    t.classList.toggle('active', t.dataset.cat === cat);
+  });
+  renderAssets();
+  updateUI();
+}
+
+function handleSearch(value) {
+  searchQuery = value.trim().toLowerCase();
+  renderAssets();
+  updateUI();
+}
+
+function init() {
+  renderAssets();
+  document.fonts.ready.then(function() {
+    fontsLoaded = true;
+    renderAssets();
+  });
+  document.addEventListener('themechange', function() {
+    renderAssets();
+    if (previewIdx >= 0) {
+      var canvas = document.getElementById('modalCanvas');
+      bgPatterns[previewIdx].render(canvas.getContext('2d'), 1920, 1080);
+    }
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePreview();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
